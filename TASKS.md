@@ -56,6 +56,62 @@ Then the detail block, as prose.
 ## Open Tasks
 
 ## Closed Tasks
+### Point The Backfill Recovery Prompt At The Right Branch And Repository
+
+DROPPED | GRM / MRFIELDTECH | 261110 210147
+HOLDING | GRM / MRFIELDTECH | 261019 011740
+
+**Slug:** `backfill-problems`
+**Status:** DONE
+**Opened:** 2026-10-19
+**Closed:** 2026-11-10
+
+**Why.** MrFieldTech, 2026-10-19, ran `/session-open backfill-problems`
+with the reply of a session in another of the owner's repositories that
+was given the BACKFILL RECOVERY PROMPT from `README.md`. That repository
+had taken a kit update on a task branch merged into its integration
+branch, not yet promoted to its default branch. The session had a second
+repository attached, only to read a standard from it. It stopped, and its
+reply offered the second repository as a place the backfill could go,
+which MrFieldTech did not expect.
+
+**Facts, 2026-10-19.**
+
+- The prompt's items 2 to 4 check for the kit, check its release and read
+  the kit files on the default branch only. A kit update merges into the
+  integration branch at close and reaches the default branch only when the
+  owner promotes it, so a repository that has just updated fails item 3
+  until the promotion. The session reported release 1.2.0 on the default
+  branch of the repository it worked in.
+- `session-open` itself works from the base, the integration branch when it
+  exists, so the skill would have run the backfill had the prompt let it
+  reach step 5.
+- The prompt says "this repository" and never says which one when a
+  session has more than one. The session found an update branch in the
+  second repository, not merged into its default branch either, and so
+  offered it as an option, and its second action line told the owner to
+  merge it there.
+
+**Decisions.**
+
+- **The recovery prompt works from the base.** MrFieldTech, 2026-11-10. It
+  checks for the kit, checks its release and reads the kit files on the
+  integration branch named in `CLAUDE.md` when that branch exists on the
+  remote, else on the default branch, as `session-open` step 2 does. An
+  update merged into the integration branch and not yet promoted is enough
+  to backfill, so the owner never has to promote just to run one.
+- **A backfill goes into the repository this session worked in.**
+  MrFieldTech, 2026-11-10. With more than one repository in the session,
+  it is the one the session committed to or ran a kit open in. A
+  repository it only read from is never written to, and when work landed
+  in more than one, the session asks which. `references.md` says a backfill
+  covers only what the session did in its own repository.
+
+**Done.** Release 1.16.0: the recovery prompt's new item 1 chooses the
+repository, item 3 finds the base, and items 4 and 5 check and read the kit
+there. `references.md` gains Its own repository only under Backfilling.
+`bash check.sh` passed on `333e4c2`.
+
 ### Answer What The First 1.14.0 Backfills Raised
 
 DROPPED | GRM / MRFIELDTECH | 261019 005145
