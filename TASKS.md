@@ -104,9 +104,8 @@ which MrFieldTech did not expect.
   in more than one, the session asks which. `references.md` says a backfill
   covers only what the session did in its own repository.
 
-**Stopping point.** Grilling done. Next: release 1.16.0, the prompt and
-its introduction in `README.md`, the rule in `references.md`, `VERSION`,
-`CHANGELOG.md` and the README's update slug.
+**Stopping point.** Release 1.16.0 is committed and `bash check.sh`
+passes. Next: `/session-close`.
 
 ## Closed Tasks
 ### Answer What The First 1.14.0 Backfills Raised
