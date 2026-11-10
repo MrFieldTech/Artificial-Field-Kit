@@ -55,13 +55,16 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
 
+DROPPED | GRM / MRFIELDTECH | 261110 210147
 HOLDING | GRM / MRFIELDTECH | 261019 011740
 
 **Slug:** `backfill-problems`
-**Status:** ACTIVE
+**Status:** DONE
 **Opened:** 2026-10-19
+**Closed:** 2026-11-10
 
 **Why.** MrFieldTech, 2026-10-19, ran `/session-open backfill-problems`
 with the reply of a session in another of the owner's repositories that
@@ -104,10 +107,11 @@ which MrFieldTech did not expect.
   in more than one, the session asks which. `references.md` says a backfill
   covers only what the session did in its own repository.
 
-**Stopping point.** Release 1.16.0 is committed and `bash check.sh`
-passes. Next: `/session-close`.
+**Done.** Release 1.16.0: the recovery prompt's new item 1 chooses the
+repository, item 3 finds the base, and items 4 and 5 check and read the kit
+there. `references.md` gains Its own repository only under Backfilling.
+`bash check.sh` passed on `333e4c2`.
 
-## Closed Tasks
 ### Answer What The First 1.14.0 Backfills Raised
 
 DROPPED | GRM / MRFIELDTECH | 261019 005145
