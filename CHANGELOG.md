@@ -4,6 +4,23 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `kit.sh update` when its owner asks.
 
+## 1.16.0
+
+The BACKFILL RECOVERY PROMPT runs in a repository whose kit update has not
+been promoted, and backfills the right repository.
+
+- The prompt checks for the kit, checks its release and reads the kit
+  files on the base, the integration branch when it exists, as
+  `session-open` does. Before this it read the default branch, so a
+  repository that had merged a kit update into its integration branch was
+  told it needed an update until the owner promoted it.
+- The prompt starts by choosing the repository: the one the session
+  committed to or ran a kit open in, never one it only read from, and it
+  asks when work landed in more than one. `references.md` says a backfill
+  covers only what its session did in its own repository.
+
+A repository needs to do nothing after updating.
+
 ## 1.15.0
 
 What the first 1.14.0 backfills, four run at once, ran into.

@@ -289,7 +289,7 @@ first in a new session, which should list past closes and ask, and the
 prompt pasted into a session whose checkout predates the kit.
 
 **No session has run 1.15.0.** Verified by: a backfill whose recovery
-prompt carries item 8, which should recreate the integration branch and
+prompt carries the item approving the self-close's merge, which should recreate the integration branch and
 merge its pull request with no auto mode block; a close whose end-of-turn
 hook stays quiet after step 8 detaches; and a merge that rebuilds two
 interleaved task blocks whole.

@@ -147,6 +147,11 @@ writes its reference. Run as the first thing in a brand new session, it has
 no session of its own to cover, so it lists the past closes with no
 reference and writes those the developer chooses.
 
+**Its own repository only.** A backfill covers only what the session did
+in the repository it runs in. Work the session did in another repository
+is that repository's to backfill, and a repository the session only read
+from gets no backfill at all.
+
 **Past closes.** Every close made one commit whose message begins
 `handoff: `, so `git log --grep='^handoff: '` on the base lists them all,
 back to the first, whether or not their task branches still exist. A close
