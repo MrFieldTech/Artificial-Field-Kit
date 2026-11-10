@@ -89,28 +89,24 @@ which MrFieldTech did not expect.
   offered it as an option, and its second action line told the owner to
   merge it there.
 
-**Open questions, round 1.**
+**Decisions.**
 
-1. Which branch should the recovery prompt check for the kit and its
-   release, and read the kit files from?
-   a. The base, as `session-open` step 2 finds it: the integration branch
-      named in `CLAUDE.md` when it exists on the remote, else the default
-      branch (recommended).
-   b. The default branch, as now, with the stop message saying to promote
-      the integration branch first.
-   c. Whichever of the two holds the newer release.
-2. Which repository does the backfill go into when the session has more
-   than one?
-   a. The one this session committed to or ran a kit open in. A repository
-      it only read from is never written to, and when work landed in more
-      than one, it asks which (recommended).
-   b. It always asks which repository when there is more than one.
-   c. One backfill in each repository the session changed.
+- **The recovery prompt works from the base.** MrFieldTech, 2026-11-10. It
+  checks for the kit, checks its release and reads the kit files on the
+  integration branch named in `CLAUDE.md` when that branch exists on the
+  remote, else on the default branch, as `session-open` step 2 does. An
+  update merged into the integration branch and not yet promoted is enough
+  to backfill, so the owner never has to promote just to run one.
+- **A backfill goes into the repository this session worked in.**
+  MrFieldTech, 2026-11-10. With more than one repository in the session,
+  it is the one the session committed to or ran a kit open in. A
+  repository it only read from is never written to, and when work landed
+  in more than one, the session asks which. `references.md` says a backfill
+  covers only what the session did in its own repository.
 
-**Stopping point.** Round 1 asked, waiting on MrFieldTech's answers. The
-fix is a release, 1.16.0: the prompt in `README.md`, any matching text in
-the skills or `references.md`, `VERSION`, `CHANGELOG.md` and the README's
-update slug.
+**Stopping point.** Grilling done. Next: release 1.16.0, the prompt and
+its introduction in `README.md`, the rule in `references.md`, `VERSION`,
+`CHANGELOG.md` and the README's update slug.
 
 ## Closed Tasks
 ### Answer What The First 1.14.0 Backfills Raised
