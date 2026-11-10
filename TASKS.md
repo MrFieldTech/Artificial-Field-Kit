@@ -55,6 +55,68 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Give The Kit A Distinctive Name
+
+HOLDING | GRM / MRFIELDTECH | 261110 225422
+
+**Slug:** `unique-name`
+**Status:** ACTIVE
+**Opened:** 2026-11-10
+
+**Why.** MrFieldTech, 2026-11-10, ran `/session-open unique-name`: the
+name Claude-Kit is too generic, anyone could use it for their own project,
+and once other developers join the owner's projects the kit should have its
+own name that identifies it. It may relate to MrFieldTech or MFT, or be
+unrelated; it need not represent MrFieldTech. This answers the open
+question in `HANDOFF.md`, "Should the kit take a more distinctive name?",
+raised 2026-10-15.
+
+**Facts, 2026-11-10.**
+
+- The name appears in five places in kit-owned files: the first line of
+  `HOUSE.md`, the `description` of both skills, and `kit.sh`'s header
+  comment and its install message. It appears in `README.md` throughout,
+  including the repository URL in the install, update and backfill
+  recovery prompts, and in this repository's `CLAUDE.md`.
+- The project rule says nothing the kit installs names a person or
+  account. A name carrying MrFieldTech or MFT would sit in those five
+  kit-owned places in every repository.
+- Elsewhere the kit calls itself "the kit", and its paths are
+  `.claude/kit/`, `kit.sh`, `KIT_PRIVATE_TERMS` and `kit-update-<version>`
+  slugs, none of which carry the name.
+- Each installed repository's `.claude/kit/MANIFEST` records the source
+  URL, and the README's update prompt, item 2, stops unless that URL is
+  `https://github.com/MrFieldTech/Claude-Kit` in any letter case. Renaming
+  the GitHub repository therefore needs the update prompt to accept the
+  old URL as well. GitHub is believed to redirect clones of a renamed
+  repository's old URL; not verified here.
+- A GitHub repository search on 2026-11-10 found "fieldbook" used by about
+  387 repositories, three of them agent tooling, the largest with 5 stars;
+  "fieldkit" by about 190.
+
+**Open questions, round 1.**
+
+1. Which direction should the name take?
+   a. (recommended) A nod to MrFieldTech without naming the account, such
+      as Fieldbook: a surveyor's record of what was done in the field,
+      which is what the session log and references are.
+   b. A name carrying MFT or MrFieldTech, such as MFT Kit. It conflicts
+      with the project rule above and needs an exception to it.
+   c. An unrelated invented name, from a shortlist the session proposes
+      and checks against GitHub.
+   d. A name MrFieldTech gives.
+2. What does the rename reach?
+   a. (recommended) The name only: the five kit-owned places, `README.md`,
+      `CLAUDE.md`, and the GitHub repository, renamed by MrFieldTech. Paths,
+      `kit.sh` and the skill commands stay, so an installed repository
+      only takes the update.
+   b. The name and the paths, such as `.claude/kit/` becoming
+      `.claude/<name>/`. Every installed repository moves its files and its
+      `CLAUDE.md` import, a breaking release.
+   c. The name in the files only; the GitHub repository stays Claude-Kit.
+
+**Stopping point.** Round 1 asked, not yet answered.
+
 ## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
 
