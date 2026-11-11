@@ -55,157 +55,6 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
-### Carry The Site And Design Standards In The Kit
-
-HOLDING | GRM / MRFIELDTECH | 261111 162605
-
-**Slug:** `skill-incorporation`
-**Status:** ACTIVE
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, in a temporary session that found the
-static site standard lives outside the kit: the kit should carry every
-skill and standard MrFieldTech wants, so installing it into a new app or
-site repository installs all of them. The request was split into three
-tasks (decision 11): this one carries the site standard and the design
-standard; `house-instructions` carries the general instructions and
-Permission to Fail; `vendored-skills` mirrors the outside skills. What
-this task was asked for, in MrFieldTech's words condensed:
-
-1. **The site standard,** now held in another of MrFieldTech's
-   repositories, carried by the kit so any site built where the kit is
-   installed follows it, with these rules added:
-   - every site font served locally, never fetched from Google Fonts;
-   - session analytics never record keystrokes;
-   - every user signup form verifies age, admitting no one under 13,
-     with the birth date or age saved to the profile only if advised,
-     since it adds personal information to the user database;
-   - every email blast to subscribers carries a one-click unsubscribe and
-     the company's official mailing address;
-   - every user upload requires a checkbox stating the user owns or may
-     use the file and agrees to the content policy, a content policy to
-     be written, and a "Report Infringement" link to a form or email
-     address for reporting uploaded content.
-2. **Design rules,** in their own section: delete filler badges; drop
-   redundant labels; unitalicize random header words; mono only where
-   needed; use a design system; show the actual product; enlarge the main
-   feature; group with spacing; make headlines specific; emphasize the
-   call to action; add an accent color; keep icons consistent; remove
-   embellishments; inner corner radius equals outer radius minus padding;
-   improve text contrast; wrap headlines properly; align by eye, not
-   pixels; use tabular numbers; add loading states; animate useful
-   feedback.
-
-**Facts, 2026-11-11.**
-
-- The standard is 1,276 lines, version 1.2, updated 2026-10-03, written
-  for static sites (HTML, one CSS file, one vanilla JS file, built by
-  Vite with pnpm, served by Cloudflare Pages) with no backend, database,
-  authentication or analytics. Its sections: Purpose, Owner, Access,
-  Dependencies, Restart/Recovery (repository, layout, build, content and
-  assets, configuration files, deployment, environments, secrets, the New
-  site checklist, the Pre-launch verification checklist, known failure
-  modes), Escalation, and a Modification Map holding a `CLAUDE.md`
-  template for new site repositories. It names the owner's projects and
-  accounts 8 times, so the kit's copy drops them by the project rules.
-- Its FONT-2 allows a font host such as Google Fonts; request 1 removes
-  that, leaving FONT-1, self-hosted WOFF2, as the rule.
-- Its source repository's records make it the source of truth there; no
-  session here writes to that repository.
-- Signup forms, uploads and email subscriptions need a backend, which the
-  static standard excludes.
-
-**Decisions Made.**
-
-- **The kit is the standard's source.** MrFieldTech, 2026-11-11. The kit
-  holds it, generic, and the other repository's entry becomes a pointer
-  to the kit, by a task in that repository once this releases.
-- **One site standard, in sections.** MrFieldTech, 2026-11-11. A single
-  source of truth covers creating any site. Its static section is the
-  default target: a static site Cloudflare can host free. A site that
-  needs more becomes a full featured site, its own section, which needs
-  local hosting or paid Cloudflare hosting, and the standard warns when a
-  site crosses that line.
-- **Design is its own section.** MrFieldTech, 2026-11-11. The kit's
-  standards are sections: design, the site standard (static and full
-  featured subsections), and others as they come. MrFieldTech asked
-  whether the design section would include the emilkowalski skills; it
-  names them, below.
-- **Age is saved as a confirmation only.** MrFieldTech, 2026-11-11. A
-  signup saves that the user confirmed 13 or older, and when, through a
-  neutral screen that does not hint at the answer. No birth date or age
-  is stored, keeping personal information out of the user database.
-- **The content policy is a kit template.** MrFieldTech, 2026-11-11, with
-  a TODO for each site-specific fact.
-- **Report Infringement links to a form or email address,** plus a
-  checklist TODO for the copyright agent's details where the site
-  operates in the United States. MrFieldTech, 2026-11-11.
-- **The user rules apply only past static.** MrFieldTech, 2026-11-11. The
-  age check, uploads, content policy, Report Infringement and email
-  rules, and the questions that fill them, are asked about or applied
-  only when a site grows past a static site into users and automated
-  emails. A static site is never asked them.
-
-- **The free plan sets the line.** MrFieldTech, 2026-11-11. The
-  standard warns when a site needs a feature or a load outside
-  Cloudflare's free plan, read from Cloudflare's pricing pages when the
-  site is built, never from memory. A backend that fits the free plan,
-  such as Pages Functions with a KV namespace, stays free and warns
-  nothing.
-- **Standards are a folder of sections.** MrFieldTech, 2026-11-11.
-  `.claude/afk/standards/`, one file per section, `site.md` holding the
-  static and full featured parts and `design.md`, read when their case
-  comes up, as the practices are. Everything under `.claude/afk/` is
-  kit-owned, so `afk.sh` installs the folder unchanged.
-- **The design rules are expanded.** MrFieldTech, 2026-11-11. The session
-  writes each of the twenty as a rule with its reason and how to check it,
-  for MrFieldTech to review.
-- **Analytics never capture keys or inputs.** MrFieldTech, 2026-11-11.
-  Session analytics and replay tools never capture key events and mask
-  every input field.
-- **The design section names the emilkowalski skills** to use for which
-  work, when they are installed. MrFieldTech, 2026-11-11.
-- **Email carries both unsubscribe forms.** MrFieldTech, 2026-11-11. Each
-  blast carries a visible unsubscribe link, the one-click unsubscribe
-  headers mail providers read, and the mailing address, which is asked as
-  a TODO once the site sends email.
-- **The standard follows the kit's version.** MrFieldTech, 2026-11-11. Its
-  separate number, 1.2, is dropped; changes go in the kit's
-  `CHANGELOG.md`.
-
-- **The full featured part fixes no stack.** MrFieldTech, 2026-11-11.
-  Each site chooses its backend, database and authentication and records
-  them in its `CLAUDE.md`; when sites built this way show a common choice,
-  the kit adds it.
-- **`design.md` holds as drafted.** MrFieldTech, 2026-11-11.
-
-**Done.** Release 2.1.0, on this branch:
-
-- `.claude/afk/standards/site.md`: the source standard's version 1.2,
-  generic, as Part 1, with FONT-1 a MUST and FONT-2 forbidding font hosts;
-  new Which part applies (SITE-1 to SITE-3), the hosting line (HOST-1 to
-  HOST-4), Part 2 (FULL, TRACK, AGE, MAIL and UPLOAD rules and a full
-  featured checklist), the change process moved to the kit, and the
-  `CLAUDE.md` template pointed at the kit's standards. The source's
-  frontmatter, Related links and change log were left out.
-- `.claude/afk/standards/content-policy.md`, the policy template, with a
-  TODO per site-specific fact.
-- `.claude/afk/standards/design.md`, DESIGN-1 to DESIGN-20.
-- `HOUSE.md`: a Standards section, and standards ranked fifth in Which
-  file wins, before the practices.
-- `check.sh`: addresses whose host is a `<placeholder>`, localhost, the
-  sitemap namespace or the escaped prefix a check greps for are allowed;
-  `HOUSE.md` must name every standard.
-- `VERSION`, `CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
-
-**Follow-up outside this repository.** The repository that held the
-standard keeps its entry as the source until a task there turns it into a
-pointer to the kit, per the first decision. Repositories with sites take
-2.1.0 by update.
-
-**Stopping point.** Work complete and `bash check.sh` passes. Next:
-`/session-close`, which sets `DONE` and merges into `preview`.
-
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
 **Slug:** `house-instructions`
@@ -406,6 +255,156 @@ repository; fixing that is part of the task.
 the session tests it against `bash check.sh` before it is saved.
 
 ## Closed Tasks
+
+### Carry The Site And Design Standards In The Kit
+
+DROPPED | GRM / MRFIELDTECH | 261111 184010
+HOLDING | GRM / MRFIELDTECH | 261111 162605
+
+**Slug:** `skill-incorporation`
+**Status:** DONE
+**Opened:** 2026-11-11
+**Closed:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, in a temporary session that found the
+static site standard lives outside the kit: the kit should carry every
+skill and standard MrFieldTech wants, so installing it into a new app or
+site repository installs all of them. The request was split into three
+tasks (decision 11): this one carries the site standard and the design
+standard; `house-instructions` carries the general instructions and
+Permission to Fail; `vendored-skills` mirrors the outside skills. What
+this task was asked for, in MrFieldTech's words condensed:
+
+1. **The site standard,** now held in another of MrFieldTech's
+   repositories, carried by the kit so any site built where the kit is
+   installed follows it, with these rules added:
+   - every site font served locally, never fetched from Google Fonts;
+   - session analytics never record keystrokes;
+   - every user signup form verifies age, admitting no one under 13,
+     with the birth date or age saved to the profile only if advised,
+     since it adds personal information to the user database;
+   - every email blast to subscribers carries a one-click unsubscribe and
+     the company's official mailing address;
+   - every user upload requires a checkbox stating the user owns or may
+     use the file and agrees to the content policy, a content policy to
+     be written, and a "Report Infringement" link to a form or email
+     address for reporting uploaded content.
+2. **Design rules,** in their own section: delete filler badges; drop
+   redundant labels; unitalicize random header words; mono only where
+   needed; use a design system; show the actual product; enlarge the main
+   feature; group with spacing; make headlines specific; emphasize the
+   call to action; add an accent color; keep icons consistent; remove
+   embellishments; inner corner radius equals outer radius minus padding;
+   improve text contrast; wrap headlines properly; align by eye, not
+   pixels; use tabular numbers; add loading states; animate useful
+   feedback.
+
+**Facts, 2026-11-11.**
+
+- The standard is 1,276 lines, version 1.2, updated 2026-10-03, written
+  for static sites (HTML, one CSS file, one vanilla JS file, built by
+  Vite with pnpm, served by Cloudflare Pages) with no backend, database,
+  authentication or analytics. Its sections: Purpose, Owner, Access,
+  Dependencies, Restart/Recovery (repository, layout, build, content and
+  assets, configuration files, deployment, environments, secrets, the New
+  site checklist, the Pre-launch verification checklist, known failure
+  modes), Escalation, and a Modification Map holding a `CLAUDE.md`
+  template for new site repositories. It names the owner's projects and
+  accounts 8 times, so the kit's copy drops them by the project rules.
+- Its FONT-2 allows a font host such as Google Fonts; request 1 removes
+  that, leaving FONT-1, self-hosted WOFF2, as the rule.
+- Its source repository's records make it the source of truth there; no
+  session here writes to that repository.
+- Signup forms, uploads and email subscriptions need a backend, which the
+  static standard excludes.
+
+**Decisions Made.**
+
+- **The kit is the standard's source.** MrFieldTech, 2026-11-11. The kit
+  holds it, generic, and the other repository's entry becomes a pointer
+  to the kit, by a task in that repository once this releases.
+- **One site standard, in sections.** MrFieldTech, 2026-11-11. A single
+  source of truth covers creating any site. Its static section is the
+  default target: a static site Cloudflare can host free. A site that
+  needs more becomes a full featured site, its own section, which needs
+  local hosting or paid Cloudflare hosting, and the standard warns when a
+  site crosses that line.
+- **Design is its own section.** MrFieldTech, 2026-11-11. The kit's
+  standards are sections: design, the site standard (static and full
+  featured subsections), and others as they come. MrFieldTech asked
+  whether the design section would include the emilkowalski skills; it
+  names them, below.
+- **Age is saved as a confirmation only.** MrFieldTech, 2026-11-11. A
+  signup saves that the user confirmed 13 or older, and when, through a
+  neutral screen that does not hint at the answer. No birth date or age
+  is stored, keeping personal information out of the user database.
+- **The content policy is a kit template.** MrFieldTech, 2026-11-11, with
+  a TODO for each site-specific fact.
+- **Report Infringement links to a form or email address,** plus a
+  checklist TODO for the copyright agent's details where the site
+  operates in the United States. MrFieldTech, 2026-11-11.
+- **The user rules apply only past static.** MrFieldTech, 2026-11-11. The
+  age check, uploads, content policy, Report Infringement and email
+  rules, and the questions that fill them, are asked about or applied
+  only when a site grows past a static site into users and automated
+  emails. A static site is never asked them.
+
+- **The free plan sets the line.** MrFieldTech, 2026-11-11. The
+  standard warns when a site needs a feature or a load outside
+  Cloudflare's free plan, read from Cloudflare's pricing pages when the
+  site is built, never from memory. A backend that fits the free plan,
+  such as Pages Functions with a KV namespace, stays free and warns
+  nothing.
+- **Standards are a folder of sections.** MrFieldTech, 2026-11-11.
+  `.claude/afk/standards/`, one file per section, `site.md` holding the
+  static and full featured parts and `design.md`, read when their case
+  comes up, as the practices are. Everything under `.claude/afk/` is
+  kit-owned, so `afk.sh` installs the folder unchanged.
+- **The design rules are expanded.** MrFieldTech, 2026-11-11. The session
+  writes each of the twenty as a rule with its reason and how to check it,
+  for MrFieldTech to review.
+- **Analytics never capture keys or inputs.** MrFieldTech, 2026-11-11.
+  Session analytics and replay tools never capture key events and mask
+  every input field.
+- **The design section names the emilkowalski skills** to use for which
+  work, when they are installed. MrFieldTech, 2026-11-11.
+- **Email carries both unsubscribe forms.** MrFieldTech, 2026-11-11. Each
+  blast carries a visible unsubscribe link, the one-click unsubscribe
+  headers mail providers read, and the mailing address, which is asked as
+  a TODO once the site sends email.
+- **The standard follows the kit's version.** MrFieldTech, 2026-11-11. Its
+  separate number, 1.2, is dropped; changes go in the kit's
+  `CHANGELOG.md`.
+
+- **The full featured part fixes no stack.** MrFieldTech, 2026-11-11.
+  Each site chooses its backend, database and authentication and records
+  them in its `CLAUDE.md`; when sites built this way show a common choice,
+  the kit adds it.
+- **`design.md` holds as drafted.** MrFieldTech, 2026-11-11.
+
+**Done.** Release 2.1.0, on this branch:
+
+- `.claude/afk/standards/site.md`: the source standard's version 1.2,
+  generic, as Part 1, with FONT-1 a MUST and FONT-2 forbidding font hosts;
+  new Which part applies (SITE-1 to SITE-3), the hosting line (HOST-1 to
+  HOST-4), Part 2 (FULL, TRACK, AGE, MAIL and UPLOAD rules and a full
+  featured checklist), the change process moved to the kit, and the
+  `CLAUDE.md` template pointed at the kit's standards. The source's
+  frontmatter, Related links and change log were left out.
+- `.claude/afk/standards/content-policy.md`, the policy template, with a
+  TODO per site-specific fact.
+- `.claude/afk/standards/design.md`, DESIGN-1 to DESIGN-20.
+- `HOUSE.md`: a Standards section, and standards ranked fifth in Which
+  file wins, before the practices.
+- `check.sh`: addresses whose host is a `<placeholder>`, localhost, the
+  sitemap namespace or the escaped prefix a check greps for are allowed;
+  `HOUSE.md` must name every standard.
+- `VERSION`, `CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
+
+**Follow-up outside this repository.** The repository that held the
+standard keeps its entry as the source until a task there turns it into a
+pointer to the kit, per the first decision. Repositories with sites take
+2.1.0 by update.
 
 ### Give The Kit A Distinctive Name
 
