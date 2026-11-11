@@ -57,8 +57,10 @@ Then the detail block, as prose.
 
 ### Mirror Outside Skills And Agents Into The Kit
 
+HOLDING | GRM / MRFIELDTECH | 261111 200802
+
 **Slug:** `vendored-skills`
-**Status:** TODO
+**Status:** ACTIVE
 **Opened:** 2026-11-11
 
 **Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
