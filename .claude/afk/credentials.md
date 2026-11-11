@@ -59,7 +59,7 @@ it breaks.>
 A session reference's companion,
 `.claude/references/<yymmddhhmmss>-<task-slug>.secrets.md`, is a secrets file
 in the same form, holding a dated copy of every value the session handled,
-by `.claude/kit/references.md`. A value whose `<slug>.secrets.md` does not
+by `.claude/afk/references.md`. A value whose `<slug>.secrets.md` does not
 exist yet lives there alone until a task places it. An older `HANDOFF.md`
 may still hold values under Credentials In Transit, in the same form, and
 the tool still reads, checks and re-encrypts them there. Move each into a
@@ -92,9 +92,9 @@ lines returned, each under a comment naming its holder.
 
 ## The tool
 
-`.claude/kit/secrets.py` does every operation. It needs `python3` and the
+`.claude/afk/secrets.py` does every operation. It needs `python3` and the
 `age` command line tool, except `check`, which needs `python3` alone. Run
-`python3 .claude/kit/secrets.py --help` for its commands.
+`python3 .claude/afk/secrets.py --help` for its commands.
 
 | To | Run |
 |---|---|
@@ -140,7 +140,7 @@ repository: a value encrypted to the wrong keys reads nowhere.
 A build that reads the values runs, as its first step:
 
 ```
-python3 .claude/kit/secrets.py decrypt --out <dir>
+python3 .claude/afk/secrets.py decrypt --out <dir>
 ```
 
 It copies every `<slug>.secrets.md` to the same path under `<dir>` with each
@@ -167,7 +167,7 @@ manager.
 
 **The Node decrypter.** Offer it only when `secrets.py decrypt` cannot run
 on the build host, such as a host with Node and no `python3`, or one where
-`age` cannot be installed. `node .claude/kit/secrets-decrypt.mjs --out <dir>`
+`age` cannot be installed. `node .claude/afk/secrets-decrypt.mjs --out <dir>`
 does the same, with the same output, refusals and check build. It needs the
 `age-encryption` package, which the repository adds to its own
 `package.json`, pinned in its lockfile.
@@ -189,7 +189,7 @@ When a key is lost, exposed, or passes to someone else:
 1. The owner makes a new key with `age-keygen -o <file>`.
 2. Replace that key's line in `secrets-recipients.txt`.
 3. On a computer holding any current private key, run
-   `python3 .claude/kit/secrets.py rekey --identity <key file>`. It
+   `python3 .claude/afk/secrets.py rekey --identity <key file>`. It
    re-encrypts every value in every `<slug>.secrets.md` file and in
    `HANDOFF.md` to the keys now listed.
 4. When a host holds a key as a variable, set the new one there before the
@@ -226,7 +226,7 @@ until it is done.
    repository, and list each command under the Secrets checks setting. With
    nothing to check, the setting is `none`.
 4. **Continuous integration.** When the repository has CI configuration, add
-   a step running `python3 .claude/kit/secrets.py check` and each Secrets
+   a step running `python3 .claude/afk/secrets.py check` and each Secrets
    checks command, with no key, after a check build when a check reads the
    build's output. When it has none, the line is
    `Action needed:` run those commands on every pull request.

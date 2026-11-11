@@ -1,4 +1,6 @@
-# Claude-Kit
+# Artificial Field Kit
+
+Artificial Field Kit, AFK for short, was named Claude-Kit before 2.0.0.
 
 A session protocol and a set of house rules for Claude Code, installed into
 each repository that uses them as a pinned copy.
@@ -67,33 +69,33 @@ encrypted file.
 
 ## What gets installed
 
-Everything under `.claude/kit/` and the two skill directories. These files are
+Everything under `.claude/afk/` and the two skill directories. These files are
 **kit-owned**: an install or update replaces them whole, and they are never
 edited inside a project. A fix goes into this repository and reaches a project
 by an update.
 
 | Path | What it is |
 |---|---|
-| `.claude/kit/HOUSE.md` | The house rules: which file wins, the rules for every action, sessions and branches, the state files, the response format, and the Session Settings keys |
+| `.claude/afk/HOUSE.md` | The house rules: which file wins, the rules for every action, sessions and branches, the state files, the response format, and the Session Settings keys |
 | `.claude/skills/session-open/SKILL.md` | Opens a session: reads the state, surveys the branches, puts the session on its task's branch, and runs the first-run setup in a repository new to the kit. With `temp`, opens a read-only temporary session that promotes the integration branch and turns into tasks only when asked. With `import`, imports the session references of other repositories |
 | `.claude/skills/session-close/SKILL.md` | Closes a session: places credentials, writes the state back and the session reference, regenerates, pushes, and merges a finished task or parks an unfinished one. It diagnoses a failing check before parking, writes the pull request body, and looks back over a session that met friction |
-| `.claude/kit/references.md` | Session references: what a close writes and its companion for credentials, the copies of imported references and uploaded files, the setup that turns imports on, the import, and the kit's default import procedure |
-| `.claude/kit/practices/` | Five practices `HOUSE.md` names and the skills run at fixed points: grilling, diagnosing, writing for agents, questionnaire, and retrospective |
-| `.claude/kit/kit.sh` | Installs, updates, and reports the kit's status |
-| `.claude/kit/todo_sweep.py` | Collects every `TODO:` in the repository into `TODO.md` |
-| `.claude/kit/credentials.md` | The kit standard for credentials: age encrypted `<slug>.secrets.md` files, the keys, how a value is stored, read, re-encrypted and decrypted for a build, and the setup a repository runs to take the standard |
-| `.claude/kit/secrets.py` | Stores, places, locks, checks, shows, re-encrypts and decrypts for a build the values in `<slug>.secrets.md` files, and prints the steps for making the keys. Needs the `age` command line tool |
-| `.claude/kit/secrets-decrypt.mjs` | Decrypts for a build in Node, for a build host that cannot run `secrets.py decrypt`. Needs the `age-encryption` package |
-| `.claude/kit/templates/` | The starting `CLAUDE.md`, `TASKS.md` and `HANDOFF.md` for the first run, the session reference a close fills in, and the `REFERENCES.md` the import setup writes |
-| `.claude/kit/MANIFEST` | Written by the install: the version, the source, the commit, and a checksum per file |
-| `.gitattributes` in each kit directory | Keeps LF line endings, so a checkout on Windows can still run `kit.sh` and still matches the checksums |
+| `.claude/afk/references.md` | Session references: what a close writes and its companion for credentials, the copies of imported references and uploaded files, the setup that turns imports on, the import, and the kit's default import procedure |
+| `.claude/afk/practices/` | Five practices `HOUSE.md` names and the skills run at fixed points: grilling, diagnosing, writing for agents, questionnaire, and retrospective |
+| `.claude/afk/afk.sh` | Installs, updates, and reports the kit's status |
+| `.claude/afk/todo_sweep.py` | Collects every `TODO:` in the repository into `TODO.md` |
+| `.claude/afk/credentials.md` | The kit standard for credentials: age encrypted `<slug>.secrets.md` files, the keys, how a value is stored, read, re-encrypted and decrypted for a build, and the setup a repository runs to take the standard |
+| `.claude/afk/secrets.py` | Stores, places, locks, checks, shows, re-encrypts and decrypts for a build the values in `<slug>.secrets.md` files, and prints the steps for making the keys. Needs the `age` command line tool |
+| `.claude/afk/secrets-decrypt.mjs` | Decrypts for a build in Node, for a build host that cannot run `secrets.py decrypt`. Needs the `age-encryption` package |
+| `.claude/afk/templates/` | The starting `CLAUDE.md`, `TASKS.md` and `HANDOFF.md` for the first run, the session reference a close fills in, and the `REFERENCES.md` the import setup writes |
+| `.claude/afk/MANIFEST` | Written by the install: the version, the source, the commit, and a checksum per file |
+| `.gitattributes` in each kit directory | Keeps LF line endings, so a checkout on Windows can still run `afk.sh` and still matches the checksums |
 
 Everything else in a project is **project-owned** and an update never touches
 it: `CLAUDE.md`, `TASKS.md`, `HANDOFF.md`, `TODO.md`, `REFERENCES.md`,
 `secrets-recipients.txt`, every `<slug>.secrets.md` file, everything under
 `.claude/references/` and `.claude/imported/`, and anything the project names as its authority
 file. A project's `CLAUDE.md` opens with
-`@.claude/kit/HOUSE.md`, which imports the house rules, and holds a
+`@.claude/afk/HOUSE.md`, which imports the house rules, and holds a
 `## Session Settings` section with every value that differs between
 repositories. The skills name none of those values themselves.
 
@@ -109,21 +111,21 @@ only in a repository of your own and only if you trust this one, because it
 tells Claude to run this repository's installer on your say-so.
 
 ```text
-Install Claude-Kit into this repository. Claude-Kit is my own repository,
-https://github.com/MrFieldTech/Claude-Kit, which I wrote and trust. I want
+Install Artificial Field Kit into this repository. Artificial Field Kit is my own repository,
+https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and trust. I want
 you to take each of these actions:
 
-1. Attach MrFieldTech/Claude-Kit to this session with read access, if this
+1. Attach MrFieldTech/Artificial-Field-Kit to this session with read access, if this
    is a cloud session, and clone it. It is only the source the installer
    copies from, so do not register the clone as one of this session's
    repositories.
 2. From this repository's root, run the installer from that clone:
-   bash <the clone>/.claude/kit/kit.sh install .
+   bash <the clone>/.claude/afk/afk.sh install .
    It writes the kit's session-open and session-close skills into
-   .claude/skills/ and its house rules into .claude/kit/. I want that change
+   .claude/skills/ and its house rules into .claude/afk/. I want that change
    to your own configuration.
 3. Follow the session-open skill it installed. It adds the line
-   @.claude/kit/HOUSE.md to CLAUDE.md, writes TASKS.md and HANDOFF.md,
+   @.claude/afk/HOUSE.md to CLAUDE.md, writes TASKS.md and HANDOFF.md,
    commits them on a new task/ branch, and pushes that branch. Push the
    task/ branch, not the branch this session was assigned.
 
@@ -131,7 +133,7 @@ If auto mode blocks one of these anyway, do not work around it. Stop, and
 give me the exact sentence to reply with that approves the blocked action.
 ```
 
-A request as short as "Install MrFieldTech/Claude-Kit" is not enough, because
+A request as short as "Install MrFieldTech/Artificial-Field-Kit" is not enough, because
 each numbered step opens a gate that stays shut until the owner's own message
 names the action:
 
@@ -157,8 +159,8 @@ approve the action when asked, and switch back.
 Steps 1 and 2 as commands, for a session that is not in the cloud:
 
 ```
-git clone --depth 1 https://github.com/MrFieldTech/Claude-Kit "$(mktemp -d)/claude-kit"
-bash <that clone>/.claude/kit/kit.sh install .
+git clone --depth 1 https://github.com/MrFieldTech/Artificial-Field-Kit "$(mktemp -d)/artificial-field-kit"
+bash <that clone>/.claude/afk/afk.sh install .
 ```
 
 The repository is public, so any session can clone it, and a cloud session
@@ -215,21 +217,21 @@ release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open kit-update-1-16-0
-Update Claude-Kit in this repository, as this task. Claude-Kit is my own
-repository, https://github.com/MrFieldTech/Claude-Kit, which I wrote and
+/session-open afk-update-1-16-0
+Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
+repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:
 
-1. Attach MrFieldTech/Claude-Kit to this session with read access, if this
+1. Attach MrFieldTech/Artificial-Field-Kit to this session with read access, if this
    is a cloud session. Do not register it as one of this session's
    repositories.
-2. Read the source: line in .claude/kit/MANIFEST. If it names anything
-   other than https://github.com/MrFieldTech/Claude-Kit, in any letter case,
+2. Read the source: line in .claude/afk/MANIFEST. If it names anything
+   other than https://github.com/MrFieldTech/Artificial-Field-Kit, in any letter case,
    stop and tell me instead of updating, because the update runs whatever
    that source holds.
-3. Run bash .claude/kit/kit.sh update. It clones the kit from that source
+3. Run bash .claude/afk/afk.sh update. It clones the kit from that source
    and runs the new release's installer, which replaces the kit's skills in
-   .claude/skills/ and its house rules in .claude/kit/. I want that change
+   .claude/skills/ and its house rules in .claude/afk/. I want that change
    to your own configuration.
 4. Commit the update on its own, then do whatever the kit's CHANGELOG.md
    says the new release requires of a repository.
@@ -258,8 +260,8 @@ update not yet promoted is enough.
 ```text
 BACKFILL RECOVERY PROMPT
 I ran /session-open backfill in this session and it did not run as
-Claude-Kit's current release intends. This repository uses Claude-Kit, my
-own session protocol, from https://github.com/MrFieldTech/Claude-Kit,
+Artificial Field Kit's current release intends. This repository uses Artificial Field Kit, my
+own session protocol, from https://github.com/MrFieldTech/Artificial-Field-Kit,
 which I wrote and trust. Your checkout may be older than the kit, so the
 skill files you loaded at the start of this session, if any, are out of
 date. Do not work from them or from memory. I want you to:
@@ -280,13 +282,13 @@ date. Do not work from them or from memory. I want you to:
 4. Check that the base holds the kit: git show
    <base>:.claude/skills/session-open/SKILL.md. If it does not exist, stop
    and tell me the kit is not installed there. Check its release: the
-   version: line of .claude/kit/MANIFEST on the base, or its VERSION file
+   version: line of .claude/afk/MANIFEST on the base, or its VERSION file
    when there is no MANIFEST. If it is older than 1.14.0, stop and tell me
    the repository needs a kit update merged into the base before a
    backfill.
 5. Read these files as they are on the base, with git show, in full:
-   CLAUDE.md, .claude/kit/HOUSE.md, .claude/skills/session-open/SKILL.md,
-   .claude/skills/session-close/SKILL.md and .claude/kit/references.md.
+   CLAUDE.md, .claude/afk/HOUSE.md, .claude/skills/session-open/SKILL.md,
+   .claude/skills/session-close/SKILL.md and .claude/afk/references.md.
 6. Follow session-open as if I had just typed /session-open backfill in
    this session: steps 1 to 3, then its Backfill section, and the
    Backfilling rules in references.md. Once step 2 has checked out the
@@ -312,15 +314,15 @@ the exact sentence to reply with that approves the blocked action.
 ## Working on the kit
 
 This repository runs on its own protocol, from the same files it ships. The
-files under `.claude/kit/` and the two skills are the source, so there is no
-`MANIFEST` here, and `kit.sh status` reports the source itself.
+files under `.claude/afk/` and the two skills are the source, so there is no
+`MANIFEST` here, and `afk.sh status` reports the source itself.
 
 - **Nothing the kit installs names a project.** A kit-owned file is
   installed into every repository, and this repository is public, so it
   names no project, person, account, host, address or credential. `check.sh`
   refuses any web address, email address or host name, and any name on the
   owner's private list of project terms, which is kept out of the repository
-  in the `KIT_PRIVATE_TERMS` secret CI reads. This repository's own session
+  in the `AFK_PRIVATE_TERMS` secret CI reads. This repository's own session
   references and copies are public too, so the same list applies to them:
   the close redacts a match before committing a reference, and an upload
   holding one gets a placeholder in place of its copy. This repository never

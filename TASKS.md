@@ -5,7 +5,7 @@
 The work queue for this repository and the source of truth for what remains.
 Each task's block holds its full specification, and an open task's block holds
 exactly where it stopped. `session-close` writes this file and `session-open`
-reads it. `.claude/kit/HOUSE.md` holds the rules.
+reads it. `.claude/afk/HOUSE.md` holds the rules.
 
 ## How Tasks Are Worked
 
@@ -33,7 +33,7 @@ permanent and name the task's branch.
 
 Each task's heading is its title. Directly under it are its holder lines,
 newest first, which record who took the task and who dropped it, as
-`.claude/kit/HOUSE.md` describes under Developers:
+`.claude/afk/HOUSE.md` describes under Developers:
 
 ```markdown
 DROPPED | <PREFIX> / <HANDLE> | <YYMMDD HHMMSS>

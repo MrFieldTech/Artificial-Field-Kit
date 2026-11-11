@@ -1,17 +1,17 @@
 # Notice
 
-The practices in `.claude/kit/practices/` and the pull request body in
+The practices in `.claude/afk/practices/` and the pull request body in
 `session-close` step 8 are adapted from skills in
 https://github.com/mattpocock/skills, rewritten for the kit's session
 protocol. Each practice names the skill it came from:
 
 | Kit file | Source skill |
 |---|---|
-| `.claude/kit/practices/grilling.md` | `grilling`, through `grill-me` |
-| `.claude/kit/practices/diagnosing.md` | `diagnosing-bugs` |
-| `.claude/kit/practices/retro.md` | `retro` |
-| `.claude/kit/practices/questionnaire.md` | `to-questionnaire` |
-| `.claude/kit/practices/writing-for-agents.md` | `writing-for-agents` |
+| `.claude/afk/practices/grilling.md` | `grilling`, through `grill-me` |
+| `.claude/afk/practices/diagnosing.md` | `diagnosing-bugs` |
+| `.claude/afk/practices/retro.md` | `retro` |
+| `.claude/afk/practices/questionnaire.md` | `to-questionnaire` |
+| `.claude/afk/practices/writing-for-agents.md` | `writing-for-agents` |
 | `.claude/skills/session-close/SKILL.md`, step 8 | `pr` |
 
 Those skills are distributed under this license:

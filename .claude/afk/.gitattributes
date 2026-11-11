@@ -1,0 +1,3 @@
+# Kit-owned files keep LF line endings on every platform, so bash can run
+# afk.sh and afk.sh status matches the checksums in the MANIFEST.
+* text eol=lf
