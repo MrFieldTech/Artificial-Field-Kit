@@ -84,6 +84,29 @@ English, expand an acronym on first use.
   placeholder is under `.claude/imported/session-import/`), rebuilt for
   the kit: merged with what `HOUSE.md` already says, generic, nothing
   said twice, and fitted to the response format.
+- **Permission to Fail splits in two; the general instructions merge.**
+  MrFieldTech, 2026-11-11. Its rules on inventing, guessing and pointing
+  out errors join Rules for every action; the rest, the real attempt and
+  the failure report, is its own section, Permission to fail. The general
+  instructions merge into Rules for every action and Response format,
+  which gains Writing for the owner and Commands for the owner. Nothing is
+  said twice.
+- **The failure report sits under What brevity never suppresses.**
+  MrFieldTech, 2026-11-11. In full, in place of part 1's description, with
+  part 2's questions kept, so the two-part reply still holds.
+- **En dashes are banned with em dashes, and `check.sh` enforces it.**
+  MrFieldTech, 2026-11-11. No file held one, and the site standard already
+  banned both in site copy.
+- **No Audience key.** MrFieldTech, 2026-11-11. A repository sets a higher
+  level in its own `CLAUDE.md`, which already outranks `HOUSE.md`.
+- **American English and spelling out acronyms go in,** under Writing for
+  the owner. MrFieldTech, 2026-11-11.
+- **"Tell me a confirmed fact so it can be recorded" is dropped.**
+  MrFieldTech, 2026-11-11. `session-close` records facts in the task's
+  block, `HANDOFF.md` and the reference, and a temporary session offers to
+  keep them.
+- **Confirming commands first applies only to commands the owner runs.**
+  MrFieldTech, 2026-11-11. The session's own work is not paced by it.
 
 **Permission to Fail, as MrFieldTech gave it.**
 
@@ -147,54 +170,8 @@ Response rules
 - Never use an em dash, ever.
 ```
 
-**Open questions, round 1.** The draft in `HOUSE.md` on this branch
-(commit after `2768c9d`) follows every option `a`.
-
-1. Where does each part land in `HOUSE.md`?
-   a. (recommended) Permission to Fail rules 1 to 3 merge into Rules for
-      every action; the rest becomes its own short section, Permission to
-      fail, after it. The general instructions merge into Rules for every
-      action and Response format, which gains two subsections, Writing for
-      the owner and Commands for the owner.
-   b. Both as their own sections, close to the text given, beside the
-      existing rules.
-   c. Everything merged into existing sections, no new section or
-      subsection.
-2. Where does the failure report sit in the reply?
-   a. (recommended) Under What brevity never suppresses, in full, taking
-      the place of part 1's description; part 2's questions stay.
-   b. As a fixed block of its own, like `session-open`'s report.
-3. Does the dash rule also ban en dashes?
-   a. (recommended) Yes, and `check.sh` fails on an en dash as it does on
-      an em dash. No file in the repository holds one now, and the site
-      standard already bans both in site copy.
-   b. Yes in `HOUSE.md`, with no check.
-   c. No, em dash only.
-4. How does a repository set a higher audience level than a capable
-   non-specialist?
-   a. (recommended) In its own `CLAUDE.md` prose, which already outranks
-      `HOUSE.md`; no new key.
-   b. A new Session Settings key, `Audience`.
-5. Do the two rules from the umbrella repository's `CLAUDE.md` that the
-   uploaded file lacks, American English and spelling out an acronym at
-   first use, go in?
-   a. (recommended) Yes, under Writing for the owner.
-   b. No, only what the uploaded file says.
-6. "When a new fact is confirmed, tell me so it can be recorded": what
-   becomes of it?
-   a. (recommended) Dropped: `session-close` records it in the task's
-      block, `HANDOFF.md` and the session reference, and a temporary
-      session offers to keep it.
-   b. Kept: the session also names each newly confirmed fact in part 1.
-7. Does the rule to give only the confirming commands first apply only to
-   commands the owner runs, not to what the session runs itself?
-   a. (recommended) Yes, owner's commands only, as drafted.
-   b. Both.
-
-**Stopping point.** Round 1 asked, with a draft in `HOUSE.md` that takes
-every option `a`. Next: record the answers as decisions, fit the draft to
-them, then the release: `VERSION` 2.2.0, a `CHANGELOG.md` entry, `README.md`
-kept true, and `check.sh` if question 3 is `a`.
+**Stopping point.** Grilling done. Release 2.2.0 written: `HOUSE.md`,
+`check.sh` (en dash), `VERSION`, `CHANGELOG.md`, `README.md`. Next: close.
 
 ### Mirror Outside Skills And Agents Into The Kit
 

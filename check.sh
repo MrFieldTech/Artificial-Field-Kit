@@ -4,7 +4,7 @@
 # 1. No kit-owned file holds an address, and neither one nor a session
 #    reference holds a name on the private list of project terms when one is
 #    given.
-# 2. No file in the repository holds an em dash.
+# 2. No file in the repository holds an em dash or an en dash.
 # 3. The scripts parse, each skill's frontmatter is whole, every practice
 #    is pointed at and every pointer names a practice that exists, and every
 #    kit-owned directory keeps LF line endings.
@@ -88,11 +88,12 @@ else
   echo "check: kit-owned files hold no address (no private terms given, so names were not checked)"
 fi
 
-# 2. The house rules forbid the em dash, in the kit as everywhere else.
-if git ls-files -z | xargs -0 grep -nI $'\xe2\x80\x94' --; then
-  fail "the lines above hold an em dash"
+# 2. The house rules forbid the em dash and the en dash, in the kit as
+#    everywhere else.
+if git ls-files -z | xargs -0 grep -nI -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' --; then
+  fail "the lines above hold an em dash or an en dash"
 fi
-echo "check: no em dash"
+echo "check: no em dash or en dash"
 
 # 3. Syntax, skill frontmatter, and line endings. A checkout on Windows
 # turns LF into CRLF unless .gitattributes says otherwise, and bash cannot

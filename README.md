@@ -83,7 +83,7 @@ by an update.
 
 | Path | What it is |
 |---|---|
-| `.claude/afk/HOUSE.md` | The house rules: which file wins, the rules for every action, sessions and branches, the state files, the response format, and the Session Settings keys |
+| `.claude/afk/HOUSE.md` | The house rules: which file wins, the rules for every action, permission to fail, sessions and branches, the state files, the response format, and the Session Settings keys |
 | `.claude/skills/session-open/SKILL.md` | Opens a session: reads the state, surveys the branches, puts the session on its task's branch, and runs the first-run setup in a repository new to the kit. With `temp`, opens a read-only temporary session that promotes the integration branch and turns into tasks only when asked. With `import`, imports the session references of other repositories |
 | `.claude/skills/session-close/SKILL.md` | Closes a session: places credentials, writes the state back and the session reference, regenerates, pushes, and merges a finished task or parks an unfinished one. It diagnoses a failing check before parking, writes the pull request body, and looks back over a session that met friction |
 | `.claude/afk/references.md` | Session references: what a close writes and its companion for credentials, the copies of imported references and uploaded files, the setup that turns imports on, the import, and the kit's default import procedure |
@@ -225,7 +225,7 @@ release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open afk-update-2-1-0
+/session-open afk-update-2-2-0
 Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
 repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:
@@ -365,7 +365,7 @@ repository on one may still update.
   holds its notice and names the skill each practice came from. A kit-owned
   file credits it without naming it, by the rule above.
 - **Run `bash check.sh` before a pull request.** It checks for addresses and
-  project names, the em dash, the scripts and the skills, and that a task
+  project names, the em dash and the en dash, the scripts and the skills, and that a task
   block's field and holder lines read as the `TASKS.md` template has them. Locally it checks
   names only when an untracked `.private-terms` file holds the list. It also installs the kit into a
   scratch repository and exercises the install, status, update, the TODO
