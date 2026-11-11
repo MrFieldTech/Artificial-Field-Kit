@@ -101,22 +101,68 @@ and emilkowalski/skills.
   only because no mobile work was seen, not for quality or size, and
   MrFieldTech will build mobile apps, so they install now.
 
-**Decisions left open.**
+**Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
-1. Where the mirrors live in this repository, and how each upstream's
-   license, notice and pinned commit are recorded.
-2. How a mirror is refreshed from upstream: a script recording the
-   commit, run as its own release.
-3. The Session Settings key that lists the cybersecurity skills a
-   repository installs, its name and default, defined in `HOUSE.md` and
-   given a default in the `CLAUDE.md` template.
-4. Whether `afk.sh install` and `update` treat mirrored files as
-   kit-owned, recorded in `MANIFEST`.
-5. Whether the cybersecurity skills need a review before mirroring, since
-   some hold offensive security procedures.
+- `afk.sh status`, run at every `/session-open` in every repository,
+  clones the kit's source with `--depth 1` to compare it, and `afk.sh
+  update` does the same. A 49 MB mirror kept in the kit's tree is
+  downloaded at every open in every repository.
+- `afk.sh` treats as kit-owned only `.claude/afk/` and the two session
+  skill directories; an install deletes and rewrites those three whole.
+- Upstream text breaks `check.sh` as written: emilkowalski/skills holds
+  713 lines with an em or en dash in 28 files and addresses in 13 files,
+  cloudflare/security-audit-skill 37 such lines in 6 files and an address
+  in 1. Section 2 fails on a dash anywhere in the repository, section 1 on
+  an address in a kit-owned file. Each also holds one `TODO`, which the
+  Regenerate sweep would list in `TODO.md`.
 
-**Stopping point.** Not started. First step: grill the open decisions,
-then mirror one source at a time, one commit each.
+**Open questions, round 1.**
+
+1. Where do the mirrors live, given the 49 MB cost above?
+   a. (recommended) In a second repository of MrFieldTech's, such as
+      `MrFieldTech/AFK-Vendor`, holding each upstream whole under
+      `<owner>-<repo>/`. `afk.sh install` and `update` fetch from it only
+      the skills a repository installs, so a session open never
+      downloads it.
+   b. Under `vendor/<owner>-<repo>/` in this repository. Every open and
+      update in every repository downloads all of it.
+   c. In this repository, but with the cybersecurity collection left
+      upstream and fetched by name at install; the small sources are kept
+      here.
+2. Are the mirrors kept verbatim?
+   a. (recommended) Yes, bit for bit, with `check.sh` sections 1 and 2
+      and the TODO sweep skipping the mirror, as copies under
+      `.claude/imported/` are a record of what was given. A refresh stays
+      mechanical.
+   b. No, each is rewritten to the house rules (no dashes, no addresses),
+      so every refresh is a rewrite by hand.
+3. Are the installed copies kit-owned?
+   a. (recommended) Yes: listed in `MANIFEST`, replaced whole by every
+      update, and an edit in place reported and refused like any other.
+   b. No: installed once and left to the repository afterwards.
+4. How is a mirror refreshed?
+   a. (recommended) A script kept in this repository and never installed,
+      `refresh.sh <owner>/<repo>`, that copies upstream's default branch,
+      records its commit, license and the date in an `UPSTREAM` file
+      beside it, and is committed as its own release.
+   b. By hand, with the commit written into `NOTICE.md`.
+5. What is the Session Settings key that picks the cybersecurity skills?
+   a. (recommended) `Security skills`, a list of skill names or `none`,
+      default `none`.
+   b. `Extra skills`, a list naming any mirrored skill outside the ones
+      that install everywhere, default `none`.
+6. Are the cybersecurity skills reviewed before mirroring, since some hold
+   offensive security procedures?
+   a. (recommended) No up-front review of all 818: they are mirrored
+      whole as decided, and a skill is read through when a repository
+      first names it in its setting, before that repository installs it.
+   b. Reviewed in full before the mirror is committed.
+   c. Only a list of the offensive ones is made now, so a repository
+      naming one is warned.
+
+**Stopping point.** Grilling, round 1 asked (six questions above). First
+step: record the answers as decisions and ask the next round, then mirror
+one source at a time, one commit each.
 
 ### Build The Private Terms List
 
