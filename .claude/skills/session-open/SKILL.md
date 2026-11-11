@@ -1,7 +1,7 @@
 ---
 name: session-open
 description: >-
-  Start a Claude Code session in a repository that uses Claude-Kit. Takes an optional task slug: an existing task resumes on its branch, a slug that names no task starts a new task under that name, claimed on its branch at once and then settled by grilling, and with no slug it lists the parked task branches and queued tasks and asks. In a repository that has never used the kit, it proposes the Session Settings and builds TASKS.md and HANDOFF.md first. Names the developer running it from their GitHub account and Claude Code branch prefix, warns before taking a task another developer still holds, and records who took each task. Reads the authority file, CLAUDE.md, TASKS.md and HANDOFF.md, reports the kit's version and any stray branch, puts the session on the task's own branch, task/<task-slug>, and works the task from the stopping point in its block. With the argument temp it opens a temporary session instead: it reads and reports the same way, answers questions without taking a branch or writing anything, merges the integration branch into the default branch when the owner asks, and turns what is to be kept or built into tasks when the owner asks. With the argument import it imports the session references of the repositories REFERENCES.md names, on a task of its own. With the argument backfill it writes the session reference the session it runs in is missing, or in a brand new session asks which past closes with no reference to write, on a task of its own that closes itself. Runs only when the owner invokes /session-open.
+  Start a Claude Code session in a repository that uses Artificial Field Kit. Takes an optional task slug: an existing task resumes on its branch, a slug that names no task starts a new task under that name, claimed on its branch at once and then settled by grilling, and with no slug it lists the parked task branches and queued tasks and asks. In a repository that has never used the kit, it proposes the Session Settings and builds TASKS.md and HANDOFF.md first. Names the developer running it from their GitHub account and Claude Code branch prefix, warns before taking a task another developer still holds, and records who took each task. Reads the authority file, CLAUDE.md, TASKS.md and HANDOFF.md, reports the kit's version and any stray branch, puts the session on the task's own branch, task/<task-slug>, and works the task from the stopping point in its block. With the argument temp it opens a temporary session instead: it reads and reports the same way, answers questions without taking a branch or writing anything, merges the integration branch into the default branch when the owner asks, and turns what is to be kept or built into tasks when the owner asks. With the argument import it imports the session references of the repositories REFERENCES.md names, on a task of its own. With the argument backfill it writes the session reference the session it runs in is missing, or in a brand new session asks which past closes with no reference to write, on a task of its own that closes itself. Runs only when the owner invokes /session-open.
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,7 @@ it is not in the repository it did not survive, which is a `session-close`
 failure to report rather than a gap to fill by guessing.
 
 This skill names no value that differs between repositories. Each one is in the
-`## Session Settings` section of `CLAUDE.md`, and `.claude/kit/HOUSE.md` holds
+`## Session Settings` section of `CLAUDE.md`, and `.claude/afk/HOUSE.md` holds
 the rules this skill applies. Below, the owner, the authority file, the default
 branch and the integration branch are what Session Settings says they are.
 
@@ -30,7 +30,7 @@ this file.
 Before anything checks out another branch, note the branch the session
 started on, with `git rev-parse --abbrev-ref HEAD`. Then name the developer
 running the session, `<PREFIX> / <HANDLE>`, by Developers in
-`.claude/kit/HOUSE.md`: the handle from the account behind the session's
+`.claude/afk/HOUSE.md`: the handle from the account behind the session's
 GitHub access, and the prefix from the branch just noted. Ask for the handle
 only when the GitHub access names no account.
 
@@ -70,7 +70,7 @@ Read, in this order, as they exist on the base:
 
 1. The authority file, when Session Settings names one. It overrides everything,
    including this file.
-2. `CLAUDE.md`, and `.claude/kit/HOUSE.md`, which it imports.
+2. `CLAUDE.md`, and `.claude/afk/HOUSE.md`, which it imports.
 3. `TASKS.md`
 4. `HANDOFF.md`
 
@@ -89,7 +89,7 @@ and stops being questioned.
 **Then check the kit:**
 
 ```
-bash .claude/kit/kit.sh status
+bash .claude/afk/afk.sh status
 ```
 
 It prints the `Kit:` line for step 6: the installed version, whether the kit's
@@ -97,7 +97,7 @@ source has a newer one, and any kit-owned file edited in place. When it
 reports a newer release, say in part 1 of the reply that the owner takes it
 with the update prompt in the kit's README. Never update the kit here. An
 update is the owner's call, made on a task branch in its own commit with
-`bash .claude/kit/kit.sh update`. A kit-owned file edited in place is
+`bash .claude/afk/afk.sh update`. A kit-owned file edited in place is
 reported and not reverted, because the edit may be the only copy of a fix
 that belongs in the kit.
 
@@ -248,7 +248,7 @@ session opening after this one sees the task as taken. If the push is rejected b
 session claimed the task first: tell the owner and go back to step 4 without
 it.
 
-**If a merge conflicts,** apply the conflict rule in `.claude/kit/HOUSE.md`.
+**If a merge conflicts,** apply the conflict rule in `.claude/afk/HOUSE.md`.
 The paths under Generated files are never merged by hand: take either side,
 run the Regenerate commands, and stage what they write. Where both sides only
 added lines to `TASKS.md` or `HANDOFF.md`, keep both, and where git
@@ -262,7 +262,7 @@ Never create a branch by any other name, never commit to the default branch or
 the integration branch, and never push the branch the cloud harness assigned.
 
 If a merge in this step changed any file under `.claude/skills/` or
-`.claude/kit/`, re-read `.claude/skills/session-open/SKILL.md` and follow the
+`.claude/afk/`, re-read `.claude/skills/session-open/SKILL.md` and follow the
 version now on disk from step 6. If it changed the authority file, `CLAUDE.md`
 or `HANDOFF.md`, read them again.
 
@@ -276,7 +276,7 @@ Task:     <task slug>, <resumed | started from the queue | new>
 Branch:   task/<slug> <resumed at <hash> | created from <the base branch's name>>
 Preview:  <the Task preview address with the slug in it | none>
 Base:     <origin/<integration branch> at <hash> | origin/<default branch> at <hash>, <integration branch> absent>
-Kit:      <the line kit.sh status printed>
+Kit:      <the line afk.sh status printed>
 Holder:   <the holder line this session added>
 Parked:   <none | the other task branches, each with its task's status and top holder line>
 Strays:   <none | branch names and any open pull request into the integration branch>
@@ -295,7 +295,7 @@ branch created in this step, the host builds it from the push that claimed it,
 so the address works a few minutes later; say so on the `Preview:` line.
 
 A task this session opened by case c or d is settled first by grilling,
-`.claude/kit/practices/grilling.md`, on its claimed branch: each round is
+`.claude/afk/practices/grilling.md`, on its claimed branch: each round is
 written into its block and pushed before it is asked, and each answer
 becomes a decision there. Done when the frontier is empty.
 
@@ -303,7 +303,7 @@ Then work the task from its stopping point. Follow its detail block. Do not
 re-plan a task the block already specifies and do not ask the owner to
 re-confirm anything recorded under Decisions Made. When the block leaves open
 a decision the next step depends on, settle it first by grilling,
-`.claude/kit/practices/grilling.md`, and record the answer in the block.
+`.claude/afk/practices/grilling.md`, and record the answer in the block.
 
 ## While working
 
@@ -327,11 +327,11 @@ whether to close it now or to switch to another task first.
 
 When it is blocked instead on answers someone other than the owner must
 give, or on more than a couple the owner needs time to find, gather them by
-a questionnaire, `.claude/kit/practices/questionnaire.md`, and mark it
+a questionnaire, `.claude/afk/practices/questionnaire.md`, and mark it
 `BLOCKED` the same way, its `Blocked:` line naming the questionnaire.
 
 If a credential is produced or discovered, place it before it is forgotten, by
-the Credentials setting and the credential rule in `.claude/kit/HOUSE.md`. Do
+the Credentials setting and the credential rule in `.claude/afk/HOUSE.md`. Do
 not leave it only in the conversation without saying so.
 
 Never use an em dash.
@@ -346,7 +346,7 @@ does not stop it, because it changes nothing, though every stray is reported.
 
 **It stays read-only.** It stays detached on the base, takes no branch, and
 writes, commits and pushes nothing. A file uploaded to it is kept only if it
-opens a task, by Copies in `.claude/kit/references.md`. It never pushes the branch the cloud
+opens a task, by Copies in `.claude/afk/references.md`. It never pushes the branch the cloud
 harness assigned. The one exception is a promotion the owner asks for, below. Report these lines, as one fenced code block with no
 backticks inside it, then answer what the owner asked:
 
@@ -354,7 +354,7 @@ backticks inside it, then answer what the owner asked:
 Task:     none, temporary session
 Branch:   none, detached at <the base branch's name> <hash>
 Base:     <as in step 6>
-Kit:      <the line kit.sh status printed>
+Kit:      <the line afk.sh status printed>
 Parked:   <none | the task branches, each with its task's status and top holder line>
 Strays:   <none | as in step 6>
 Questions: <none | the number of open questions in HANDOFF.md>
@@ -432,15 +432,15 @@ so on the low-context line and offer to open its task before anything else.
 For `/session-open import`. It ran steps 1 to 3 like any session, and a
 stray stops it there, because it opens a task. In a repository new to the
 kit it does not run First Run: say so and stop. Read
-`.claude/kit/references.md` before anything below; it holds the rules for
+`.claude/afk/references.md` before anything below; it holds the rules for
 each step.
 
 1. **Turned on?** Read `REFERENCES.md` on the base. With none, say imports
-   are not turned on, offer the setup in `.claude/kit/references.md` as a
+   are not turned on, offer the setup in `.claude/afk/references.md` as a
    numbered question, and stop. Nothing is written.
 2. **One at a time.** When a `task/import-<yymmddhhmmss>` branch exists on
    the remote, `import-` and twelve digits and nothing else, follow One at
-   a time in `.claude/kit/references.md` and stop until the developer
+   a time in `.claude/afk/references.md` and stop until the developer
    answers. Nothing is written.
 3. **Attach each source** under Sources, read-only, through the session's
    GitHub access: in a cloud session, attach it with read access and clone
@@ -448,7 +448,7 @@ each step.
    branch its row names. A source that cannot be reached is reported, and
    its row is left as it is.
 4. **List what is new** in each source by What is new in
-   `.claude/kit/references.md`. Done when every reachable source has its
+   `.claude/afk/references.md`. Done when every reachable source has its
    list, empty or not.
 5. **Report** these lines, as one fenced code block with no backticks
    inside it:
@@ -456,7 +456,7 @@ each step.
    ```
    Task:     <none, nothing to import | import-<yymmddhhmmss>, new>
    Base:     <as in step 6>
-   Kit:      <the line kit.sh status printed>
+   Kit:      <the line afk.sh status printed>
    Parked:   <as in step 6>
    Strays:   <as in step 6>
    Sources:  <each source, with its count of new references or unreachable>
@@ -468,7 +468,7 @@ each step.
    case c with no grilling: its block lists each source and each new
    reference, oldest first, each `not imported`, and the Import procedure
    `REFERENCES.md` names. Claim it by step 5.
-7. **Import** each reference by The import in `.claude/kit/references.md`,
+7. **Import** each reference by The import in `.claude/afk/references.md`,
    by the Import procedure `REFERENCES.md` names, the kit default first
    settling every subject's home by its Homes step, one commit per reference
    holding the import, its copies by Copies, its source's row in
@@ -483,7 +483,7 @@ It then ends with `/session-close`, like any task.
 
 For `/session-open backfill`. It ran steps 1 to 3 like any session, and a
 stray stops it there. In a repository new to the kit it does not run First
-Run: say so and stop. Read Backfilling in `.claude/kit/references.md`
+Run: say so and stop. Read Backfilling in `.claude/afk/references.md`
 before anything below.
 
 1. **One at a time, for past closes only.** A backfill in a session that
@@ -517,9 +517,9 @@ before anything below.
 
 ## First Run
 
-For a repository that has never used the kit. `kit.sh install` has written the
+For a repository that has never used the kit. `afk.sh install` has written the
 kit-owned files into the working tree and nothing is committed yet. If
-`.claude/kit/kit.sh` is not there, stop and ask the owner to install the kit
+`.claude/afk/afk.sh` is not there, stop and ask the owner to install the kit
 first, by the command in the kit's README.
 
 1. **Find the default branch.** `git symbolic-ref --short refs/remotes/origin/HEAD`
@@ -529,7 +529,7 @@ first, by the command in the kit's README.
    covers it.
 
 2. **Read the repository and settle a value for every Session Settings key.**
-   The keys and what each means are at the end of `.claude/kit/HOUSE.md`. Look
+   The keys and what each means are at the end of `.claude/afk/HOUSE.md`. Look
    at:
    - `.github/workflows/` and any other CI configuration, for the checks that
      run on a pull request and the commands behind them.
@@ -567,12 +567,12 @@ first, by the command in the kit's README.
      credentials or the owner has said it will. When it keeps them its own
      way, it is asked, with keeping that way as one option and `kit
      standard` as another. Otherwise it is `kit standard`, item 4 runs the
-     setup in `.claude/kit/credentials.md` on the first task's branch, and
+     setup in `.claude/afk/credentials.md` on the first task's branch, and
      item 5 reports what it leaves for the owner. **Secrets checks** is
      `none` until that setup writes it.
 
    Every other key the repository does not show takes the default in
-   `.claude/kit/templates/CLAUDE.md`. A value the repository shows more than
+   `.claude/afk/templates/CLAUDE.md`. A value the repository shows more than
    one answer for is a question, never a guess.
 
 3. **Ask only what is left.** Ask about each value still open, and about each
@@ -595,17 +595,17 @@ first, by the command in the kit's README.
 4. **Write the settings and state files on the first task's branch.** The
    first task is the one the owner named, or `kit-setup` when they named none.
    Create its branch from the default branch as step 5 does. Then:
-   - `CLAUDE.md`. When one exists, add `@.claude/kit/HOUSE.md` as its first
+   - `CLAUDE.md`. When one exists, add `@.claude/afk/HOUSE.md` as its first
      line, a title and a line saying what the repository is when it has
      neither, and the Session Settings section after them. Remove each
      section that says nothing `HOUSE.md` does not already say, and name it
      in the reply, because two copies of a rule drift apart. A section that
      says more stays unless the owner answered to remove it. Keep everything
      else. When there is no `CLAUDE.md`, start from
-     `.claude/kit/templates/CLAUDE.md`.
-   - `TASKS.md` from `.claude/kit/templates/TASKS.md`, with the first task's
+     `.claude/afk/templates/CLAUDE.md`.
+   - `TASKS.md` from `.claude/afk/templates/TASKS.md`, with the first task's
      block under Open Tasks.
-   - `HANDOFF.md` from `.claude/kit/templates/HANDOFF.md`.
+   - `HANDOFF.md` from `.claude/afk/templates/HANDOFF.md`.
    - Whatever the Regenerate commands write, by running them.
    - The kit's paths, in any list of the repository's files that a
      `README.md` or contributing guide keeps.
@@ -615,7 +615,7 @@ first, by the command in the kit's README.
    whether to fold it into the kit's format or to move it aside.
 
    Commit all of it together with the kit-owned files, including
-   `.claude/kit/MANIFEST`, and push the branch at once. That push is the claim.
+   `.claude/afk/MANIFEST`, and push the branch at once. That push is the claim.
 
 5. **Tell the owner what only they can set,** as notices at the top of part 1
    of the reply, each on its own line beginning `Action needed:`. They are
@@ -628,7 +628,7 @@ first, by the command in the kit's README.
    - When there is a preview host, add `task/*` and the integration branch to
      its list of branches that build previews.
    - When Credentials is `kit standard`, whatever the setup in
-     `.claude/kit/credentials.md`, Setting it up, leaves for the owner, such
+     `.claude/afk/credentials.md`, Setting it up, leaves for the owner, such
      as making the keys.
    - When the repository is public, turn on secret scanning with push
      protection, under its Settings, Advanced Security. Every close pushes a

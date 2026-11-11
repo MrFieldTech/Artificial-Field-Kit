@@ -3,9 +3,9 @@
 //
 // The same command as `secrets.py decrypt`, for a build host that has Node
 // and cannot run python3 or the age command line tool. Use secrets.py where
-// it runs: .claude/kit/credentials.md says when this one is offered.
+// it runs: .claude/afk/credentials.md says when this one is offered.
 //
-//   node .claude/kit/secrets-decrypt.mjs --out <dir>
+//   node .claude/afk/secrets-decrypt.mjs --out <dir>
 //
 // Copies every <slug>.secrets.md outside .claude/references/ and
 // .claude/imported/ to the same path under <dir>, which git must ignore, with each value in plaintext.

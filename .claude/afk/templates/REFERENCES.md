@@ -4,7 +4,7 @@
 
 Where this repository imports session references from, and how far each
 import got. `/session-open import` reads it and the import task writes it.
-`.claude/kit/references.md` holds the rules.
+`.claude/afk/references.md` holds the rules.
 
 ## Procedure
 
