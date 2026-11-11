@@ -125,9 +125,27 @@ and emilkowalski/skills.
   skill is read through when a repository first names it under Security
   skills, before that repository installs it, and the whole collection is
   reviewed later by its own task, `security-skill-review`.
+- **A name clash stops an install or update.** MrFieldTech, 2026-11-11.
+  When a repository holds a skill or agent of its own where a mirrored one
+  would go, `afk.sh` names the clash and changes nothing, because the
+  repository's file may be the only copy of its own work.
+- **cloudflare/security-audit-skill installs everywhere,** like the
+  emilkowalski skills. MrFieldTech, 2026-11-11.
+- **This repository does not install the mirrors into itself.**
+  MrFieldTech, 2026-11-11. Its sessions write the protocol and rarely
+  need them, and a second copy would have to be kept in step.
 
 **Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
+- Claude Code loads project skills only from `.claude/skills/<name>/`
+  (and nested `<dir>/.claude/skills/`, which load only once a file under
+  `<dir>` is read or edited), and project agents only from
+  `.claude/agents/`, by its skills and sub-agents documentation read
+  2026-11-11. A folder such as `.claude/afk/skills/` is never loaded.
+  The same documentation says a plugin folder, holding
+  `.claude-plugin/plugin.json`, placed under `.claude/skills/` loads as
+  `<name>@skills-dir`, its skills namespaced `/<name>:<skill>`, possibly
+  only after the workspace trust dialog. Not tried in a session.
 - `afk.sh status`, run at every `/session-open` in every repository,
   clones the kit's source with `--depth 1` to compare it, and `afk.sh
   update` does the same. A 49 MB mirror kept in the kit's tree is
@@ -141,31 +159,28 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Open questions, round 2.**
+**Open questions, round 3.**
 
-7. A repository already holds a skill or agent of its own under a name a
-   mirrored one installs to, such as `.claude/skills/animate/`. What does
-   `afk.sh install` or `update` do?
-   a. (recommended) Refuse, name the clash, and change nothing, because
-      the repository's file may be the only copy of its own work.
-   b. Replace it and print a line, as it does today for a kit directory
-      no install wrote.
-8. Where does cloudflare/security-audit-skill install? No decision covers
-   it yet.
-   a. (recommended) Everywhere, like the emilkowalski skills: it is one
-      skill, so it adds one line to every session's skill list.
-   b. Only by name, under Security skills.
-9. Does this repository install the everywhere set into itself, so its
-   own sessions can use them? Its sessions run on the source files, and
-   `vendor/` is not where Claude Code looks for skills.
-   a. (recommended) No: this repository writes the protocol and rarely
-      needs them, and a copy here would be a second copy to keep in step.
-   b. Yes: `refresh.sh` also writes them into this repository's
-      `.claude/skills/` and `.claude/agents/`.
+10. MrFieldTech asked, 2026-11-11, whether everything the kit installs
+    beyond its own files should sit in one folder the kit owns, so a
+    repository's owner sees what the kit put there. Claude Code never
+    loads skills from `.claude/afk/skills/`. Which layout?
+    a. (recommended) One plugin folder, `.claude/skills/afk-vendor/`,
+       holding every installed mirrored skill and the agent, used as
+       `/afk-vendor:animate`. Namespaced, so no clash with a repository's
+       own skills. This changes the decision that `code-simplifier` goes
+       under `.claude/agents/`, though not why: it is still a
+       committed agent the session hands work to. Built only after a
+       live session shows the folder loads, in the cloud as well as
+       locally, with no extra step; otherwise the next option.
+    b. Each mirrored skill in its own `.claude/skills/<name>/` and the
+       agent in `.claude/agents/`, with `.claude/afk/MANIFEST` the list
+       of what the kit installed and `afk.sh status` able to print it.
 
-**Stopping point.** Grilling, round 2 asked (questions 7 to 9 above).
-First step: record the answers as decisions, then mirror one source at a
-time, one commit each.
+**Stopping point.** Grilling, round 3 asked (question 10 above). First
+step: record the answer; for 10a, test a plugin folder under
+`.claude/skills/` in a live session before building on it. Then mirror one
+source at a time, one commit each.
 
 ### Review The Mirrored Cybersecurity Skills
 
