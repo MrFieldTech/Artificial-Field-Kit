@@ -173,26 +173,38 @@ this task was asked for, in MrFieldTech's words condensed:
   separate number, 1.2, is dropped; changes go in the kit's
   `CHANGELOG.md`.
 
-**Done so far.** `.claude/afk/standards/design.md` drafted: the twenty
-rules as DESIGN-1 to DESIGN-20 in six groups, each with its reason and
-check, and a table of the emilkowalski skills by work.
+- **The full featured part fixes no stack.** MrFieldTech, 2026-11-11.
+  Each site chooses its backend, database and authentication and records
+  them in its `CLAUDE.md`; when sites built this way show a common choice,
+  the kit adds it.
+- **`design.md` holds as drafted.** MrFieldTech, 2026-11-11.
 
-**Open questions, round 3.** Asked 2026-11-11; recommended answer first.
+**Done.** Release 2.1.0, on this branch:
 
-1. What does the full featured section fix beyond the user rules and the
-   hosting warning? a. Nothing: each site chooses its backend, database
-   and authentication and records them in its `CLAUDE.md`, and the
-   section holds only rules that hold for any stack. b. One stack now,
-   named by MrFieldTech.
-2. Review of `design.md`: a. It holds as drafted. b. Changes, named by
-   MrFieldTech.
+- `.claude/afk/standards/site.md`: the source standard's version 1.2,
+  generic, as Part 1, with FONT-1 a MUST and FONT-2 forbidding font hosts;
+  new Which part applies (SITE-1 to SITE-3), the hosting line (HOST-1 to
+  HOST-4), Part 2 (FULL, TRACK, AGE, MAIL and UPLOAD rules and a full
+  featured checklist), the change process moved to the kit, and the
+  `CLAUDE.md` template pointed at the kit's standards. The source's
+  frontmatter, Related links and change log were left out.
+- `.claude/afk/standards/content-policy.md`, the policy template, with a
+  TODO per site-specific fact.
+- `.claude/afk/standards/design.md`, DESIGN-1 to DESIGN-20.
+- `HOUSE.md`: a Standards section, and standards ranked fifth in Which
+  file wins, before the practices.
+- `check.sh`: addresses whose host is a `<placeholder>`, localhost, the
+  sitemap namespace or the escaped prefix a check greps for are allowed;
+  `HOUSE.md` must name every standard.
+- `VERSION`, `CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
 
-**Stopping point.** Round 3 asked. Next: record the answers, then write
-`.claude/afk/standards/site.md` from the source standard, generic, in
-pieces: common rules, the static part, then the full featured part. Then
-`HOUSE.md` gains a Standards section beside Practices, the `CLAUDE.md`
-template names the standards, and the release: `VERSION` 2.1.0,
-`CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
+**Follow-up outside this repository.** The repository that held the
+standard keeps its entry as the source until a task there turns it into a
+pointer to the kit, per the first decision. Repositories with sites take
+2.1.0 by update.
+
+**Stopping point.** Work complete and `bash check.sh` passes. Next:
+`/session-close`, which sets `DONE` and merges into `preview`.
 
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
