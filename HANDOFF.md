@@ -13,6 +13,7 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-11 | GRM / MRFIELDTECH | `house-instructions`, DONE, merged into `preview`: release 2.2.0 merges the owner's general instructions into `HOUSE.md`, adds a Permission to fail section with its failure report, and bans the en dash, which `check.sh` now enforces | `2768c9d..ac6d2e7` |
 | 2026-11-11 | GRM / MRFIELDTECH | `skill-incorporation`, DONE, merged into `preview`: release 2.1.0 adds `.claude/afk/standards/` with the site standard (static and full featured parts, the hosting line), a content policy template and twenty design rules, named in `HOUSE.md`; `house-instructions` and `vendored-skills` opened for later | `4995d34..003517b` |
 | 2026-11-11 | GRM / MRFIELDTECH | `unique-name`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.0.0 renames the kit Artificial Field Kit and moves it from `.claude/kit/` to `.claude/afk/`, with a forwarder that moves a 1.x repository on its next update; `private-terms` opened for later | `70399cf..2b0503b` |
 | 2026-11-10 | GRM / MRFIELDTECH | `backfill-problems`, DONE, merged into `preview`: release 1.16.0 has the BACKFILL RECOVERY PROMPT check and read the kit on the base rather than the default branch, and backfill only the repository the session worked in | `6d6212a..333e4c2` |
@@ -262,7 +263,8 @@ None.
   It happened again in `session-references` on 2026-10-14, and in
   `check-block-fields`, `task-name-changes` and `backfill-intent` on
 2026-10-16, and in `backfill-no-close` on 2026-10-17, and in
-  `backfill-problems` on 2026-11-10. Open a task for it?
+  `backfill-problems` on 2026-11-10, and in `house-instructions` on
+  2026-11-11. Open a task for it?
 - **Should `grilling.md` have a question carried from an earlier session
   rewritten before it is asked?** Raised by GRM / MRFIELDTECH, 2026-10-16,
   in `check-block-fields`. Its open questions were written in shorthand when
@@ -280,6 +282,12 @@ None.
   file. Open a task for it?
 
 ## Flagged As Unverified
+
+**The 2.2.0 response rules in a live session.** Part 1 now leads with the
+answer, and Writing for the owner and Commands for the owner are new; no
+session has yet run on them. Verified by: the first session that loads
+2.2.0, checking its replies keep the two-part format with the answer
+first.
 
 **Cloudflare's free plan and the site standard's hosting line.** The
 session believed, from memory, that the free plan includes Pages Functions,

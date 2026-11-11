@@ -4,6 +4,33 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `afk.sh update` when its owner asks.
 
+## 2.2.0
+
+The house rules carry the owner's general instructions and a permission to
+fail.
+
+- Rules for every action: never invent or assume a name, figure, price,
+  version, source, feature or which tool is in use, and say "I don't know"
+  in a reply; label a guess as one; point out an error, contradiction or
+  flawed premise at once, including in the session's own earlier work, and
+  ask which is current when the owner and the files disagree; say so when
+  a recommendation reverses a recorded decision; prefer automating
+  repeatable work. The dash rule now bans the en dash too.
+- A new section, Permission to fail: make a real attempt, and when the goal
+  is out of reach, give a failure report instead of a workaround that only
+  looks right. The report is kept in full under What brevity never
+  suppresses.
+- Response format: part 1 leads with the answer, Yes or No first, a verdict
+  and its deciding factors first; no affirmation or filler. New: Writing
+  for the owner, for a capable non-specialist unless `CLAUDE.md` says
+  otherwise, acronyms spelled out, American English; and Commands for the
+  owner, complete commands, and only the confirming ones first when a step
+  depends on what the owner must check.
+- `check.sh` fails on an en dash as on an em dash.
+
+A repository that updates should look for en dashes in its own files, which
+the house rules now forbid.
+
 ## 2.1.0
 
 The kit carries standards: how a website is built and how any interface

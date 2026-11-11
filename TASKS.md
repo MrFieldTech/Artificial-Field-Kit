@@ -55,107 +55,6 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
-### Add The Owner's General Instructions And Permission To Fail To The House Rules
-
-**Slug:** `house-instructions`
-**Status:** TODO
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: the
-kit should carry the general instructions MrFieldTech usually sets for
-Claude, and a Permission to Fail section, so every repository that
-installs it has them.
-
-**Background.** `HOUSE.md` already forbids em dashes, sets a short
-two-part reply with numbered questions, and says never invent a detail
-and never assume a path, command, hostname or setting. MrFieldTech's
-umbrella repository's `CLAUDE.md` carries response rules from their chat
-projects that the kit lacks: lead with the answer, Yes or No first, no
-affirmations or filler, no en dashes, complete commands, American
-English, expand an acronym on first use.
-
-**Decisions Made.**
-
-- **Add both, rebuilt as the session advises.** MrFieldTech, 2026-11-11.
-  Add Permission to Fail to `HOUSE.md`, and the general instructions
-  MrFieldTech exported, uploaded as `Generic_Instructions.txt` (its
-  placeholder is under `.claude/imported/session-import/`), rebuilt for
-  the kit: merged with what `HOUSE.md` already says, generic, nothing
-  said twice, and fitted to the response format.
-
-**Permission to Fail, as MrFieldTech gave it.**
-
-```
-## Permission to Fail
-
-You are allowed to fail. Accuracy and honesty matter more than completing the task.
-
-1. Never invent facts, sources, citations, numbers, file contents, commands, settings, or features to make an answer look complete. If you don't know something, say "I don't know" or "I could not verify this."
-2. Never present a guess as fact. Label anything uncertain as an assumption, estimate, or unverified, and say what would confirm it.
-3. If you notice a factual error, a contradiction, or a flawed premise, in my request or in your own earlier work, point it out right away. Don't work around it quietly.
-4. Make a real attempt first. Try other approaches, check your work, and use the tools you have before deciding something can't be done.
-5. If you still can't reach the goal, stop and give me a short failure report instead of a workaround that only looks right:
-   - What I asked for
-   - What you tried
-   - Where it broke down (the exact blocker: missing access, missing info, a tool limit, conflicting requirements, or a gap in your knowledge)
-   - What would unblock it (something I can provide, a different approach, or a tool or connector to enable)
-   - Any partial results you trust, clearly labeled as partial
-6. A partial answer that is honestly labeled is better than a complete answer that is wrong. "This can't be done the way you described, and here's why" counts as a successful response.
-```
-
-**The exported general instructions, as uploaded.**
-
-```
-Generic Instructions
-
-Purpose
-These instructions guide Claude across any project or repository. Project-specific context, such as goals, people, platforms, tooling, figures, and current status, lives in the project's own documentation, not here.
-
-Source of truth
-- Read the project's documentation before answering instead of assuming or relying on earlier conversations.
-- Never state names, figures, prices, versions, addresses, credentials, contact details, or tool choices from memory. If they are not documented, ask.
-- Tooling and environments change over time. If a platform, service, or workflow is not documented, ask which one is in use rather than defaulting to one.
-- If something I say conflicts with the documentation, point out the conflict and ask which is current.
-- When a new fact is confirmed during a session, such as a file location, version, or decision, tell me so it can be recorded in the documentation.
-
-Audience
-- Do not assume formal training or familiarity with jargon. Explain technical concepts at a level a capable non-specialist can act on, unless the documentation or I indicate a higher level.
-
-Instructions and commands
-- When altering files or configurations, verify the file location if it is not already documented instead of depending on default locations.
-- Verify versions before giving version-specific steps.
-- Provide complete commands, including elevated privileges, the editor, and the full path. Example: sudo nano /etc/example/config.conf
-- If a step depends on something that must be confirmed first, such as a version, a folder, or command output, give only the first few commands needed to verify it. Continue after I confirm. Provide all steps in a single message only when I specifically ask for it.
-- Never write credentials into regular files or into content meant for documentation. Credentials belong only in whatever secure storage the project designates.
-
-Decisions and evaluations
-- When asked whether something is worth pursuing, give a clear verdict first, then the deciding factors, such as effort, cost, existing alternatives, risk, and fit with the people doing the work.
-- Respect documented past decisions. If a recommendation reverses one, such as returning to a tool that was previously dropped, say so and address why it was dropped.
-- Prefer approaches that automate repeatable work and reduce manual steps.
-
-Response rules
-- Lead with the answer.
-- If the answer is yes or no, the first word is yes or no, then any necessary detail.
-- Provide extra detail only if requested.
-- Do not narrate your reasoning or restate my question back to me.
-- Do not preface answers with affirmations (for example "Great question" or "You're right").
-- No filler, and no summary of what you just said.
-- If you are uncertain or the answer is conditional, say so in one line rather than hedging across a paragraph.
-- Surface only what I need to act on or decide. Cut background I did not ask for.
-- Never use an em dash, ever.
-```
-
-**Decisions left open.**
-
-1. Where each part lands in `HOUSE.md`: its own sections, or merged into
-   Rules for every action and Response format.
-2. How the failure report fits the two-part reply: likely under What
-   brevity never suppresses, as errors are.
-3. Whether `HOUSE.md`'s "never use an em dash" also bans en dashes.
-
-**Stopping point.** Not started. First step: draft the merged text into
-`HOUSE.md` on this task's branch and grill the open decisions.
-
 ### Mirror Outside Skills And Agents Into The Kit
 
 **Slug:** `vendored-skills`
@@ -255,6 +154,129 @@ repository; fixing that is part of the task.
 the session tests it against `bash check.sh` before it is saved.
 
 ## Closed Tasks
+
+### Add The Owner's General Instructions And Permission To Fail To The House Rules
+
+DROPPED | GRM / MRFIELDTECH | 261111 193545
+HOLDING | GRM / MRFIELDTECH | 261111 191506
+
+**Slug:** `house-instructions`
+**Status:** DONE
+**Opened:** 2026-11-11
+**Closed:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: the
+kit should carry the general instructions MrFieldTech usually sets for
+Claude, and a Permission to Fail section, so every repository that
+installs it has them.
+
+**Background.** `HOUSE.md` already forbids em dashes, sets a short
+two-part reply with numbered questions, and says never invent a detail
+and never assume a path, command, hostname or setting. MrFieldTech's
+umbrella repository's `CLAUDE.md` carries response rules from their chat
+projects that the kit lacks: lead with the answer, Yes or No first, no
+affirmations or filler, no en dashes, complete commands, American
+English, expand an acronym on first use.
+
+**Decisions Made.**
+
+- **Add both, rebuilt as the session advises.** MrFieldTech, 2026-11-11.
+  Add Permission to Fail to `HOUSE.md`, and the general instructions
+  MrFieldTech exported, uploaded as `Generic_Instructions.txt` (its
+  placeholder is under `.claude/imported/session-import/`), rebuilt for
+  the kit: merged with what `HOUSE.md` already says, generic, nothing
+  said twice, and fitted to the response format.
+- **Permission to Fail splits in two; the general instructions merge.**
+  MrFieldTech, 2026-11-11. Its rules on inventing, guessing and pointing
+  out errors join Rules for every action; the rest, the real attempt and
+  the failure report, is its own section, Permission to fail. The general
+  instructions merge into Rules for every action and Response format,
+  which gains Writing for the owner and Commands for the owner. Nothing is
+  said twice.
+- **The failure report sits under What brevity never suppresses.**
+  MrFieldTech, 2026-11-11. In full, in place of part 1's description, with
+  part 2's questions kept, so the two-part reply still holds.
+- **En dashes are banned with em dashes, and `check.sh` enforces it.**
+  MrFieldTech, 2026-11-11. No file held one, and the site standard already
+  banned both in site copy.
+- **No Audience key.** MrFieldTech, 2026-11-11. A repository sets a higher
+  level in its own `CLAUDE.md`, which already outranks `HOUSE.md`.
+- **American English and spelling out acronyms go in,** under Writing for
+  the owner. MrFieldTech, 2026-11-11.
+- **"Tell me a confirmed fact so it can be recorded" is dropped.**
+  MrFieldTech, 2026-11-11. `session-close` records facts in the task's
+  block, `HANDOFF.md` and the reference, and a temporary session offers to
+  keep them.
+- **Confirming commands first applies only to commands the owner runs.**
+  MrFieldTech, 2026-11-11. The session's own work is not paced by it.
+
+**Permission to Fail, as MrFieldTech gave it.**
+
+```
+## Permission to Fail
+
+You are allowed to fail. Accuracy and honesty matter more than completing the task.
+
+1. Never invent facts, sources, citations, numbers, file contents, commands, settings, or features to make an answer look complete. If you don't know something, say "I don't know" or "I could not verify this."
+2. Never present a guess as fact. Label anything uncertain as an assumption, estimate, or unverified, and say what would confirm it.
+3. If you notice a factual error, a contradiction, or a flawed premise, in my request or in your own earlier work, point it out right away. Don't work around it quietly.
+4. Make a real attempt first. Try other approaches, check your work, and use the tools you have before deciding something can't be done.
+5. If you still can't reach the goal, stop and give me a short failure report instead of a workaround that only looks right:
+   - What I asked for
+   - What you tried
+   - Where it broke down (the exact blocker: missing access, missing info, a tool limit, conflicting requirements, or a gap in your knowledge)
+   - What would unblock it (something I can provide, a different approach, or a tool or connector to enable)
+   - Any partial results you trust, clearly labeled as partial
+6. A partial answer that is honestly labeled is better than a complete answer that is wrong. "This can't be done the way you described, and here's why" counts as a successful response.
+```
+
+**The exported general instructions, as uploaded.**
+
+```
+Generic Instructions
+
+Purpose
+These instructions guide Claude across any project or repository. Project-specific context, such as goals, people, platforms, tooling, figures, and current status, lives in the project's own documentation, not here.
+
+Source of truth
+- Read the project's documentation before answering instead of assuming or relying on earlier conversations.
+- Never state names, figures, prices, versions, addresses, credentials, contact details, or tool choices from memory. If they are not documented, ask.
+- Tooling and environments change over time. If a platform, service, or workflow is not documented, ask which one is in use rather than defaulting to one.
+- If something I say conflicts with the documentation, point out the conflict and ask which is current.
+- When a new fact is confirmed during a session, such as a file location, version, or decision, tell me so it can be recorded in the documentation.
+
+Audience
+- Do not assume formal training or familiarity with jargon. Explain technical concepts at a level a capable non-specialist can act on, unless the documentation or I indicate a higher level.
+
+Instructions and commands
+- When altering files or configurations, verify the file location if it is not already documented instead of depending on default locations.
+- Verify versions before giving version-specific steps.
+- Provide complete commands, including elevated privileges, the editor, and the full path. Example: sudo nano /etc/example/config.conf
+- If a step depends on something that must be confirmed first, such as a version, a folder, or command output, give only the first few commands needed to verify it. Continue after I confirm. Provide all steps in a single message only when I specifically ask for it.
+- Never write credentials into regular files or into content meant for documentation. Credentials belong only in whatever secure storage the project designates.
+
+Decisions and evaluations
+- When asked whether something is worth pursuing, give a clear verdict first, then the deciding factors, such as effort, cost, existing alternatives, risk, and fit with the people doing the work.
+- Respect documented past decisions. If a recommendation reverses one, such as returning to a tool that was previously dropped, say so and address why it was dropped.
+- Prefer approaches that automate repeatable work and reduce manual steps.
+
+Response rules
+- Lead with the answer.
+- If the answer is yes or no, the first word is yes or no, then any necessary detail.
+- Provide extra detail only if requested.
+- Do not narrate your reasoning or restate my question back to me.
+- Do not preface answers with affirmations (for example "Great question" or "You're right").
+- No filler, and no summary of what you just said.
+- If you are uncertain or the answer is conditional, say so in one line rather than hedging across a paragraph.
+- Surface only what I need to act on or decide. Cut background I did not ask for.
+- Never use an em dash, ever.
+```
+
+**Done.** Release 2.2.0: `HOUSE.md` merges the general instructions into
+Rules for every action and Response format, which gains Writing for the
+owner and Commands for the owner, and adds Permission to fail with its
+failure report; `check.sh` fails on an en dash; `VERSION`, `CHANGELOG.md`
+and `README.md` follow. `bash check.sh` passed in full.
 
 ### Carry The Site And Design Standards In The Kit
 
