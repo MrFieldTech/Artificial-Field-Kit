@@ -90,32 +90,58 @@ raised 2026-10-15.
   the GitHub repository therefore needs the update prompt to accept the
   old URL as well. GitHub is believed to redirect clones of a renamed
   repository's old URL; not verified here.
-- A GitHub repository search on 2026-11-10 found "fieldbook" used by about
-  387 repositories, three of them agent tooling, the largest with 5 stars;
-  "fieldkit" by about 190.
+- A GitHub repository search on 2026-11-11 found no repository named
+  Artificial Field Kit; the seven matches for the words are unrelated. "AFK"
+  alone is crowded among agent tools, such as `afk-code` with 90 stars and
+  `agent-afk` with 63.
+- `.claude/kit` appears 242 times across 20 tracked files, and each
+  installed repository's `CLAUDE.md` imports `@.claude/kit/HOUSE.md`.
 
-**Open questions, round 1.**
+**Decisions.**
 
-1. Which direction should the name take?
-   a. (recommended) A nod to MrFieldTech without naming the account, such
-      as Fieldbook: a surveyor's record of what was done in the field,
-      which is what the session log and references are.
-   b. A name carrying MFT or MrFieldTech, such as MFT Kit. It conflicts
-      with the project rule above and needs an exception to it.
-   c. An unrelated invented name, from a shortlist the session proposes
-      and checks against GitHub.
-   d. A name MrFieldTech gives.
-2. What does the rename reach?
-   a. (recommended) The name only: the five kit-owned places, `README.md`,
-      `CLAUDE.md`, and the GitHub repository, renamed by MrFieldTech. Paths,
-      `kit.sh` and the skill commands stay, so an installed repository
-      only takes the update.
-   b. The name and the paths, such as `.claude/kit/` becoming
-      `.claude/<name>/`. Every installed repository moves its files and its
-      `CLAUDE.md` import, a breaking release.
-   c. The name in the files only; the GitHub repository stays Claude-Kit.
+- **The kit is named Artificial Field Kit, AFK for short.** MrFieldTech,
+  2026-11-11. Field nods to MrFieldTech without naming the account, so the
+  project rule holds, and AFK is what a developer is while an agent codes.
+  Kit is in the name, so "the kit" and "kit" stay as they are in prose.
+  The full name is the distinctive part; AFK alone is not.
+- **The rename reaches everything it can.** MrFieldTech, 2026-11-11. Every
+  current mention of Claude-Kit changes, including the GitHub repository,
+  which MrFieldTech renames. History keeps the old name where it records
+  what happened: `CHANGELOG.md` entries before this release, session
+  references and closed task blocks. No skill or kit-owned file says
+  Claude-Kit afterwards. The release says how an installed repository
+  makes the change so that nothing is lost and everything works after it.
 
-**Stopping point.** Round 1 asked, not yet answered.
+**Open questions, round 2.**
+
+1. Do the kit's folder and file names change?
+   a. (recommended) No. `.claude/kit/`, `kit.sh`, `KIT_SOURCE`,
+      `KIT_PRIVATE_TERMS` and `kit-update-<version>` slugs already match a
+      name ending in Kit, so an installed repository's paths and its
+      `CLAUDE.md` import stay, and the transition is the source URL alone.
+   b. Yes, to `.claude/afk/`, `afk.sh` and so on. The update moves every
+      file and rewrites the import in each repository's `CLAUDE.md`, and
+      MrFieldTech renames the `KIT_PRIVATE_TERMS` secret.
+2. What is the GitHub repository renamed to?
+   a. (recommended) `Artificial-Field-Kit`.
+   b. `ArtificialFieldKit`.
+   c. `AFK`, which is short but not distinctive.
+3. What version is the release?
+   a. (recommended) 2.0.0. The kit's name and source URL change and every
+      install and update prompt in `README.md` changes with them, so an
+      installed repository must take a step beyond running the update.
+   b. 1.17.0, as the next feature release.
+4. How is an installed repository whose `MANIFEST` still names the old
+   URL updated?
+   a. (recommended) The update prompt in `README.md` accepts either the
+      old or the new URL in the `source:` line, and the update writes the
+      new URL into `MANIFEST`, so the next update needs no exception.
+      Relies on GitHub redirecting the old URL, which the session verifies
+      once the repository is renamed.
+   b. The `CHANGELOG.md` entry tells the repository to edit its `MANIFEST`
+      source line by hand before running the update.
+
+**Stopping point.** Round 2 asked, not yet answered.
 
 ## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
