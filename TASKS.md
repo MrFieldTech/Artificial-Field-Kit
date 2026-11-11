@@ -146,7 +146,19 @@ raised 2026-10-15.
   forwarder ends with `.claude/afk/`, the new URL, the import moved, and
   nothing lost.
 
-**Stopping point.** Decisions settled; the rename is next.
+**Done.** Release 2.0.0. `.claude/kit/` moved to `.claude/afk/` and
+`kit.sh` to `afk.sh`, with every live mention of Claude-Kit, the old paths
+and `KIT_` names changed; `CHANGELOG.md` entries before 2.0.0, session
+references, closed task blocks and `HANDOFF.md`'s records keep the old
+name. `afk.sh install` moves a 1.x install, and `.claude/kit/kit.sh` stays
+in this repository, not kit-owned, as the forwarder a 1.x `kit.sh update`
+runs. `todo_sweep.py` accepts a `TODO.md` its 1.x self wrote. `check.sh`
+tests the move, and a real 1.16.0 install updated through its own
+`kit.sh update` to 2.0.0 in a scratch repository on 2026-11-11, reporting
+`2.0.0, current` after. `bash check.sh` passed on `f2754e8`. CI reads
+`AFK_PRIVATE_TERMS`, a secret MrFieldTech must add.
+
+**Stopping point.** Built and checked; `/session-close` is next.
 
 ## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
