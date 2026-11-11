@@ -55,6 +55,136 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Install Standards, House Rules And Vendored Skills With The Kit
+
+HOLDING | GRM / MRFIELDTECH | 261111 162605
+
+**Slug:** `skill-incorporation`
+**Status:** ACTIVE
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, in a temporary session that found the
+static site standard lives outside the kit: the kit should carry every
+skill and standard MrFieldTech wants, so installing it into a new app or
+site repository installs all of them. Asked for, in their words condensed:
+
+1. **The static site standard,** now held in another of MrFieldTech's
+   repositories, carried by the kit so any site built where the kit is
+   installed follows it, with these rules added:
+   - every site font served locally, never fetched from Google Fonts;
+   - session analytics never record keystrokes;
+   - every user signup form verifies age, admitting no one under 13,
+     with the birth date or age saved to the profile only if advised,
+     since it adds personal information to the user database;
+   - every email blast to subscribers carries a one-click unsubscribe and
+     the company's official mailing address;
+   - every user upload requires a checkbox stating the user owns or may
+     use the file and agrees to the content policy, a content policy to
+     be written, and a "Report Infringement" link to a form or email
+     address for reporting uploaded content.
+2. **Design rules,** in their own section if advised: delete filler
+   badges; drop redundant labels; unitalicize random header words; mono
+   only where needed; use a design system; show the actual product;
+   enlarge the main feature; group with spacing; make headlines specific;
+   emphasize the call to action; add an accent color; keep icons
+   consistent; remove embellishments; inner corner radius equals outer
+   radius minus padding; improve text contrast; wrap headlines properly;
+   align by eye, not pixels; use tabular numbers; add loading states;
+   animate useful feedback.
+3. **General instructions** MrFieldTech usually sets for Claude, such as
+   no em dashes and concise output, where the kit lacks them, plus a
+   Permission to Fail section, given verbatim in the session and to be
+   copied into the kit word for word apart from what the kit's format
+   requires:
+   - never invent facts, sources, numbers, file contents, commands,
+     settings or features; say "I don't know" or "I could not verify
+     this";
+   - never present a guess as fact; label it and say what would confirm
+     it;
+   - point out a factual error, contradiction or flawed premise at once;
+   - make a real attempt first, with other approaches and the tools at
+     hand;
+   - when the goal cannot be reached, give a short failure report: what
+     was asked, what was tried, where it broke down, what would unblock
+     it, and any trusted partial results labelled partial;
+   - an honestly labelled partial answer beats a complete wrong one.
+4. **Vendored skills,** mirrored into this repository so they work in
+   the IDE or Claude Code without reaching their own repositories:
+   `code-simplifier` from anthropics/claude-plugins-official,
+   cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
+   and emilkowalski/skills.
+
+**Facts, 2026-11-11.**
+
+- The standard is 1,276 lines, version 1.2, updated 2026-10-03, written
+  for static sites (HTML, one CSS file, one vanilla JS file, built by
+  Vite with pnpm, served by Cloudflare Pages) with no backend, database,
+  authentication or analytics. It names the owner's projects and
+  accounts 8 times, so a copy here must drop them by the project rules.
+  Its FONT-2 now allows a font host such as Google Fonts; request 1
+  removes that. Its source repository's records make it the source of
+  truth; no session here writes there.
+- Signup forms, uploads and email subscriptions need a backend, which the
+  standard excludes, so those rules reach beyond it.
+- `HOUSE.md` already forbids em dashes, sets a short two-part reply, and
+  says never invent a detail. MrFieldTech's umbrella repository's
+  `CLAUDE.md` carries further response rules from their chat projects:
+  lead with the answer, Yes or No first, no affirmations or filler, no en
+  dashes, complete commands, American English, expand an acronym on first
+  use. The instructions set on claude.ai are not readable from here.
+- `code-simplifier` is a Claude Code agent
+  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
+  Apache License 2.0. Upstream at `43fd1f9`.
+- cloudflare/security-audit-skill: one skill, `security-audit`, MIT,
+  372 KB, upstream at `c1c8a8c`.
+- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
+  License 2.0, upstream at `54a7988`. Claude Code lists every installed
+  skill's name and description in each session's context, so 818 in
+  every repository would cost context in every session.
+- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`;
+  several are mobile or Swift only (`write-swift`, `animate-expo`,
+  `mobile-native`, `apple-design`).
+- Both licenses allow mirroring into a public repository with the
+  license and any notice kept.
+
+**Open questions, round 1.** Asked 2026-11-11; recommended answer first.
+
+1. Where does the site standard live from now on? a. The kit is its
+   source, generic, and the other repository's entry becomes a pointer
+   to it, changed by a task there. b. The kit keeps a generic copy and
+   the other repository stays the source. c. Both edited by hand.
+2. Where do the user data rules (age, uploads, email, analytics) go?
+   a. A separate web app standard applying to any site or app, which the
+   static site standard points to. b. Inside the static site standard.
+3. Where do the twenty design rules go? a. A separate design standard
+   for any user interface, site or app. b. A section of the site
+   standard.
+4. What does a signup save about age? a. Only that the user confirmed 13
+   or older, and when, through a neutral screen that does not hint at
+   the answer. b. The birth date. c. The age at signup.
+5. The content policy: a. A template in the kit with a TODO for each
+   site-specific fact, filled in per site. b. Written per site only.
+6. Report Infringement: a. A link to a form or mailto, plus a checklist
+   TODO asking for the copyright agent's details where the site operates
+   in the United States. b. Link only.
+7. House rules: a. Add Permission to Fail to `HOUSE.md` and fold in the
+   umbrella repository's response rules listed above, generic; more can
+   come from an export later. b. Permission to Fail only. c. Wait for
+   the export.
+8. `code-simplifier`: a. Mirror it as an agent under `.claude/agents/`.
+   b. Rewrite it as a skill.
+9. The 818 cybersecurity skills: a. Mirror all here, installed into a
+   repository only when its Session Settings name them. b. Install all
+   everywhere. c. Mirror only a chosen subset.
+10. emilkowalski/skills: a. Install all 18 everywhere. b. Leave out the
+    mobile and Swift ones by default.
+11. Releases: a. Split into four tasks, each its own release: site and
+    app standards, design standard, house rules, vendored skills, this
+    task keeping the standards. b. One release for all of it.
+
+**Stopping point.** Round 1 asked. Next: record the answers as
+decisions and ask round 2.
+
 ### Build The Private Terms List
 
 **Slug:** `private-terms`
