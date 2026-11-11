@@ -55,13 +55,115 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Mirror Outside Skills And Agents Into The Kit
+
+**Slug:** `vendored-skills`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
+skills should be mirrored into this repository, installed with the kit,
+so they work in the IDE or Claude Code without reaching their own
+repositories: `code-simplifier` from anthropics/claude-plugins-official,
+cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
+and emilkowalski/skills.
+
+**Facts, 2026-11-11.**
+
+- `code-simplifier` is a Claude Code agent
+  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
+  Apache License 2.0. Upstream at `43fd1f9`. A copy also sits in that
+  repository's `pr-review-toolkit` plugin.
+- cloudflare/security-audit-skill: one skill, `skills/security-audit`,
+  MIT, 372 KB, upstream at `c1c8a8c`.
+- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
+  License 2.0, upstream at `54a7988`. Claude Code lists every installed
+  skill's name and description in each session's context, so 818 in
+  every repository would cost context in every session.
+- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`.
+- Both licenses allow mirroring into a public repository with the
+  license and any notice kept.
+
+**Decisions Made.**
+
+- **`code-simplifier` is mirrored as an agent** under `.claude/agents/`.
+  MrFieldTech, 2026-11-11. A Claude Code agent is used when the session
+  hands it work by the Agent tool, which it does on its own when the
+  work matches the agent's description, or when the owner asks for it by
+  name, such as "run the code-simplifier agent on this change".
+- **The cybersecurity skills are mirrored whole and installed only by
+  name.** MrFieldTech, 2026-11-11. All 818 are kept in this repository;
+  a repository installs the ones its Session Settings list.
+- **All 18 emilkowalski skills install everywhere.** MrFieldTech,
+  2026-11-11. The mobile and Swift ones were first recommended left out
+  only because no mobile work was seen, not for quality or size, and
+  MrFieldTech will build mobile apps, so they install now.
+
+**Decisions left open.**
+
+1. Where the mirrors live in this repository, and how each upstream's
+   license, notice and pinned commit are recorded.
+2. How a mirror is refreshed from upstream: a script recording the
+   commit, run as its own release.
+3. The Session Settings key that lists the cybersecurity skills a
+   repository installs, its name and default, defined in `HOUSE.md` and
+   given a default in the `CLAUDE.md` template.
+4. Whether `afk.sh install` and `update` treat mirrored files as
+   kit-owned, recorded in `MANIFEST`.
+5. Whether the cybersecurity skills need a review before mirroring, since
+   some hold offensive security procedures.
+
+**Stopping point.** Not started. First step: grill the open decisions,
+then mirror one source at a time, one commit each.
+
+### Build The Private Terms List
+
+**Slug:** `private-terms`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
+`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
+
+**Background.** `check.sh` section 1 reads the secret in CI, or an
+untracked `.private-terms` file locally, as one extended regular
+expression matched case-sensitively by `grep -E`, and fails when it
+matches anything in the kit-owned files, `.claude/references/` or
+`.claude/imported/`. Without it the names part is skipped with a line in
+the log. MrFieldTech found on 2026-11-11 that the secret, then named
+`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
+session reads the same list from its environment to redact a reference at
+close, which needs it set as an environment variable as well, where it is
+stored in plain text.
+
+**Decisions left open.**
+
+1. Which terms go in: the names of MrFieldTech's other projects and
+   repositories, their domains and hosts, the names of clients and other
+   people. Not `MrFieldTech`, which this repository's references name as
+   the developer.
+2. Whether the list is also set in the cloud environment, so closes here
+   can redact.
+3. Whether CI should fail, rather than skip, when the secret is empty, so
+   a missing list is never silent again.
+
+The first CI run with the list may fail on a name already in the
+repository; fixing that is part of the task.
+
+**Stopping point.** Not started. First step: MrFieldTech writes the list;
+the session tests it against `bash check.sh` before it is saved.
+
+## Closed Tasks
+
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
+DROPPED | GRM / MRFIELDTECH | 261111 193545
 HOLDING | GRM / MRFIELDTECH | 261111 191506
 
 **Slug:** `house-instructions`
-**Status:** ACTIVE
+**Status:** DONE
 **Opened:** 2026-11-11
+**Closed:** 2026-11-11
 
 **Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: the
 kit should carry the general instructions MrFieldTech usually sets for
@@ -170,108 +272,11 @@ Response rules
 - Never use an em dash, ever.
 ```
 
-**Stopping point.** Grilling done. Release 2.2.0 written: `HOUSE.md`,
-`check.sh` (en dash), `VERSION`, `CHANGELOG.md`, `README.md`. Next: close.
-
-### Mirror Outside Skills And Agents Into The Kit
-
-**Slug:** `vendored-skills`
-**Status:** TODO
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
-skills should be mirrored into this repository, installed with the kit,
-so they work in the IDE or Claude Code without reaching their own
-repositories: `code-simplifier` from anthropics/claude-plugins-official,
-cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
-and emilkowalski/skills.
-
-**Facts, 2026-11-11.**
-
-- `code-simplifier` is a Claude Code agent
-  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
-  Apache License 2.0. Upstream at `43fd1f9`. A copy also sits in that
-  repository's `pr-review-toolkit` plugin.
-- cloudflare/security-audit-skill: one skill, `skills/security-audit`,
-  MIT, 372 KB, upstream at `c1c8a8c`.
-- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
-  License 2.0, upstream at `54a7988`. Claude Code lists every installed
-  skill's name and description in each session's context, so 818 in
-  every repository would cost context in every session.
-- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`.
-- Both licenses allow mirroring into a public repository with the
-  license and any notice kept.
-
-**Decisions Made.**
-
-- **`code-simplifier` is mirrored as an agent** under `.claude/agents/`.
-  MrFieldTech, 2026-11-11. A Claude Code agent is used when the session
-  hands it work by the Agent tool, which it does on its own when the
-  work matches the agent's description, or when the owner asks for it by
-  name, such as "run the code-simplifier agent on this change".
-- **The cybersecurity skills are mirrored whole and installed only by
-  name.** MrFieldTech, 2026-11-11. All 818 are kept in this repository;
-  a repository installs the ones its Session Settings list.
-- **All 18 emilkowalski skills install everywhere.** MrFieldTech,
-  2026-11-11. The mobile and Swift ones were first recommended left out
-  only because no mobile work was seen, not for quality or size, and
-  MrFieldTech will build mobile apps, so they install now.
-
-**Decisions left open.**
-
-1. Where the mirrors live in this repository, and how each upstream's
-   license, notice and pinned commit are recorded.
-2. How a mirror is refreshed from upstream: a script recording the
-   commit, run as its own release.
-3. The Session Settings key that lists the cybersecurity skills a
-   repository installs, its name and default, defined in `HOUSE.md` and
-   given a default in the `CLAUDE.md` template.
-4. Whether `afk.sh install` and `update` treat mirrored files as
-   kit-owned, recorded in `MANIFEST`.
-5. Whether the cybersecurity skills need a review before mirroring, since
-   some hold offensive security procedures.
-
-**Stopping point.** Not started. First step: grill the open decisions,
-then mirror one source at a time, one commit each.
-
-### Build The Private Terms List
-
-**Slug:** `private-terms`
-**Status:** TODO
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
-`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
-
-**Background.** `check.sh` section 1 reads the secret in CI, or an
-untracked `.private-terms` file locally, as one extended regular
-expression matched case-sensitively by `grep -E`, and fails when it
-matches anything in the kit-owned files, `.claude/references/` or
-`.claude/imported/`. Without it the names part is skipped with a line in
-the log. MrFieldTech found on 2026-11-11 that the secret, then named
-`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
-session reads the same list from its environment to redact a reference at
-close, which needs it set as an environment variable as well, where it is
-stored in plain text.
-
-**Decisions left open.**
-
-1. Which terms go in: the names of MrFieldTech's other projects and
-   repositories, their domains and hosts, the names of clients and other
-   people. Not `MrFieldTech`, which this repository's references name as
-   the developer.
-2. Whether the list is also set in the cloud environment, so closes here
-   can redact.
-3. Whether CI should fail, rather than skip, when the secret is empty, so
-   a missing list is never silent again.
-
-The first CI run with the list may fail on a name already in the
-repository; fixing that is part of the task.
-
-**Stopping point.** Not started. First step: MrFieldTech writes the list;
-the session tests it against `bash check.sh` before it is saved.
-
-## Closed Tasks
+**Done.** Release 2.2.0: `HOUSE.md` merges the general instructions into
+Rules for every action and Response format, which gains Writing for the
+owner and Commands for the owner, and adds Permission to fail with its
+failure report; `check.sh` fails on an en dash; `VERSION`, `CHANGELOG.md`
+and `README.md` follow. `bash check.sh` passed in full.
 
 ### Carry The Site And Design Standards In The Kit
 
