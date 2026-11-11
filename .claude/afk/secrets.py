@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Encrypt, check and read the credentials in a repository's *.secrets.md files.
 
-The kit standard for credentials, described in .claude/kit/credentials.md:
+The kit standard for credentials, described in .claude/afk/credentials.md:
 every value in a <slug>.secrets.md file is encrypted on its own, with age, to
 every public key in secrets-recipients.txt at the repository root, and written
 as an ASCII armored block fenced and tagged `age` under a bold label.
@@ -66,11 +66,11 @@ import sys
 import tempfile
 
 SUFFIX = ".secrets.md"
-# Session references and their companions, .claude/kit/references.md. A
+# Session references and their companions, .claude/afk/references.md. A
 # companion is a dated copy of values whose home is elsewhere, so a build
 # never decrypts it.
 REFERENCES = ".claude/references/"
-# Verbatim copies of what the repository was given, .claude/kit/references.md
+# Verbatim copies of what the repository was given, .claude/afk/references.md
 # Copies. A copy may be encrypted to another repository's keys, so nothing
 # here re-encrypts or decrypts it.
 IMPORTED = ".claude/imported/"
@@ -225,7 +225,7 @@ def recipients(top):
     if not os.path.exists(path):
         raise Refusal(
             "%s does not exist, so there is no key to encrypt to. "
-            ".claude/kit/credentials.md says how the owner makes the keys." % RECIPIENTS
+            ".claude/afk/credentials.md says how the owner makes the keys." % RECIPIENTS
         )
     keys = [line.strip() for line in read(path) if line.strip() and not line.strip().startswith("#")]
     bad = [key for key in keys if not re.match(r"^age1[0-9a-z]+$", key)]

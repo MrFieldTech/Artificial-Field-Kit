@@ -5,7 +5,7 @@
 The work queue for this repository and the source of truth for what remains.
 Each task's block holds its full specification, and an open task's block holds
 exactly where it stopped. `session-close` writes this file and `session-open`
-reads it. `.claude/kit/HOUSE.md` holds the rules.
+reads it. `.claude/afk/HOUSE.md` holds the rules.
 
 ## How Tasks Are Worked
 
@@ -33,7 +33,7 @@ permanent and name the task's branch.
 
 Each task's heading is its title. Directly under it are its holder lines,
 newest first, which record who took the task and who dropped it, as
-`.claude/kit/HOUSE.md` describes under Developers:
+`.claude/afk/HOUSE.md` describes under Developers:
 
 ```markdown
 DROPPED | <PREFIX> / <HANDLE> | <YYMMDD HHMMSS>
@@ -55,7 +55,209 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Build The Private Terms List
+
+**Slug:** `private-terms`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
+`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
+
+**Background.** `check.sh` section 1 reads the secret in CI, or an
+untracked `.private-terms` file locally, as one extended regular
+expression matched case-sensitively by `grep -E`, and fails when it
+matches anything in the kit-owned files, `.claude/references/` or
+`.claude/imported/`. Without it the names part is skipped with a line in
+the log. MrFieldTech found on 2026-11-11 that the secret, then named
+`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
+session reads the same list from its environment to redact a reference at
+close, which needs it set as an environment variable as well, where it is
+stored in plain text.
+
+**Decisions left open.**
+
+1. Which terms go in: the names of MrFieldTech's other projects and
+   repositories, their domains and hosts, the names of clients and other
+   people. Not `MrFieldTech`, which this repository's references name as
+   the developer.
+2. Whether the list is also set in the cloud environment, so closes here
+   can redact.
+3. Whether CI should fail, rather than skip, when the secret is empty, so
+   a missing list is never silent again.
+
+The first CI run with the list may fail on a name already in the
+repository; fixing that is part of the task.
+
+**Stopping point.** Not started. First step: MrFieldTech writes the list;
+the session tests it against `bash check.sh` before it is saved.
+
 ## Closed Tasks
+
+### Give The Kit A Distinctive Name
+
+DROPPED | GRM / MRFIELDTECH | 261111 042752
+HOLDING | GRM / MRFIELDTECH | 261110 225422
+
+**Slug:** `unique-name`
+**Status:** DONE
+**Opened:** 2026-11-10
+**Closed:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-10, ran `/session-open unique-name`: the
+name Claude-Kit is too generic, anyone could use it for their own project,
+and once other developers join the owner's projects the kit should have its
+own name that identifies it. It may relate to MrFieldTech or MFT, or be
+unrelated; it need not represent MrFieldTech. This answers the open
+question in `HANDOFF.md`, "Should the kit take a more distinctive name?",
+raised 2026-10-15.
+
+**Facts, 2026-11-10.**
+
+- The name appears in five places in kit-owned files: the first line of
+  `HOUSE.md`, the `description` of both skills, and `kit.sh`'s header
+  comment and its install message. It appears in `README.md` throughout,
+  including the repository URL in the install, update and backfill
+  recovery prompts, and in this repository's `CLAUDE.md`.
+- The project rule says nothing the kit installs names a person or
+  account. A name carrying MrFieldTech or MFT would sit in those five
+  kit-owned places in every repository.
+- Elsewhere the kit calls itself "the kit", and its paths are
+  `.claude/kit/`, `kit.sh`, `KIT_PRIVATE_TERMS` and `kit-update-<version>`
+  slugs, none of which carry the name.
+- Each installed repository's `.claude/kit/MANIFEST` records the source
+  URL, and the README's update prompt, item 2, stops unless that URL is
+  `https://github.com/MrFieldTech/Claude-Kit` in any letter case. Renaming
+  the GitHub repository therefore needs the update prompt to accept the
+  old URL as well. GitHub is believed to redirect clones of a renamed
+  repository's old URL; not verified here.
+- A GitHub repository search on 2026-11-11 found no repository named
+  Artificial Field Kit; the seven matches for the words are unrelated. "AFK"
+  alone is crowded among agent tools, such as `afk-code` with 90 stars and
+  `agent-afk` with 63.
+- `.claude/kit` appears 242 times across 20 tracked files, and each
+  installed repository's `CLAUDE.md` imports `@.claude/kit/HOUSE.md`.
+
+**Decisions.**
+
+- **The kit is named Artificial Field Kit, AFK for short.** MrFieldTech,
+  2026-11-11. Field nods to MrFieldTech without naming the account, so the
+  project rule holds, and AFK is what a developer is while an agent codes.
+  Kit is in the name, so "the kit" and "kit" stay as they are in prose.
+  The full name is the distinctive part; AFK alone is not.
+- **The rename reaches everything it can.** MrFieldTech, 2026-11-11. Every
+  current mention of Claude-Kit changes, including the GitHub repository,
+  which MrFieldTech renames. History keeps the old name where it records
+  what happened: `CHANGELOG.md` entries before this release, session
+  references and closed task blocks. No skill or kit-owned file says
+  Claude-Kit afterwards. The release says how an installed repository
+  makes the change so that nothing is lost and everything works after it.
+
+- **The names in paths change with it.** MrFieldTech, 2026-11-11.
+  `.claude/kit/` becomes `.claude/afk/`, `kit.sh` becomes `afk.sh`,
+  `KIT_SOURCE` becomes `AFK_SOURCE`, `KIT_PRIVATE_TERMS` becomes
+  `AFK_PRIVATE_TERMS`, and the update slug `kit-update-<version>` becomes
+  `afk-update-<version>`. The update moves an installed repository's files
+  and the import in its `CLAUDE.md`. The skill directories carry no name and
+  stay. "The kit" stays in prose.
+- **The repository is `MrFieldTech/Artificial-Field-Kit`.** MrFieldTech
+  renamed it on 2026-11-11. The old URL still answers: `git ls-remote` and a
+  clone of `https://github.com/MrFieldTech/Claude-Kit` returned the same
+  `HEAD` as the new URL that day.
+- **The release is 2.0.0.** MrFieldTech, 2026-11-11. An installed
+  repository must do more than run the update.
+- **The update moves a repository onto the new URL.** MrFieldTech,
+  2026-11-11. The update prompt accepts the old or the new URL in the
+  `source:` line, and the update records the new URL in the `MANIFEST`.
+
+**Plan.**
+
+- A 1.x `kit.sh update` looks for `.claude/kit/kit.sh` in the source and
+  runs it as the installer. The source keeps a small forwarder there, which
+  is not kit-owned and is never installed: it maps the old URL to the new
+  and runs `.claude/afk/afk.sh install`. A kit-owned file never holds the
+  URL, by the project rule.
+- `afk.sh install`, finding a 1.x install in the target, checks the old
+  `MANIFEST` for local edits, removes `.claude/kit/`, installs
+  `.claude/afk/`, rewrites the `@.claude/kit/HOUSE.md` import in
+  `CLAUDE.md`, and lists every other file that still mentions
+  `.claude/kit/` or `kit.sh`, for the updating session to fix by the
+  `CHANGELOG.md` entry.
+- `check.sh` tests that path: a 1.16.0 install updated through the
+  forwarder ends with `.claude/afk/`, the new URL, the import moved, and
+  nothing lost.
+
+**Done.** Release 2.0.0. `.claude/kit/` moved to `.claude/afk/` and
+`kit.sh` to `afk.sh`, with every live mention of Claude-Kit, the old paths
+and `KIT_` names changed; `CHANGELOG.md` entries before 2.0.0, session
+references, closed task blocks and `HANDOFF.md`'s records keep the old
+name. `afk.sh install` moves a 1.x install, and `.claude/kit/kit.sh` stays
+in this repository, not kit-owned, as the forwarder a 1.x `kit.sh update`
+runs. `todo_sweep.py` accepts a `TODO.md` its 1.x self wrote. `check.sh`
+tests the move, and a real 1.16.0 install updated through its own
+`kit.sh update` to 2.0.0 in a scratch repository on 2026-11-11, reporting
+`2.0.0, current` after. `bash check.sh` passed on `f2754e8`. CI reads
+`AFK_PRIVATE_TERMS`. MrFieldTech found on 2026-11-11 that no
+`KIT_PRIVATE_TERMS` secret ever existed, so CI has never checked names;
+`private-terms` builds the list. `CLAUDE.md` gained a project rule keeping
+the forwarder.
+
+### Point The Backfill Recovery Prompt At The Right Branch And Repository
+
+DROPPED | GRM / MRFIELDTECH | 261110 210147
+HOLDING | GRM / MRFIELDTECH | 261019 011740
+
+**Slug:** `backfill-problems`
+**Status:** DONE
+**Opened:** 2026-10-19
+**Closed:** 2026-11-10
+
+**Why.** MrFieldTech, 2026-10-19, ran `/session-open backfill-problems`
+with the reply of a session in another of the owner's repositories that
+was given the BACKFILL RECOVERY PROMPT from `README.md`. That repository
+had taken a kit update on a task branch merged into its integration
+branch, not yet promoted to its default branch. The session had a second
+repository attached, only to read a standard from it. It stopped, and its
+reply offered the second repository as a place the backfill could go,
+which MrFieldTech did not expect.
+
+**Facts, 2026-10-19.**
+
+- The prompt's items 2 to 4 check for the kit, check its release and read
+  the kit files on the default branch only. A kit update merges into the
+  integration branch at close and reaches the default branch only when the
+  owner promotes it, so a repository that has just updated fails item 3
+  until the promotion. The session reported release 1.2.0 on the default
+  branch of the repository it worked in.
+- `session-open` itself works from the base, the integration branch when it
+  exists, so the skill would have run the backfill had the prompt let it
+  reach step 5.
+- The prompt says "this repository" and never says which one when a
+  session has more than one. The session found an update branch in the
+  second repository, not merged into its default branch either, and so
+  offered it as an option, and its second action line told the owner to
+  merge it there.
+
+**Decisions.**
+
+- **The recovery prompt works from the base.** MrFieldTech, 2026-11-10. It
+  checks for the kit, checks its release and reads the kit files on the
+  integration branch named in `CLAUDE.md` when that branch exists on the
+  remote, else on the default branch, as `session-open` step 2 does. An
+  update merged into the integration branch and not yet promoted is enough
+  to backfill, so the owner never has to promote just to run one.
+- **A backfill goes into the repository this session worked in.**
+  MrFieldTech, 2026-11-10. With more than one repository in the session,
+  it is the one the session committed to or ran a kit open in. A
+  repository it only read from is never written to, and when work landed
+  in more than one, the session asks which. `references.md` says a backfill
+  covers only what the session did in its own repository.
+
+**Done.** Release 1.16.0: the recovery prompt's new item 1 chooses the
+repository, item 3 finds the base, and items 4 and 5 check and read the kit
+there. `references.md` gains Its own repository only under Backfilling.
+`bash check.sh` passed on `333e4c2`.
+
 ### Answer What The First 1.14.0 Backfills Raised
 
 DROPPED | GRM / MRFIELDTECH | 261019 005145

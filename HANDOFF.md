@@ -13,6 +13,8 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-11 | GRM / MRFIELDTECH | `unique-name`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.0.0 renames the kit Artificial Field Kit and moves it from `.claude/kit/` to `.claude/afk/`, with a forwarder that moves a 1.x repository on its next update; `private-terms` opened for later | `70399cf..2b0503b` |
+| 2026-11-10 | GRM / MRFIELDTECH | `backfill-problems`, DONE, merged into `preview`: release 1.16.0 has the BACKFILL RECOVERY PROMPT check and read the kit on the base rather than the default branch, and backfill only the repository the session worked in | `6d6212a..333e4c2` |
 | 2026-10-19 | GRM / MRFIELDTECH | `backfill-questions`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.15.0 lets backfills of their own sessions run side by side, has the BACKFILL RECOVERY PROMPT approve the self-close's merge, rebuilds interleaved task blocks whole, detaches after a merged branch is deleted, and reports a finished but unmerged branch as a close perhaps still running | `049569e..51edf26` |
 | 2026-10-17 | GRM / MRFIELDTECH | `backfill-no-close`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.14.0 has a backfill cover everything its session did that no reference covers, names backfill references `<yymmddhhmmss>-<slug>-bf.md`, and adds the BACKFILL RECOVERY PROMPT to `README.md` | `054e960..d99a0e6` |
 | 2026-10-17 | GRM / MRFIELDTECH | `import-file-process`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.13.0 keeps a bit for bit copy of each imported reference and its companion, and of every file uploaded to a session, under `.claude/imported/` | `94754b0..90bd2f0` |
@@ -210,6 +212,19 @@ None.
   auto mode and rebuilt interleaved task blocks by hand. The full decisions
   are in the `backfill-questions` block in `TASKS.md`.
 
+- **The BACKFILL RECOVERY PROMPT works from the base, in the repository
+  the session worked in.** MrFieldTech, 2026-11-10, after a session refused
+  to backfill a repository whose kit update was on its integration branch
+  only, and offered a second repository it had only read. The full
+  decisions are in the `backfill-problems` block in `TASKS.md`.
+- **The kit is Artificial Field Kit, AFK, in `.claude/afk/`.** MrFieldTech,
+  2026-11-11: Claude-Kit was a name anyone could use. Release 2.0.0, at
+  `MrFieldTech/Artificial-Field-Kit`. The full decisions are in the
+  `unique-name` block in `TASKS.md`.
+- **The 1.x forwarder stays at `.claude/kit/kit.sh`.** GRM / MRFIELDTECH,
+  2026-11-11, in `unique-name`: every 1.x repository updates by running it.
+  Moved to `CLAUDE.md` as a project rule.
+
 ## Open Questions
 
 - **Should the private repository the default import follows name its
@@ -226,9 +241,11 @@ None.
   own pull requests, and a repository whose branch protection requires an
   approval would park every task at close. Not wanted now; open a task when
   it is?
-- **Should the kit take a more distinctive name?** Raised by GRM /
-  MRFIELDTECH, 2026-10-15. Claude-Kit used publicly is too generic. Open a
-  task to choose one?
+- **Should CI fail when `AFK_PRIVATE_TERMS` is empty?** Raised by GRM /
+  MRFIELDTECH, 2026-11-11, in `unique-name`, for `private-terms`. The
+  secret never existed and CI skipped the names check with only a log
+  line, so no session noticed, and this one told MrFieldTech to copy a
+  secret that was not there. Settle it in `private-terms`?
 
 - **Should the kit make every remote branch tracked from the start?** A
   session working from a single-branch clone pushed its task branch, but git
@@ -243,8 +260,8 @@ None.
   current'", which reads as a broken installer rather than "commit first".
   It happened again in `session-references` on 2026-10-14, and in
   `check-block-fields`, `task-name-changes` and `backfill-intent` on
-2026-10-16, and in `backfill-no-close` on 2026-10-17. Open a task for
-  it?
+2026-10-16, and in `backfill-no-close` on 2026-10-17, and in
+  `backfill-problems` on 2026-11-10. Open a task for it?
 - **Should `grilling.md` have a question carried from an earlier session
   rewritten before it is asked?** Raised by GRM / MRFIELDTECH, 2026-10-16,
   in `check-block-fields`. Its open questions were written in shorthand when
@@ -262,6 +279,19 @@ None.
   file. Open a task for it?
 
 ## Flagged As Unverified
+
+**No repository has moved from 1.x to 2.0.0 through GitHub.** A real
+1.16.0 install updated through its own `kit.sh update` to `.claude/afk/`
+in a scratch repository on 2026-11-11, from a local source, and `check.sh`
+tests the forwarder's mapping of the old address. Verified by: the first
+repository to take 2.0.0 by the update prompt, which should end with
+`.claude/afk/`, the new address in its `MANIFEST`, and the files the
+update listed changed by the 2.0.0 entry.
+
+**Whether the old address keeps redirecting.** On 2026-11-11 both
+addresses returned the same `HEAD`. GitHub ends a redirect if a repository
+is ever created at the old name. Verified by: never creating
+`MrFieldTech/Claude-Kit` again.
 
 **No session has made a copy under `.claude/imported/`.** `backfill-no-close`
 wrote four placeholders under `session-import/`, by this repository's rule
@@ -288,8 +318,13 @@ it through the BACKFILL RECOVERY PROMPT on 2026-10-17, one after loading
 first in a new session, which should list past closes and ask, and the
 prompt pasted into a session whose checkout predates the kit.
 
+**No session has run 1.16.0's recovery prompt.** Verified by: the prompt
+pasted into a session with two repositories, one only read, whose kit
+update sits on the integration branch unpromoted; it should choose the
+repository it worked in and backfill from the integration branch.
+
 **No session has run 1.15.0.** Verified by: a backfill whose recovery
-prompt carries item 8, which should recreate the integration branch and
+prompt carries the item approving the self-close's merge, which should recreate the integration branch and
 merge its pull request with no auto mode block; a close whose end-of-turn
 hook stays quiet after step 8 detaches; and a merge that rebuilds two
 interleaved task blocks whole.
@@ -304,9 +339,10 @@ including `git diff --diff-filter=A` across a source's history.
 account.** Push protection on a public repository is believed free; custom
 patterns, which could catch project names, were not checked.
 
-**The kit's own references were not checked against the private terms.**
-`KIT_PRIVATE_TERMS` was not set in this session's environment, so the first
-reference here names no other project by hand, and CI checks it.
+**No reference or kit-owned file here has been checked against private
+terms.** The `KIT_PRIVATE_TERMS` secret never existed, found 2026-11-11, so
+CI skipped the check on every run. Verified by: `private-terms` setting
+`AFK_PRIVATE_TERMS` and a CI run passing with it.
 
 **No session has run 1.6.0's open or close from start to finish.** This
 session opened under 1.5.0 and wrote its own holder lines by hand. The next

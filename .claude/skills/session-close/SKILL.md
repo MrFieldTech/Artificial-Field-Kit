@@ -1,7 +1,7 @@
 ---
 name: session-close
 description: >-
-  Close out a Claude Code session in a repository that uses Claude-Kit. For each task branch the session worked on, stops at a clean boundary, places every credential, updates the task's block in TASKS.md, looks back over a session that met friction, edits HANDOFF.md in place, writes the session reference, runs the repository's Regenerate commands, and pushes the branch. A failing Regenerate command or check is diagnosed before anything parks. A task that is DONE, DISMISSED or BLOCKED then merges into the integration branch by a pull request whose body carries evidence and a merge danger call, and GitHub deletes its branch; a task stopped partway stays parked on its branch. Merges the integration branch into the default branch only when the owner asks. Reports where to see each task's work. Runs only when the owner invokes /session-close.
+  Close out a Claude Code session in a repository that uses Artificial Field Kit. For each task branch the session worked on, stops at a clean boundary, places every credential, updates the task's block in TASKS.md, looks back over a session that met friction, edits HANDOFF.md in place, writes the session reference, runs the repository's Regenerate commands, and pushes the branch. A failing Regenerate command or check is diagnosed before anything parks. A task that is DONE, DISMISSED or BLOCKED then merges into the integration branch by a pull request whose body carries evidence and a merge danger call, and GitHub deletes its branch; a task stopped partway stays parked on its branch. Merges the integration branch into the default branch only when the owner asks. Reports where to see each task's work. Runs only when the owner invokes /session-close.
 disable-model-invocation: true
 ---
 
@@ -13,7 +13,7 @@ describes work sitting only in the working tree is worse than no handoff,
 because the next session trusts it.
 
 This skill names no value that differs between repositories. Each one is in the
-`## Session Settings` section of `CLAUDE.md`, and `.claude/kit/HOUSE.md` holds
+`## Session Settings` section of `CLAUDE.md`, and `.claude/afk/HOUSE.md` holds
 the rules this skill applies. Below, the owner, the authority file, the default
 branch and the integration branch are what Session Settings says they are.
 
@@ -53,10 +53,10 @@ access. Then:
   the setting names and commit only what the encryption prints. Check that
   the output does not contain the value before it is written anywhere.
 - **When the repository is confirmed private and the setting is `kit
-  standard`,** the method is `.claude/kit/credentials.md`: store each value
-  in its `<slug>.secrets.md` with `python3 .claude/kit/secrets.py set`, or,
+  standard`,** the method is `.claude/afk/credentials.md`: store each value
+  in its `<slug>.secrets.md` with `python3 .claude/afk/secrets.py set`, or,
   when where it belongs is not settled, in this session's companion alone,
-  by step 4, with a task opened to place it. Then run `python3 .claude/kit/secrets.py check`
+  by step 4, with a task opened to place it. Then run `python3 .claude/afk/secrets.py check`
   and each command under the Secrets checks setting, and commit nothing
   while one fails. With no `secrets-recipients.txt`, or no `age` tool the
   session can install, the next case applies.
@@ -71,7 +71,7 @@ access. Then:
   to set one up.
 
 Every value this session produced, was given or changed is also copied into
-its companion in step 4, by `.claude/kit/references.md`, wherever the rules
+its companion in step 4, by `.claude/afk/references.md`, wherever the rules
 above commit it. Note each value the owner or anyone gave in plaintext in the
 conversation, for step 11.
 
@@ -93,7 +93,7 @@ session may be editing the rest.
 
 Directly under the task's heading, above its other holder lines, add one for
 this session, whatever the status below, with the UTC time now and the
-developer `session-open` named, by Developers in `.claude/kit/HOUSE.md`:
+developer `session-open` named, by Developers in `.claude/afk/HOUSE.md`:
 
 ```
 DROPPED | <PREFIX> / <HANDLE> | <YYMMDD HHMMSS>
@@ -120,7 +120,7 @@ Set the status:
 ## 4. Edit HANDOFF.md and write the session reference
 
 First, when the session met friction, look back over it by the retrospective
-in `.claude/kit/practices/retro.md`. Each proposal it keeps is a question for
+in `.claude/afk/practices/retro.md`. Each proposal it keeps is a question for
 Open Questions below.
 
 Edit the file in place and never replace it, because another session may close
@@ -166,7 +166,7 @@ older kit or because the authority file requires one, keeps it and the
 values in it. Add no value there unless the authority file sends it there.
 
 Then write the session reference for this task branch, and its companion
-when step 2 committed any value, by `.claude/kit/references.md`. Read that
+when step 2 committed any value, by `.claude/afk/references.md`. Read that
 file first. The reference is a new file: never edit one already committed.
 It is done when every heading of the template is there, each holding facts
 or `None.`, and every credential this session handled is under Credentials
@@ -175,7 +175,7 @@ by its label.
 ## 5. Regenerate derived files
 
 Run each Regenerate command, in the order Session Settings gives. If any command
-fails, find its cause by `.claude/kit/practices/diagnosing.md`. When the cause is
+fails, find its cause by `.claude/afk/practices/diagnosing.md`. When the cause is
 in this task's work and the fix fits in this session, fix it on the task
 branch, commit, widen the Session Log row's commit range to include the fix,
 and run the commands again. Otherwise record the exact command, the exact error
@@ -239,7 +239,7 @@ git merge --no-edit origin/<target>
 git merge --no-edit origin/<default branch>
 ```
 
-If a merge conflicts, apply the conflict rule in `.claude/kit/HOUSE.md`. The
+If a merge conflicts, apply the conflict rule in `.claude/afk/HOUSE.md`. The
 paths under Generated files are never merged by hand: take either side, run the
 Regenerate commands again, and stage what they write. Where both sides only
 added lines to `TASKS.md` or `HANDOFF.md`, keep both, and where git
@@ -250,7 +250,7 @@ unattended.
 
 **Check the tree.** Run the Regenerate commands, then each command under Checks
 before merge, then `git status --short`. If a check fails, find its cause by
-`.claude/kit/practices/diagnosing.md`, fix it on the task branch, widen the
+`.claude/afk/practices/diagnosing.md`, fix it on the task branch, widen the
 Session Log row's commit range to include the fix, and run the checks again.
 Park the task only when the fix does not fit in this session, with the
 diagnosis's stopping point in its block. If the Regenerate commands rewrote a
@@ -301,7 +301,7 @@ record the difference under Flagged As Unverified.
   of the task stays in the history.
 - GitHub reports it cannot be merged because the target moved: bring the base in
   again from the top of this step.
-- A check fails: find its cause by `.claude/kit/practices/diagnosing.md`, fix
+- A check fails: find its cause by `.claude/afk/practices/diagnosing.md`, fix
   it on the task branch, widen the Session Log row's commit range, update the
   body's evidence, and push, and the pull request re-runs. When the fix shows
   a guard the repository lacks, add the retrospective's proposal for it under
@@ -453,7 +453,7 @@ merge, a few minutes after it.
 
 `TASKS.md` and `HANDOFF.md` keep the format they already have. The State file
 format setting names it: `kit templates` for the files in
-`.claude/kit/templates/`, or a rule in the authority file, such as frontmatter
+`.claude/afk/templates/`, or a rule in the authority file, such as frontmatter
 the repository requires. Either way the headings are these, named and never
 numbered.
 
@@ -485,7 +485,7 @@ numbered.
 
 Each task heading is its title. Directly under it, the holder lines, newest
 first, one per session that took or dropped the task, as Developers in
-`.claude/kit/HOUSE.md` gives them, then:
+`.claude/afk/HOUSE.md` gives them, then:
 
 ```markdown
 **Slug:** `<task-slug>`

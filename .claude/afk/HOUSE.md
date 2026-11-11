@@ -1,9 +1,9 @@
 # House Rules
 
-These rules apply in every repository that uses Claude-Kit. The kit installs
-this file, and the first line of the repository's `CLAUDE.md` imports it.
-Never edit it inside a project: a change goes to the kit and reaches the
-project by an update. The kit's own repository is the one place it is edited.
+These rules apply in every repository that uses Artificial Field Kit, AFK
+for short, called the kit below. The kit installs this file, and the first
+line of the repository's `CLAUDE.md` imports it. Never edit it inside a
+project: a change goes to the kit and reaches the project by an update. The kit's own repository is the one place it is edited.
 
 Every value that differs between repositories is in the `## Session Settings`
 section of `CLAUDE.md`. The keys are defined at the end of this file.
@@ -22,7 +22,7 @@ When two sources disagree, the first of these wins:
 2. The rest of `CLAUDE.md`.
 3. This file.
 4. The `session-open` and `session-close` skills.
-5. The practices in `.claude/kit/practices/`.
+5. The practices in `.claude/afk/practices/`.
 
 Read the authority file rather than working from memory of it. It is
 versioned and it changes. A conflict between it and an instruction from the
@@ -44,13 +44,13 @@ owner is not resolved by picking one. Say so plainly and stop.
   anywhere the Credentials setting does not send it. It is never committed in
   plaintext: a value committed to the repository is encrypted first, by the
   method the Credentials setting names. With `kit standard`, that is an age
-  encrypted `<slug>.secrets.md` file, by `.claude/kit/credentials.md`. With no
+  encrypted `<slug>.secrets.md` file, by `.claude/afk/credentials.md`. With no
   rule set, with no method named or none the container can run, or in a
   repository not confirmed private, it is committed nowhere: it goes in the
   reply for the owner to place, and the reply says it is the only copy. The
   one exception is an encrypted companion copied bit for bit under
   `.claude/imported/`, committed there only on the developer's explicit
-  instruction, by Copies in `.claude/kit/references.md`.
+  instruction, by Copies in `.claude/afk/references.md`.
 
 ## Sessions and branches
 
@@ -168,14 +168,14 @@ may close into them.
 **Session references** are the facts each session learned, one file per
 task branch at every close, under `.claude/references/`, with the session's
 credentials in a companion file. Another repository imports them by
-`/session-open import`. `.claude/kit/references.md` holds the rules: read it
+`/session-open import`. `.claude/afk/references.md` holds the rules: read it
 before writing one at close, before turning imports on, before an import,
 and before a backfill.
 
 **Copies** under `.claude/imported/` are the repository's own bit for bit
 record of what it was given: each reference it imports, with its companion,
 and every file a developer uploads to a session. A file that is not copied
-gets a placeholder describing it. Read Copies in `.claude/kit/references.md`
+gets a placeholder describing it. Read Copies in `.claude/afk/references.md`
 whenever a developer uploads a file, and before an import.
 
 When Generated files lists `TODO.md`, it holds every `TODO:` in the repository
@@ -185,7 +185,7 @@ and run the sweep again.
 ## Practices
 
 Five practices hold how recurring kinds of work are done. Each is a file in
-`.claude/kit/practices/`, read in full when its case comes up. The session
+`.claude/afk/practices/`, read in full when its case comes up. The session
 reaches for it on its own, and the owner never has to name one.
 
 - **Grilling**, `grilling.md`: when a new task's branch is claimed, and
@@ -309,7 +309,7 @@ never in a kit-owned file.
   request's own checks run as well.
 - **Credentials.** Where a credential goes. `none`, the default, means
   nowhere in the repository. `kit standard` means age encrypted
-  `<slug>.secrets.md` files, as `.claude/kit/credentials.md` describes, and
+  `<slug>.secrets.md` files, as `.claude/afk/credentials.md` describes, and
   switching to it runs the setup there. A repository that keeps credentials
   its own way, or whose build neither of the kit's decrypters serves, names
   its own place or rule instead, with the reason the kit standard does not
@@ -320,7 +320,7 @@ never in a kit-owned file.
   the session.
 - **Secrets checks.** Commands that check this repository's own handling of
   credentials, beyond `secrets.py check`, one per check, or `none`. The
-  setup in `.claude/kit/credentials.md` writes them, and `session-close`
+  setup in `.claude/afk/credentials.md` writes them, and `session-close`
   runs them under `kit standard`.
 - **State file format.** The format `TASKS.md` and `HANDOFF.md` keep: `kit
   templates`, or a rule in the authority file.

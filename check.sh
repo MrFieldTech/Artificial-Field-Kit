@@ -26,9 +26,9 @@
 
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
-KIT_ROOT="$(pwd)"
+AFK_ROOT="$(pwd)"
 
-KIT_OWNED=(.claude/kit .claude/skills/session-open .claude/skills/session-close)
+AFK_OWNED=(.claude/afk .claude/skills/session-open .claude/skills/session-close)
 
 fail() {
   printf 'check: %s\n' "$*" >&2
@@ -44,22 +44,22 @@ ADDRESS='https?://|[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}|\b[A-Za-z0-9-]+
 # grep exits 1 when nothing matches and 2 when it cannot search, which must
 # fail the check rather than pass it.
 status=0
-grep -rnIE "$ADDRESS" "${KIT_OWNED[@]}" || status=$?
+grep -rnIE "$ADDRESS" "${AFK_OWNED[@]}" || status=$?
 [ "$status" -ne 0 ] && [ "$status" -ne 1 ] && fail "the address pattern could not be searched"
 [ "$status" -eq 0 ] && fail "the lines above hold an address, which belongs to one project"
 # Names cannot be caught by pattern, so they come from a list kept out of
-# this public repository: the KIT_PRIVATE_TERMS repository secret in CI, or an
+# this public repository: the AFK_PRIVATE_TERMS repository secret in CI, or an
 # untracked .private-terms file locally, holding one extended regular
 # expression. Add a term there whenever a project's detail leaks in. Without
 # either, this part is skipped, and CI still runs it on every pull request.
-terms="${KIT_PRIVATE_TERMS:-}"
+terms="${AFK_PRIVATE_TERMS:-}"
 if [ -z "$terms" ] && [ -f .private-terms ]; then
   terms="$(tr -d '\n' < .private-terms)"
 fi
 # This repository's own session references and copies are public too, so
 # they are held to the same list. CLAUDE.md has the close redact a match
 # before a reference is committed, and a copy holding one is not made.
-TERMS_SCANNED=("${KIT_OWNED[@]}")
+TERMS_SCANNED=("${AFK_OWNED[@]}")
 [ -d .claude/references ] && TERMS_SCANNED+=(.claude/references)
 [ -d .claude/imported ] && TERMS_SCANNED+=(.claude/imported)
 if [ -n "$terms" ]; then
@@ -80,13 +80,13 @@ echo "check: no em dash"
 
 # 3. Syntax, skill frontmatter, and line endings. A checkout on Windows
 # turns LF into CRLF unless .gitattributes says otherwise, and bash cannot
-# run kit.sh with CRLF endings.
-bash -n .claude/kit/kit.sh
+# run afk.sh with CRLF endings.
+bash -n .claude/afk/afk.sh
 for script in todo_sweep.py secrets.py; do
-  python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read())' ".claude/kit/$script"
+  python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read())' ".claude/afk/$script"
 done
 if command -v node >/dev/null 2>&1; then
-  node --check .claude/kit/secrets-decrypt.mjs
+  node --check .claude/afk/secrets-decrypt.mjs
 fi
 for skill in session-open session-close; do
   file=".claude/skills/$skill/SKILL.md"
@@ -98,36 +98,36 @@ done
 # A practice is read only when a pointer names it, so a practice no pointer
 # names is never read, and a pointer to a missing file sends a session
 # nowhere. HOUSE.md's Practices section is where every practice is named.
-practices_section="$(sed -n '/^## Practices$/,/^## /p' .claude/kit/HOUSE.md)"
+practices_section="$(sed -n '/^## Practices$/,/^## /p' .claude/afk/HOUSE.md)"
 [ -n "$practices_section" ] || fail "HOUSE.md has no Practices section"
-for file in .claude/kit/practices/*.md; do
+for file in .claude/afk/practices/*.md; do
   grep -qF "\`$(basename "$file")\`" <<< "$practices_section" \
     || fail "HOUSE.md's Practices section does not name $file"
 done
 for name in $(grep -oE '`[a-z-]+\.md`' <<< "$practices_section" | tr -d '`' | sort -u); do
-  [ -f ".claude/kit/practices/$name" ] || fail "HOUSE.md names the practice $name, which does not exist"
+  [ -f ".claude/afk/practices/$name" ] || fail "HOUSE.md names the practice $name, which does not exist"
 done
-for path in $(grep -rhoE '\.claude/kit/practices/[a-z-]+\.md' "${KIT_OWNED[@]}" | sort -u); do
+for path in $(grep -rhoE '\.claude/afk/practices/[a-z-]+\.md' "${AFK_OWNED[@]}" | sort -u); do
   [ -f "$path" ] || fail "a kit-owned file points at $path, which does not exist"
 done
-for dir in "${KIT_OWNED[@]}"; do
+for dir in "${AFK_OWNED[@]}"; do
   grep -qx '\* text eol=lf' "$dir/.gitattributes" 2>/dev/null \
     || fail "$dir has no .gitattributes keeping LF line endings"
 done
-if grep -rlI $'\r' "${KIT_OWNED[@]}"; then
+if grep -rlI $'\r' "${AFK_OWNED[@]}"; then
   fail "the files above hold a carriage return"
 fi
 echo "check: scripts parse, skills are whole, practices are pointed at, and line endings stay LF"
 
 # 4. A task block's format is written out in more than one file, and a
 # field or holder line added to one copy and missed in another is caught
-# nowhere else. .claude/kit/templates/TASKS.md is the source. Every fenced
+# nowhere else. .claude/afk/templates/TASKS.md is the source. Every fenced
 # example of the format in a kit-owned file, and in this repository's
 # TASKS.md, must read exactly as the template's: the whole field block, and
 # a holder line as one of the template's two lines or both in its order.
 # Only text above a TASKS.md file's Open Tasks heading is read, so a task's
 # own lines are never compared.
-python3 - "${KIT_OWNED[@]}" TASKS.md <<'EOF' || fail "a task block's format differs from .claude/kit/templates/TASKS.md, as printed above"
+python3 - "${AFK_OWNED[@]}" TASKS.md <<'EOF' || fail "a task block's format differs from .claude/afk/templates/TASKS.md, as printed above"
 import pathlib, re, sys
 
 def examples(path):
@@ -146,7 +146,7 @@ def examples(path):
 
 # The holder words before 1.10.0 are matched too, so a copy left on them fails.
 holder = re.compile(r"(HOLDING|DROPPED|(IN)?ACTIVE) \| ")
-template = ".claude/kit/templates/TASKS.md"
+template = ".claude/afk/templates/TASKS.md"
 blocks = examples(template)
 holders = [b for b in ([l for l in b if holder.match(l)] for b in blocks) if b]
 labels = re.compile(r"\*\*[A-Z][a-z]+:\*\* ")
@@ -179,8 +179,8 @@ echo "check: task block formats match the template"
 version="$(tr -d '[:space:]' < VERSION)"
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "VERSION holds '$version', not a version number"
 grep -q "^## $version\b" CHANGELOG.md || fail "CHANGELOG.md has no '## $version' entry"
-grep -qx "/session-open kit-update-${version//./-}" README.md \
-  || fail "README.md's update block does not open with /session-open kit-update-${version//./-}"
+grep -qx "/session-open afk-update-${version//./-}" README.md \
+  || fail "README.md's update block does not open with /session-open afk-update-${version//./-}"
 echo "check: version $version is recorded"
 
 # 6. End to end, in a scratch repository with nothing of its own.
@@ -193,35 +193,85 @@ git -C "$repo" -c user.name=check -c user.email=check@example.invalid \
 
 # Install from a clean clone of this checkout's HEAD, so uncommitted edits do
 # not make the status line disagree with itself.
-git clone --quiet "file://$KIT_ROOT" "$scratch/kit"
-KIT_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/kit/kit.sh" install "$repo" >/dev/null
+git clone --quiet "file://$AFK_ROOT" "$scratch/kit"
+AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null
 
-for file in $(cd "$scratch/kit" && find "${KIT_OWNED[@]}" -type f | sort); do
+for file in $(cd "$scratch/kit" && find "${AFK_OWNED[@]}" -type f | sort); do
   [ -f "$repo/$file" ] || fail "install left out $file"
-  grep -q "  $file\$" "$repo/.claude/kit/MANIFEST" || fail "MANIFEST does not list $file"
+  grep -q "  $file\$" "$repo/.claude/afk/MANIFEST" || fail "MANIFEST does not list $file"
 done
-[ -x "$repo/.claude/kit/kit.sh" ] || fail "install left kit.sh without its execute bit"
+[ -x "$repo/.claude/afk/afk.sh" ] || fail "install left afk.sh without its execute bit"
 
-status="$(cd "$repo" && bash .claude/kit/kit.sh status)"
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after install reads '$status', not '$version, current'"
 
-printf '\nA local edit.\n' >> "$repo/.claude/kit/HOUSE.md"
-status="$(cd "$repo" && bash .claude/kit/kit.sh status)"
+printf '\nA local edit.\n' >> "$repo/.claude/afk/HOUSE.md"
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 case "$status" in
-  *"edited locally: .claude/kit/HOUSE.md"*) ;;
+  *"edited locally: .claude/afk/HOUSE.md"*) ;;
   *) fail "status did not report a local edit: '$status'" ;;
 esac
-if KIT_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/kit/kit.sh" install "$repo" >/dev/null 2>&1; then
+if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null 2>&1; then
   fail "install overwrote a kit-owned file edited in place"
 fi
-KIT_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/kit/kit.sh" install "$repo" --discard-local-edits >/dev/null
-status="$(cd "$repo" && bash .claude/kit/kit.sh status)"
+AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" --discard-local-edits >/dev/null
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after reinstall reads '$status'"
 
-(cd "$repo" && bash .claude/kit/kit.sh update >/dev/null)
-status="$(cd "$repo" && bash .claude/kit/kit.sh status)"
+(cd "$repo" && bash .claude/afk/afk.sh update >/dev/null)
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after update reads '$status'"
 echo "check: install, status, and update work"
+
+# A repository on a release before 2.0.0, when the kit was Claude-Kit in
+# .claude/kit/, updates by running .claude/kit/kit.sh from the source with
+# KIT_SOURCE set to the source its manifest names. The forwarder there must
+# move it to .claude/afk/ and the kit's new address, losing nothing.
+old="$scratch/old"
+git init --quiet "$old"
+mkdir -p "$old/.claude/kit/templates" "$old/.claude/skills/session-open" "$old/.claude/skills/session-close"
+printf 'old house rules\n' > "$old/.claude/kit/HOUSE.md"
+printf 'old sweep\n' > "$old/.claude/kit/todo_sweep.py"
+printf 'old template\n' > "$old/.claude/kit/templates/TASKS.md"
+printf 'old open\n' > "$old/.claude/skills/session-open/SKILL.md"
+printf 'old close\n' > "$old/.claude/skills/session-close/SKILL.md"
+old_manifest() {
+  printf '# Written by kit.sh install. Never edit by hand.\nversion: 1.16.0\n'
+  printf 'source: https://github.com/MrFieldTech/Claude-Kit\ncommit: unknown\nfiles:\n'
+  for f in .claude/kit/HOUSE.md .claude/kit/templates/TASKS.md .claude/kit/todo_sweep.py \
+    .claude/skills/session-close/SKILL.md .claude/skills/session-open/SKILL.md; do
+    printf '  %s  %s\n' "$( (sha256sum "$old/$f" 2>/dev/null || shasum -a 256 "$old/$f") | cut -d' ' -f1)" "$f"
+  done
+}
+old_manifest > "$old/.claude/kit/MANIFEST"
+printf '@.claude/kit/HOUSE.md\n\n# Project\n\n- **Regenerate:** `python3 .claude/kit/todo_sweep.py`\n' > "$old/CLAUDE.md"
+printf '# Tasks\n\nthe project queue\n' > "$old/TASKS.md"
+mkdir -p "$old/.claude/references"
+printf 'ran .claude/kit/kit.sh\n' > "$old/.claude/references/261015000000-old.md"
+git -C "$old" add -A
+git -C "$old" -c user.name=check -c user.email=check@example.invalid commit --quiet -m "1.16.0"
+
+printf 'a local edit\n' >> "$old/.claude/kit/HOUSE.md"
+if KIT_SOURCE=https://github.com/MrFieldTech/Claude-Kit bash "$scratch/kit/.claude/kit/kit.sh" install "$old" >/dev/null 2>&1; then
+  fail "the move from .claude/kit/ overwrote a kit-owned file edited in place"
+fi
+git -C "$old" checkout --quiet -- .claude/kit/HOUSE.md
+moved="$(KIT_SOURCE=https://github.com/MrFieldTech/Claude-Kit bash "$scratch/kit/.claude/kit/kit.sh" install "$old")"
+[ ! -e "$old/.claude/kit" ] || fail "the move left .claude/kit/ behind"
+for file in $(cd "$scratch/kit" && find "${AFK_OWNED[@]}" -type f | sort); do
+  cmp -s "$scratch/kit/$file" "$old/$file" || fail "the move did not install $file"
+done
+grep -qx 'source: https://github.com/MrFieldTech/Artificial-Field-Kit' "$old/.claude/afk/MANIFEST" \
+  || fail "the move did not record the kit's new address in the manifest"
+[ "$(sed -n 1p "$old/CLAUDE.md")" = "@.claude/afk/HOUSE.md" ] || fail "the move did not point CLAUDE.md's import at .claude/afk/HOUSE.md"
+grep -qF 'python3 .claude/kit/todo_sweep.py' "$old/CLAUDE.md" || fail "the move changed CLAUDE.md beyond its import"
+[ "$(cat "$old/TASKS.md")" = "$(printf '# Tasks\n\nthe project queue')" ] || fail "the move changed TASKS.md"
+grep -qx '  CLAUDE.md' <<< "$moved" || fail "the move did not list CLAUDE.md as still naming .claude/kit/"
+grep -q 'references' <<< "$moved" && fail "the move listed a session reference, which is a record and stays"
+printf '# TODO\n\nGenerated by `.claude/kit/todo_sweep.py` from every `TODO:` in the repository.\n' > "$old/TODO.md"
+(cd "$old" && python3 .claude/afk/todo_sweep.py >/dev/null 2>&1) \
+  || fail "the sweep refused a TODO.md written by its release before 2.0.0"
+echo "check: a repository on a release before 2.0.0 moves to .claude/afk/"
 
 # The sweep: a question, a statement, a wrapped question, a marker in
 # backticks and one in a code fence, and a file the sweep must not read.
@@ -246,10 +296,10 @@ printf 'TODO: never read?\n' > "$repo/key.secrets.md"
 mkdir -p "$repo/.claude/references"
 printf 'TODO: never read either?\n' > "$repo/.claude/references/261015000000-check.md"
 git -C "$repo" add notes.md code.py key.secrets.md .claude/references
-(cd "$repo" && python3 .claude/kit/todo_sweep.py >/dev/null)
+(cd "$repo" && python3 .claude/afk/todo_sweep.py >/dev/null)
 expected='# TODO
 
-Generated by `.claude/kit/todo_sweep.py` from every `TODO:` in the repository. Never edit it by
+Generated by `.claude/afk/todo_sweep.py` from every `TODO:` in the repository. Never edit it by
 hand: answer each question where it is asked, then run the sweep again.
 
 **4 open, in 2 files.** 1 is not yet written as a question.
@@ -268,14 +318,14 @@ hand: answer each question where it is asked, then run the sweep again.
   diff <(printf '%s' "$expected") "$repo/TODO.md" >&2 || true
   fail "the sweep wrote something other than expected, diff above"
 }
-(cd "$repo" && python3 .claude/kit/todo_sweep.py --check >/dev/null) \
+(cd "$repo" && python3 .claude/afk/todo_sweep.py --check >/dev/null) \
   || fail "the sweep calls its own fresh output stale"
 printf 'TODO: A new question?\n' >> "$repo/code.py"
-if (cd "$repo" && python3 .claude/kit/todo_sweep.py --check >/dev/null 2>&1); then
+if (cd "$repo" && python3 .claude/afk/todo_sweep.py --check >/dev/null 2>&1); then
   fail "the sweep missed a stale TODO.md"
 fi
 printf '# My own list\n' > "$repo/TODO.md"
-if (cd "$repo" && python3 .claude/kit/todo_sweep.py >/dev/null 2>&1); then
+if (cd "$repo" && python3 .claude/afk/todo_sweep.py >/dev/null 2>&1); then
   fail "the sweep overwrote a TODO.md it did not write"
 fi
 echo "check: the TODO sweep works"
@@ -289,15 +339,15 @@ if command -v age >/dev/null 2>&1 && command -v age-keygen >/dev/null 2>&1; then
   mkdir -p "$keys"
   git init --quiet "$srepo"
   cp -R "$repo/.claude" "$srepo/"
-  cp "$scratch/kit/.claude/kit/templates/HANDOFF.md" "$srepo/HANDOFF.md"
+  cp "$scratch/kit/.claude/afk/templates/HANDOFF.md" "$srepo/HANDOFF.md"
   # The template has no Credentials In Transit since 1.6.0. An older
   # HANDOFF.md keeps one, and the tool still reads it there.
   printf '\n## Credentials In Transit\n\nNone.\n' >> "$srepo/HANDOFF.md"
   for k in one two three; do age-keygen -o "$keys/$k" 2>/dev/null; done
   pub() { age-keygen -y "$keys/$1"; }
-  secrets() { (cd "$srepo" && python3 .claude/kit/secrets.py "$@"); }
+  secrets() { (cd "$srepo" && python3 .claude/afk/secrets.py "$@"); }
 
-  (cd "$srepo" && python3 .claude/kit/secrets.py check >/dev/null) \
+  (cd "$srepo" && python3 .claude/afk/secrets.py check >/dev/null) \
     || fail "secrets check fails on a repository with no secrets"
   if printf 'v' | secrets set secrets/svc.secrets.md "Token" >/dev/null 2>&1; then
     fail "secrets set encrypted with no secrets-recipients.txt"
@@ -426,14 +476,14 @@ if command -v age >/dev/null 2>&1 && command -v age-keygen >/dev/null 2>&1; then
   # The Node decrypter must write what secrets.py writes.
   if command -v node >/dev/null 2>&1; then
     rm -rf "$srepo/build-secrets"
-    (cd "$srepo" && SECRETS_CHECK_BUILD=1 node .claude/kit/secrets-decrypt.mjs --out build-secrets >/dev/null) \
+    (cd "$srepo" && SECRETS_CHECK_BUILD=1 node .claude/afk/secrets-decrypt.mjs --out build-secrets >/dev/null) \
       || fail "the Node decrypter failed a check build"
     grep -qF '`secrets-check-build-placeholder`' "$copy" || fail "the Node check build wrote no placeholder"
     [ -e "$srepo/build-secrets/.claude" ] && fail "the Node decrypter wrote a session reference's companion"
-    if (cd "$srepo" && node .claude/kit/secrets-decrypt.mjs --out build-secrets >/dev/null 2>&1); then
+    if (cd "$srepo" && node .claude/afk/secrets-decrypt.mjs --out build-secrets >/dev/null 2>&1); then
       fail "the Node decrypter ran with no key"
     fi
-    if (cd "$srepo" && SECRETS_CHECK_BUILD=1 node .claude/kit/secrets-decrypt.mjs --out tracked >/dev/null 2>&1); then
+    if (cd "$srepo" && SECRETS_CHECK_BUILD=1 node .claude/afk/secrets-decrypt.mjs --out tracked >/dev/null 2>&1); then
       fail "the Node decrypter wrote into a directory git does not ignore"
     fi
     if [ -n "${CHECK_NODE_MODULES:-}" ]; then
@@ -441,11 +491,11 @@ if command -v age >/dev/null 2>&1 && command -v age-keygen >/dev/null 2>&1; then
       printf 'node_modules\n' >> "$srepo/.gitignore"
       SECRETS_AGE_KEY="$(cat "$keys/three")" secrets decrypt --out "$scratch/py-out" >/dev/null
       rm -rf "$srepo/build-secrets"
-      (cd "$srepo" && SECRETS_AGE_KEY="$(cat "$keys/three")" node .claude/kit/secrets-decrypt.mjs --out build-secrets >/dev/null) \
+      (cd "$srepo" && SECRETS_AGE_KEY="$(cat "$keys/three")" node .claude/afk/secrets-decrypt.mjs --out build-secrets >/dev/null) \
         || fail "the Node decrypter failed with a key that reads every value"
       diff -r "$scratch/py-out" "$srepo/build-secrets" >&2 \
         || fail "the Node decrypter wrote something other than secrets.py decrypt, diff above"
-      if (cd "$srepo" && SECRETS_AGE_KEY="$(cat "$keys/one")" node .claude/kit/secrets-decrypt.mjs --out build-secrets >/dev/null 2>&1); then
+      if (cd "$srepo" && SECRETS_AGE_KEY="$(cat "$keys/one")" node .claude/afk/secrets-decrypt.mjs --out build-secrets >/dev/null 2>&1); then
         fail "the Node decrypter passed with a key that reads no value"
       fi
     fi
@@ -459,4 +509,4 @@ fi
 
 # 8. This repository keeps its own TODO.md by the sweep it ships. This file is
 # excluded because the fixtures above are TODOs by design.
-python3 .claude/kit/todo_sweep.py --exclude check.sh --check
+python3 .claude/afk/todo_sweep.py --exclude check.sh --check

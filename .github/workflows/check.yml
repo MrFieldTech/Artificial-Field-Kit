@@ -24,10 +24,10 @@ jobs:
       - name: Install age
         run: sudo apt-get update -q && sudo apt-get install -y -q age
 
-      # KIT_PRIVATE_TERMS is a repository secret listing the names of the
+      # AFK_PRIVATE_TERMS is a repository secret listing the names of the
       # owner's projects, which kit-owned files must never hold. It is a
       # secret so the public repository does not publish the list.
       - name: Check the kit
         env:
-          KIT_PRIVATE_TERMS: ${{ secrets.KIT_PRIVATE_TERMS }}
+          AFK_PRIVATE_TERMS: ${{ secrets.AFK_PRIVATE_TERMS }}
         run: bash check.sh

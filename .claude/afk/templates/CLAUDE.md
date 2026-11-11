@@ -1,4 +1,4 @@
-@.claude/kit/HOUSE.md
+@.claude/afk/HOUSE.md
 
 # <Repository name>
 
@@ -8,7 +8,7 @@ never seen it.>
 ## Session Settings
 
 Read by `session-open` and `session-close`, which name no value of their own.
-What each key means is at the end of `.claude/kit/HOUSE.md`. Change a value
+What each key means is at the end of `.claude/afk/HOUSE.md`. Change a value
 here, never in a kit-owned file.
 
 - **Owner:** <the account that owns the repository>
@@ -20,7 +20,7 @@ here, never in a kit-owned file.
 - **Integration preview address:** none
 - **Task slug limit:** 23
 - **Reserved slugs:** none
-- **Regenerate:** `python3 .claude/kit/todo_sweep.py`
+- **Regenerate:** `python3 .claude/afk/todo_sweep.py`
 - **Generated files:** `TODO.md`
 - **Checks before merge:** none
 - **Credentials:** none
@@ -29,5 +29,5 @@ here, never in a kit-owned file.
 
 ## Project rules
 
-<Rules for this repository alone, on top of `.claude/kit/HOUSE.md`. Delete
+<Rules for this repository alone, on top of `.claude/afk/HOUSE.md`. Delete
 this section when there are none.>

@@ -13,13 +13,13 @@ moment it is written, from `date -u +%y%m%d%H%M%S`. A task that spans three
 sessions has three. It is never edited after the commit that adds it: a
 correction is a fact in a later reference.
 
-It starts from `.claude/kit/templates/reference.md` and keeps every heading
+It starts from `.claude/afk/templates/reference.md` and keeps every heading
 there, in that order. Under a heading with nothing to record, write `None.`
 A session that learned nothing worth keeping still writes one, with `None.`
 under every heading after Current State.
 
 - **Who.** The Developer line names the developer who ran the session, as
-  `<PREFIX> / <HANDLE>`, by Developers in `.claude/kit/HOUSE.md`, and each
+  `<PREFIX> / <HANDLE>`, by Developers in `.claude/afk/HOUSE.md`, and each
   decision names the developer who made it the same way.
 - **Facts, not documentation.** Each line is one fact a later reader can
   check, in the words the session would use to say it, not a polished page.
@@ -47,7 +47,7 @@ beside the reference and under the same name. Which method encrypts them,
 or whether they are committed at all, is the Credentials setting's:
 
 - **`kit standard`, in a repository confirmed private:** store each value
-  with `python3 .claude/kit/secrets.py set <companion> "<label>"`, its
+  with `python3 .claude/afk/secrets.py set <companion> "<label>"`, its
   label the reference's id. The note under a block names the value's home,
   or says it has none yet and names the task opened to place it. A value
   with no home yet lives here and nowhere else.
@@ -108,7 +108,7 @@ task, and copies them onto that task's branch when it does.
 **What is not copied.** An upload is not copied when it is 100 MB or more,
 which GitHub refuses; when it holds a credential in plaintext, each value
 then handled by the Credentials setting and the credential rule in
-`.claude/kit/HOUSE.md`; when it is a companion that the rule for imported
+`.claude/afk/HOUSE.md`; when it is a companion that the rule for imported
 companions above would not copy; when the developer omits it at the warning
 below; and when the repository's own rules bar something it holds. In its
 place goes a placeholder, `<name>-<yymmddhhmmss>.md` in the same directory,
@@ -146,6 +146,11 @@ task the session worked and has not closed is left to its close, which
 writes its reference. Run as the first thing in a brand new session, it has
 no session of its own to cover, so it lists the past closes with no
 reference and writes those the developer chooses.
+
+**Its own repository only.** A backfill covers only what the session did
+in the repository it runs in. Work the session did in another repository
+is that repository's to backfill, and a repository the session only read
+from gets no backfill at all.
 
 **Past closes.** Every close made one commit whose message begins
 `handoff: `, so `git log --grep='^handoff: '` on the base lists them all,
@@ -210,7 +215,7 @@ under Artifacts and records no other facts.
 
 The owner asks for it in any words. The setup runs on a task branch, as an
 ordinary task, and ends with `REFERENCES.md` at the repository root, from
-`.claude/kit/templates/REFERENCES.md`.
+`.claude/afk/templates/REFERENCES.md`.
 
 1. **Sources.** List the repositories the session's GitHub access reaches.
    Each one whose default branch holds `.claude/references/` is a
@@ -302,7 +307,7 @@ by the usual rules when the answers wait.
 - **Here not `kit standard`, or not confirmed private:** copy nothing.
   Write a `TODO:` naming the label where the value would go, and ask the
   owner what to do with it, recommending the setup in
-  `.claude/kit/credentials.md`.
+  `.claude/afk/credentials.md`.
 
 A value is never decrypted during an import.
 
