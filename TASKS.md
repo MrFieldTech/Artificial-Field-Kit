@@ -125,12 +125,12 @@ this task was asked for, in MrFieldTech's words condensed:
   default target: a static site Cloudflare can host free. A site that
   needs more becomes a full featured site, its own section, which needs
   local hosting or paid Cloudflare hosting, and the standard warns when a
-  site crosses that line. Round 2 question 1 settles where the line sits.
+  site crosses that line.
 - **Design is its own section.** MrFieldTech, 2026-11-11. The kit's
   standards are sections: design, the site standard (static and full
   featured subsections), and others as they come. MrFieldTech asked
-  whether the design section would include the emilkowalski skills;
-  round 2 question 5 settles how it refers to them.
+  whether the design section would include the emilkowalski skills; it
+  names them, below.
 - **Age is saved as a confirmation only.** MrFieldTech, 2026-11-11. A
   signup saves that the user confirmed 13 or older, and when, through a
   neutral screen that does not hint at the answer. No birth date or age
@@ -146,36 +146,53 @@ this task was asked for, in MrFieldTech's words condensed:
   only when a site grows past a static site into users and automated
   emails. A static site is never asked them.
 
-**Open questions, round 2.** Asked 2026-11-11; recommended answer first.
+- **The free plan sets the line.** MrFieldTech, 2026-11-11. The
+  standard warns when a site needs a feature or a load outside
+  Cloudflare's free plan, read from Cloudflare's pricing pages when the
+  site is built, never from memory. A backend that fits the free plan,
+  such as Pages Functions with a KV namespace, stays free and warns
+  nothing.
+- **Standards are a folder of sections.** MrFieldTech, 2026-11-11.
+  `.claude/afk/standards/`, one file per section, `site.md` holding the
+  static and full featured parts and `design.md`, read when their case
+  comes up, as the practices are. Everything under `.claude/afk/` is
+  kit-owned, so `afk.sh` installs the folder unchanged.
+- **The design rules are expanded.** MrFieldTech, 2026-11-11. The session
+  writes each of the twenty as a rule with its reason and how to check it,
+  for MrFieldTech to review.
+- **Analytics never capture keys or inputs.** MrFieldTech, 2026-11-11.
+  Session analytics and replay tools never capture key events and mask
+  every input field.
+- **The design section names the emilkowalski skills** to use for which
+  work, when they are installed. MrFieldTech, 2026-11-11.
+- **Email carries both unsubscribe forms.** MrFieldTech, 2026-11-11. Each
+  blast carries a visible unsubscribe link, the one-click unsubscribe
+  headers mail providers read, and the mailing address, which is asked as
+  a TODO once the site sends email.
+- **The standard follows the kit's version.** MrFieldTech, 2026-11-11. Its
+  separate number, 1.2, is dropped; changes go in the kit's
+  `CHANGELOG.md`.
 
-1. Where does free static end and the warning begin? Cloudflare's free
-   plan is believed, from memory and not verified, to include Pages
-   Functions, Workers, KV and D1 within daily limits, and another of
-   MrFieldTech's sites already runs two Pages Functions and a KV
-   namespace. a. Warn when a site needs a feature or a load outside
-   Cloudflare's free plan, read from Cloudflare's pricing pages when the
-   site is built. b. Warn at any backend at all.
-2. Layout: a. A folder `.claude/afk/standards/`, one file per section
-   (`site.md` with static and full featured parts, `design.md`), read
-   when their case comes up, as the practices are. b. One file.
-3. The design rules: a. The session expands each of the twenty into a
-   rule with its reason and how to check it, for MrFieldTech to review.
-   b. Keep them as the one-line list given.
-4. Analytics: a. Session analytics and replay tools never capture key
-   events and mask every input field. b. Keystrokes only.
-5. The emilkowalski skills: a. The design section names which of them to
-   use for which work, such as animation and interface review, when they
-   are installed. b. It does not mention them.
-6. Email: a. Each blast carries a visible unsubscribe link and the
-   one-click unsubscribe headers mail providers read, and the mailing
-   address, asked as a TODO once the site sends email. b. A visible link
-   only.
-7. The standard's own version: a. It drops its separate number and
-   follows the kit's version and changelog. b. It keeps its own number,
-   continuing from 1.2.
+**Done so far.** `.claude/afk/standards/design.md` drafted: the twenty
+rules as DESIGN-1 to DESIGN-20 in six groups, each with its reason and
+check, and a table of the emilkowalski skills by work.
 
-**Stopping point.** Round 2 asked. Next: record the answers as decisions
-and ask round 3, or start writing `standards/` if the frontier is empty.
+**Open questions, round 3.** Asked 2026-11-11; recommended answer first.
+
+1. What does the full featured section fix beyond the user rules and the
+   hosting warning? a. Nothing: each site chooses its backend, database
+   and authentication and records them in its `CLAUDE.md`, and the
+   section holds only rules that hold for any stack. b. One stack now,
+   named by MrFieldTech.
+2. Review of `design.md`: a. It holds as drafted. b. Changes, named by
+   MrFieldTech.
+
+**Stopping point.** Round 3 asked. Next: record the answers, then write
+`.claude/afk/standards/site.md` from the source standard, generic, in
+pieces: common rules, the static part, then the full featured part. Then
+`HOUSE.md` gains a Standards section beside Practices, the `CLAUDE.md`
+template names the standards, and the release: `VERSION` 2.1.0,
+`CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
 
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
