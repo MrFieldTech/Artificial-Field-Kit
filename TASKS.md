@@ -112,36 +112,41 @@ raised 2026-10-15.
   Claude-Kit afterwards. The release says how an installed repository
   makes the change so that nothing is lost and everything works after it.
 
-**Open questions, round 2.**
+- **The names in paths change with it.** MrFieldTech, 2026-11-11.
+  `.claude/kit/` becomes `.claude/afk/`, `kit.sh` becomes `afk.sh`,
+  `KIT_SOURCE` becomes `AFK_SOURCE`, `KIT_PRIVATE_TERMS` becomes
+  `AFK_PRIVATE_TERMS`, and the update slug `kit-update-<version>` becomes
+  `afk-update-<version>`. The update moves an installed repository's files
+  and the import in its `CLAUDE.md`. The skill directories carry no name and
+  stay. "The kit" stays in prose.
+- **The repository is `MrFieldTech/Artificial-Field-Kit`.** MrFieldTech
+  renamed it on 2026-11-11. The old URL still answers: `git ls-remote` and a
+  clone of `https://github.com/MrFieldTech/Claude-Kit` returned the same
+  `HEAD` as the new URL that day.
+- **The release is 2.0.0.** MrFieldTech, 2026-11-11. An installed
+  repository must do more than run the update.
+- **The update moves a repository onto the new URL.** MrFieldTech,
+  2026-11-11. The update prompt accepts the old or the new URL in the
+  `source:` line, and the update records the new URL in the `MANIFEST`.
 
-1. Do the kit's folder and file names change?
-   a. (recommended) No. `.claude/kit/`, `kit.sh`, `KIT_SOURCE`,
-      `KIT_PRIVATE_TERMS` and `kit-update-<version>` slugs already match a
-      name ending in Kit, so an installed repository's paths and its
-      `CLAUDE.md` import stay, and the transition is the source URL alone.
-   b. Yes, to `.claude/afk/`, `afk.sh` and so on. The update moves every
-      file and rewrites the import in each repository's `CLAUDE.md`, and
-      MrFieldTech renames the `KIT_PRIVATE_TERMS` secret.
-2. What is the GitHub repository renamed to?
-   a. (recommended) `Artificial-Field-Kit`.
-   b. `ArtificialFieldKit`.
-   c. `AFK`, which is short but not distinctive.
-3. What version is the release?
-   a. (recommended) 2.0.0. The kit's name and source URL change and every
-      install and update prompt in `README.md` changes with them, so an
-      installed repository must take a step beyond running the update.
-   b. 1.17.0, as the next feature release.
-4. How is an installed repository whose `MANIFEST` still names the old
-   URL updated?
-   a. (recommended) The update prompt in `README.md` accepts either the
-      old or the new URL in the `source:` line, and the update writes the
-      new URL into `MANIFEST`, so the next update needs no exception.
-      Relies on GitHub redirecting the old URL, which the session verifies
-      once the repository is renamed.
-   b. The `CHANGELOG.md` entry tells the repository to edit its `MANIFEST`
-      source line by hand before running the update.
+**Plan.**
 
-**Stopping point.** Round 2 asked, not yet answered.
+- A 1.x `kit.sh update` looks for `.claude/kit/kit.sh` in the source and
+  runs it as the installer. The source keeps a small forwarder there, which
+  is not kit-owned and is never installed: it maps the old URL to the new
+  and runs `.claude/afk/afk.sh install`. A kit-owned file never holds the
+  URL, by the project rule.
+- `afk.sh install`, finding a 1.x install in the target, checks the old
+  `MANIFEST` for local edits, removes `.claude/kit/`, installs
+  `.claude/afk/`, rewrites the `@.claude/kit/HOUSE.md` import in
+  `CLAUDE.md`, and lists every other file that still mentions
+  `.claude/kit/` or `kit.sh`, for the updating session to fix by the
+  `CHANGELOG.md` entry.
+- `check.sh` tests that path: a 1.16.0 install updated through the
+  forwarder ends with `.claude/afk/`, the new URL, the import moved, and
+  nothing lost.
+
+**Stopping point.** Decisions settled; the rename is next.
 
 ## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
