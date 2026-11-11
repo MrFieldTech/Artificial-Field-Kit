@@ -13,6 +13,7 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-11 | GRM / MRFIELDTECH | `skill-incorporation`, DONE, merged into `preview`: release 2.1.0 adds `.claude/afk/standards/` with the site standard (static and full featured parts, the hosting line), a content policy template and twenty design rules, named in `HOUSE.md`; `house-instructions` and `vendored-skills` opened for later | `4995d34..003517b` |
 | 2026-11-11 | GRM / MRFIELDTECH | `unique-name`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.0.0 renames the kit Artificial Field Kit and moves it from `.claude/kit/` to `.claude/afk/`, with a forwarder that moves a 1.x repository on its next update; `private-terms` opened for later | `70399cf..2b0503b` |
 | 2026-11-10 | GRM / MRFIELDTECH | `backfill-problems`, DONE, merged into `preview`: release 1.16.0 has the BACKFILL RECOVERY PROMPT check and read the kit on the base rather than the default branch, and backfill only the repository the session worked in | `6d6212a..333e4c2` |
 | 2026-10-19 | GRM / MRFIELDTECH | `backfill-questions`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.15.0 lets backfills of their own sessions run side by side, has the BACKFILL RECOVERY PROMPT approve the self-close's merge, rebuilds interleaved task blocks whole, detaches after a merged branch is deleted, and reports a finished but unmerged branch as a close perhaps still running | `049569e..51edf26` |
@@ -279,6 +280,18 @@ None.
   file. Open a task for it?
 
 ## Flagged As Unverified
+
+**Cloudflare's free plan and the site standard's hosting line.** The
+session believed, from memory, that the free plan includes Pages Functions,
+Workers, KV and D1 within daily limits; HOST-1 has every site read the
+pricing pages instead. Verified by: the first site that runs HOST-1,
+recording what the pages say.
+
+**The legal grounds the full featured rules cite.** AGE-1's under 13 line,
+UPLOAD-5's copyright agent registration and MAIL-2's provider handling of
+one-click unsubscribe headers were written from general knowledge and not
+checked against a source this session. Verified by: the owner confirming
+each where a site operates, as Part 2 of `site.md` asks.
 
 **No repository has moved from 1.x to 2.0.0 through GitHub.** A real
 1.16.0 install updated through its own `kit.sh update` to `.claude/afk/`

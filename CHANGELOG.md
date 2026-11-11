@@ -4,6 +4,36 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `afk.sh update` when its owner asks.
 
+## 2.1.0
+
+The kit carries standards: how a website is built and how any interface
+looks, read when their case comes up, as the practices are.
+
+- `.claude/afk/standards/site.md`, the site standard. It was written
+  outside the kit and reached version 1.2 there; the kit takes it over from
+  that version, generic, and it now follows the kit's version. Part 1 is
+  the static site it covered. Its typefaces are now always served from the
+  site's own origin: FONT-1 is a MUST, and FONT-2 forbids a font host such
+  as Google Fonts. New: which part applies, SITE-1 to SITE-3; the hosting
+  line, HOST-1 to HOST-4, which warns before a site needs more than
+  Cloudflare's free plan; and Part 2, the full featured site, with rules
+  for its stack, analytics that never capture keys or inputs, a 13 or
+  older age check that stores no birth date, email to a list with one-click
+  unsubscribe and a mailing address, and uploads with a consent checkbox, a
+  content policy and a Report Infringement link.
+- `.claude/afk/standards/content-policy.md`, the template a full featured
+  site fills to publish its content policy.
+- `.claude/afk/standards/design.md`, twenty design rules, DESIGN-1 to
+  DESIGN-20, each with its reason and check, and which design skills to
+  reach for when they are installed.
+- `HOUSE.md` gains a Standards section, and the standards rank between the
+  skills and the practices in Which file wins.
+
+A repository that already has a site built to the standard's version 1.2
+checks it against FONT-1 and FONT-2, and records in its `CLAUDE.md` which
+part it is built to, per SITE-1, the next time its site is worked on.
+Nothing else needs doing after updating.
+
 ## 2.0.0
 
 The kit is renamed Artificial Field Kit, AFK for short, and moves from

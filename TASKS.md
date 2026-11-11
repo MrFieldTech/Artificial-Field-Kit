@@ -55,6 +55,168 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Add The Owner's General Instructions And Permission To Fail To The House Rules
+
+**Slug:** `house-instructions`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: the
+kit should carry the general instructions MrFieldTech usually sets for
+Claude, and a Permission to Fail section, so every repository that
+installs it has them.
+
+**Background.** `HOUSE.md` already forbids em dashes, sets a short
+two-part reply with numbered questions, and says never invent a detail
+and never assume a path, command, hostname or setting. MrFieldTech's
+umbrella repository's `CLAUDE.md` carries response rules from their chat
+projects that the kit lacks: lead with the answer, Yes or No first, no
+affirmations or filler, no en dashes, complete commands, American
+English, expand an acronym on first use.
+
+**Decisions Made.**
+
+- **Add both, rebuilt as the session advises.** MrFieldTech, 2026-11-11.
+  Add Permission to Fail to `HOUSE.md`, and the general instructions
+  MrFieldTech exported, uploaded as `Generic_Instructions.txt` (its
+  placeholder is under `.claude/imported/session-import/`), rebuilt for
+  the kit: merged with what `HOUSE.md` already says, generic, nothing
+  said twice, and fitted to the response format.
+
+**Permission to Fail, as MrFieldTech gave it.**
+
+```
+## Permission to Fail
+
+You are allowed to fail. Accuracy and honesty matter more than completing the task.
+
+1. Never invent facts, sources, citations, numbers, file contents, commands, settings, or features to make an answer look complete. If you don't know something, say "I don't know" or "I could not verify this."
+2. Never present a guess as fact. Label anything uncertain as an assumption, estimate, or unverified, and say what would confirm it.
+3. If you notice a factual error, a contradiction, or a flawed premise, in my request or in your own earlier work, point it out right away. Don't work around it quietly.
+4. Make a real attempt first. Try other approaches, check your work, and use the tools you have before deciding something can't be done.
+5. If you still can't reach the goal, stop and give me a short failure report instead of a workaround that only looks right:
+   - What I asked for
+   - What you tried
+   - Where it broke down (the exact blocker: missing access, missing info, a tool limit, conflicting requirements, or a gap in your knowledge)
+   - What would unblock it (something I can provide, a different approach, or a tool or connector to enable)
+   - Any partial results you trust, clearly labeled as partial
+6. A partial answer that is honestly labeled is better than a complete answer that is wrong. "This can't be done the way you described, and here's why" counts as a successful response.
+```
+
+**The exported general instructions, as uploaded.**
+
+```
+Generic Instructions
+
+Purpose
+These instructions guide Claude across any project or repository. Project-specific context, such as goals, people, platforms, tooling, figures, and current status, lives in the project's own documentation, not here.
+
+Source of truth
+- Read the project's documentation before answering instead of assuming or relying on earlier conversations.
+- Never state names, figures, prices, versions, addresses, credentials, contact details, or tool choices from memory. If they are not documented, ask.
+- Tooling and environments change over time. If a platform, service, or workflow is not documented, ask which one is in use rather than defaulting to one.
+- If something I say conflicts with the documentation, point out the conflict and ask which is current.
+- When a new fact is confirmed during a session, such as a file location, version, or decision, tell me so it can be recorded in the documentation.
+
+Audience
+- Do not assume formal training or familiarity with jargon. Explain technical concepts at a level a capable non-specialist can act on, unless the documentation or I indicate a higher level.
+
+Instructions and commands
+- When altering files or configurations, verify the file location if it is not already documented instead of depending on default locations.
+- Verify versions before giving version-specific steps.
+- Provide complete commands, including elevated privileges, the editor, and the full path. Example: sudo nano /etc/example/config.conf
+- If a step depends on something that must be confirmed first, such as a version, a folder, or command output, give only the first few commands needed to verify it. Continue after I confirm. Provide all steps in a single message only when I specifically ask for it.
+- Never write credentials into regular files or into content meant for documentation. Credentials belong only in whatever secure storage the project designates.
+
+Decisions and evaluations
+- When asked whether something is worth pursuing, give a clear verdict first, then the deciding factors, such as effort, cost, existing alternatives, risk, and fit with the people doing the work.
+- Respect documented past decisions. If a recommendation reverses one, such as returning to a tool that was previously dropped, say so and address why it was dropped.
+- Prefer approaches that automate repeatable work and reduce manual steps.
+
+Response rules
+- Lead with the answer.
+- If the answer is yes or no, the first word is yes or no, then any necessary detail.
+- Provide extra detail only if requested.
+- Do not narrate your reasoning or restate my question back to me.
+- Do not preface answers with affirmations (for example "Great question" or "You're right").
+- No filler, and no summary of what you just said.
+- If you are uncertain or the answer is conditional, say so in one line rather than hedging across a paragraph.
+- Surface only what I need to act on or decide. Cut background I did not ask for.
+- Never use an em dash, ever.
+```
+
+**Decisions left open.**
+
+1. Where each part lands in `HOUSE.md`: its own sections, or merged into
+   Rules for every action and Response format.
+2. How the failure report fits the two-part reply: likely under What
+   brevity never suppresses, as errors are.
+3. Whether `HOUSE.md`'s "never use an em dash" also bans en dashes.
+
+**Stopping point.** Not started. First step: draft the merged text into
+`HOUSE.md` on this task's branch and grill the open decisions.
+
+### Mirror Outside Skills And Agents Into The Kit
+
+**Slug:** `vendored-skills`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
+skills should be mirrored into this repository, installed with the kit,
+so they work in the IDE or Claude Code without reaching their own
+repositories: `code-simplifier` from anthropics/claude-plugins-official,
+cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
+and emilkowalski/skills.
+
+**Facts, 2026-11-11.**
+
+- `code-simplifier` is a Claude Code agent
+  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
+  Apache License 2.0. Upstream at `43fd1f9`. A copy also sits in that
+  repository's `pr-review-toolkit` plugin.
+- cloudflare/security-audit-skill: one skill, `skills/security-audit`,
+  MIT, 372 KB, upstream at `c1c8a8c`.
+- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
+  License 2.0, upstream at `54a7988`. Claude Code lists every installed
+  skill's name and description in each session's context, so 818 in
+  every repository would cost context in every session.
+- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`.
+- Both licenses allow mirroring into a public repository with the
+  license and any notice kept.
+
+**Decisions Made.**
+
+- **`code-simplifier` is mirrored as an agent** under `.claude/agents/`.
+  MrFieldTech, 2026-11-11. A Claude Code agent is used when the session
+  hands it work by the Agent tool, which it does on its own when the
+  work matches the agent's description, or when the owner asks for it by
+  name, such as "run the code-simplifier agent on this change".
+- **The cybersecurity skills are mirrored whole and installed only by
+  name.** MrFieldTech, 2026-11-11. All 818 are kept in this repository;
+  a repository installs the ones its Session Settings list.
+- **All 18 emilkowalski skills install everywhere.** MrFieldTech,
+  2026-11-11. The mobile and Swift ones were first recommended left out
+  only because no mobile work was seen, not for quality or size, and
+  MrFieldTech will build mobile apps, so they install now.
+
+**Decisions left open.**
+
+1. Where the mirrors live in this repository, and how each upstream's
+   license, notice and pinned commit are recorded.
+2. How a mirror is refreshed from upstream: a script recording the
+   commit, run as its own release.
+3. The Session Settings key that lists the cybersecurity skills a
+   repository installs, its name and default, defined in `HOUSE.md` and
+   given a default in the `CLAUDE.md` template.
+4. Whether `afk.sh install` and `update` treat mirrored files as
+   kit-owned, recorded in `MANIFEST`.
+5. Whether the cybersecurity skills need a review before mirroring, since
+   some hold offensive security procedures.
+
+**Stopping point.** Not started. First step: grill the open decisions,
+then mirror one source at a time, one commit each.
+
 ### Build The Private Terms List
 
 **Slug:** `private-terms`
@@ -93,6 +255,156 @@ repository; fixing that is part of the task.
 the session tests it against `bash check.sh` before it is saved.
 
 ## Closed Tasks
+
+### Carry The Site And Design Standards In The Kit
+
+DROPPED | GRM / MRFIELDTECH | 261111 184010
+HOLDING | GRM / MRFIELDTECH | 261111 162605
+
+**Slug:** `skill-incorporation`
+**Status:** DONE
+**Opened:** 2026-11-11
+**Closed:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, in a temporary session that found the
+static site standard lives outside the kit: the kit should carry every
+skill and standard MrFieldTech wants, so installing it into a new app or
+site repository installs all of them. The request was split into three
+tasks (decision 11): this one carries the site standard and the design
+standard; `house-instructions` carries the general instructions and
+Permission to Fail; `vendored-skills` mirrors the outside skills. What
+this task was asked for, in MrFieldTech's words condensed:
+
+1. **The site standard,** now held in another of MrFieldTech's
+   repositories, carried by the kit so any site built where the kit is
+   installed follows it, with these rules added:
+   - every site font served locally, never fetched from Google Fonts;
+   - session analytics never record keystrokes;
+   - every user signup form verifies age, admitting no one under 13,
+     with the birth date or age saved to the profile only if advised,
+     since it adds personal information to the user database;
+   - every email blast to subscribers carries a one-click unsubscribe and
+     the company's official mailing address;
+   - every user upload requires a checkbox stating the user owns or may
+     use the file and agrees to the content policy, a content policy to
+     be written, and a "Report Infringement" link to a form or email
+     address for reporting uploaded content.
+2. **Design rules,** in their own section: delete filler badges; drop
+   redundant labels; unitalicize random header words; mono only where
+   needed; use a design system; show the actual product; enlarge the main
+   feature; group with spacing; make headlines specific; emphasize the
+   call to action; add an accent color; keep icons consistent; remove
+   embellishments; inner corner radius equals outer radius minus padding;
+   improve text contrast; wrap headlines properly; align by eye, not
+   pixels; use tabular numbers; add loading states; animate useful
+   feedback.
+
+**Facts, 2026-11-11.**
+
+- The standard is 1,276 lines, version 1.2, updated 2026-10-03, written
+  for static sites (HTML, one CSS file, one vanilla JS file, built by
+  Vite with pnpm, served by Cloudflare Pages) with no backend, database,
+  authentication or analytics. Its sections: Purpose, Owner, Access,
+  Dependencies, Restart/Recovery (repository, layout, build, content and
+  assets, configuration files, deployment, environments, secrets, the New
+  site checklist, the Pre-launch verification checklist, known failure
+  modes), Escalation, and a Modification Map holding a `CLAUDE.md`
+  template for new site repositories. It names the owner's projects and
+  accounts 8 times, so the kit's copy drops them by the project rules.
+- Its FONT-2 allows a font host such as Google Fonts; request 1 removes
+  that, leaving FONT-1, self-hosted WOFF2, as the rule.
+- Its source repository's records make it the source of truth there; no
+  session here writes to that repository.
+- Signup forms, uploads and email subscriptions need a backend, which the
+  static standard excludes.
+
+**Decisions Made.**
+
+- **The kit is the standard's source.** MrFieldTech, 2026-11-11. The kit
+  holds it, generic, and the other repository's entry becomes a pointer
+  to the kit, by a task in that repository once this releases.
+- **One site standard, in sections.** MrFieldTech, 2026-11-11. A single
+  source of truth covers creating any site. Its static section is the
+  default target: a static site Cloudflare can host free. A site that
+  needs more becomes a full featured site, its own section, which needs
+  local hosting or paid Cloudflare hosting, and the standard warns when a
+  site crosses that line.
+- **Design is its own section.** MrFieldTech, 2026-11-11. The kit's
+  standards are sections: design, the site standard (static and full
+  featured subsections), and others as they come. MrFieldTech asked
+  whether the design section would include the emilkowalski skills; it
+  names them, below.
+- **Age is saved as a confirmation only.** MrFieldTech, 2026-11-11. A
+  signup saves that the user confirmed 13 or older, and when, through a
+  neutral screen that does not hint at the answer. No birth date or age
+  is stored, keeping personal information out of the user database.
+- **The content policy is a kit template.** MrFieldTech, 2026-11-11, with
+  a TODO for each site-specific fact.
+- **Report Infringement links to a form or email address,** plus a
+  checklist TODO for the copyright agent's details where the site
+  operates in the United States. MrFieldTech, 2026-11-11.
+- **The user rules apply only past static.** MrFieldTech, 2026-11-11. The
+  age check, uploads, content policy, Report Infringement and email
+  rules, and the questions that fill them, are asked about or applied
+  only when a site grows past a static site into users and automated
+  emails. A static site is never asked them.
+
+- **The free plan sets the line.** MrFieldTech, 2026-11-11. The
+  standard warns when a site needs a feature or a load outside
+  Cloudflare's free plan, read from Cloudflare's pricing pages when the
+  site is built, never from memory. A backend that fits the free plan,
+  such as Pages Functions with a KV namespace, stays free and warns
+  nothing.
+- **Standards are a folder of sections.** MrFieldTech, 2026-11-11.
+  `.claude/afk/standards/`, one file per section, `site.md` holding the
+  static and full featured parts and `design.md`, read when their case
+  comes up, as the practices are. Everything under `.claude/afk/` is
+  kit-owned, so `afk.sh` installs the folder unchanged.
+- **The design rules are expanded.** MrFieldTech, 2026-11-11. The session
+  writes each of the twenty as a rule with its reason and how to check it,
+  for MrFieldTech to review.
+- **Analytics never capture keys or inputs.** MrFieldTech, 2026-11-11.
+  Session analytics and replay tools never capture key events and mask
+  every input field.
+- **The design section names the emilkowalski skills** to use for which
+  work, when they are installed. MrFieldTech, 2026-11-11.
+- **Email carries both unsubscribe forms.** MrFieldTech, 2026-11-11. Each
+  blast carries a visible unsubscribe link, the one-click unsubscribe
+  headers mail providers read, and the mailing address, which is asked as
+  a TODO once the site sends email.
+- **The standard follows the kit's version.** MrFieldTech, 2026-11-11. Its
+  separate number, 1.2, is dropped; changes go in the kit's
+  `CHANGELOG.md`.
+
+- **The full featured part fixes no stack.** MrFieldTech, 2026-11-11.
+  Each site chooses its backend, database and authentication and records
+  them in its `CLAUDE.md`; when sites built this way show a common choice,
+  the kit adds it.
+- **`design.md` holds as drafted.** MrFieldTech, 2026-11-11.
+
+**Done.** Release 2.1.0, on this branch:
+
+- `.claude/afk/standards/site.md`: the source standard's version 1.2,
+  generic, as Part 1, with FONT-1 a MUST and FONT-2 forbidding font hosts;
+  new Which part applies (SITE-1 to SITE-3), the hosting line (HOST-1 to
+  HOST-4), Part 2 (FULL, TRACK, AGE, MAIL and UPLOAD rules and a full
+  featured checklist), the change process moved to the kit, and the
+  `CLAUDE.md` template pointed at the kit's standards. The source's
+  frontmatter, Related links and change log were left out.
+- `.claude/afk/standards/content-policy.md`, the policy template, with a
+  TODO per site-specific fact.
+- `.claude/afk/standards/design.md`, DESIGN-1 to DESIGN-20.
+- `HOUSE.md`: a Standards section, and standards ranked fifth in Which
+  file wins, before the practices.
+- `check.sh`: addresses whose host is a `<placeholder>`, localhost, the
+  sitemap namespace or the escaped prefix a check greps for are allowed;
+  `HOUSE.md` must name every standard.
+- `VERSION`, `CHANGELOG.md`, `README.md` and its `afk-update-2-1-0` slug.
+
+**Follow-up outside this repository.** The repository that held the
+standard keeps its entry as the source until a task there turns it into a
+pointer to the kit, per the first decision. Repositories with sites take
+2.1.0 by update.
 
 ### Give The Kit A Distinctive Name
 
