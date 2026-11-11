@@ -64,6 +64,11 @@ here, never in a kit-owned file.
   reads it; one that holds a term, or that cannot be checked because the
   variable is not set, gets the placeholder instead, naming no other project.
   `check.sh` fails on any match under `.claude/imported/`.
+- **`.claude/kit/kit.sh` stays.** It is not kit-owned and is never
+  installed: a release before 2.0.0 updates by running it from this
+  repository, and it hands the install to `.claude/afk/afk.sh`. Removing it
+  strands every repository still on 1.x, so it goes only when MrFieldTech
+  says none is left.
 - **A skill stays generic by reading Session Settings.** A value that differs
   between repositories becomes a settings key, defined at the end of
   `HOUSE.md` and given a default in `.claude/afk/templates/CLAUDE.md`, never a
