@@ -13,6 +13,7 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-11 | GRM / MRFIELDTECH | `unique-name`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.0.0 renames the kit Artificial Field Kit and moves it from `.claude/kit/` to `.claude/afk/`, with a forwarder that moves a 1.x repository on its next update; `private-terms` opened for later | `70399cf..2b0503b` |
 | 2026-11-10 | GRM / MRFIELDTECH | `backfill-problems`, DONE, merged into `preview`: release 1.16.0 has the BACKFILL RECOVERY PROMPT check and read the kit on the base rather than the default branch, and backfill only the repository the session worked in | `6d6212a..333e4c2` |
 | 2026-10-19 | GRM / MRFIELDTECH | `backfill-questions`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.15.0 lets backfills of their own sessions run side by side, has the BACKFILL RECOVERY PROMPT approve the self-close's merge, rebuilds interleaved task blocks whole, detaches after a merged branch is deleted, and reports a finished but unmerged branch as a close perhaps still running | `049569e..51edf26` |
 | 2026-10-17 | GRM / MRFIELDTECH | `backfill-no-close`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 1.14.0 has a backfill cover everything its session did that no reference covers, names backfill references `<yymmddhhmmss>-<slug>-bf.md`, and adds the BACKFILL RECOVERY PROMPT to `README.md` | `054e960..d99a0e6` |
@@ -216,6 +217,13 @@ None.
   to backfill a repository whose kit update was on its integration branch
   only, and offered a second repository it had only read. The full
   decisions are in the `backfill-problems` block in `TASKS.md`.
+- **The kit is Artificial Field Kit, AFK, in `.claude/afk/`.** MrFieldTech,
+  2026-11-11: Claude-Kit was a name anyone could use. Release 2.0.0, at
+  `MrFieldTech/Artificial-Field-Kit`. The full decisions are in the
+  `unique-name` block in `TASKS.md`.
+- **The 1.x forwarder stays at `.claude/kit/kit.sh`.** GRM / MRFIELDTECH,
+  2026-11-11, in `unique-name`: every 1.x repository updates by running it.
+  Moved to `CLAUDE.md` as a project rule.
 
 ## Open Questions
 
@@ -233,9 +241,11 @@ None.
   own pull requests, and a repository whose branch protection requires an
   approval would park every task at close. Not wanted now; open a task when
   it is?
-- **Should the kit take a more distinctive name?** Raised by GRM /
-  MRFIELDTECH, 2026-10-15. Claude-Kit used publicly is too generic. Open a
-  task to choose one?
+- **Should CI fail when `AFK_PRIVATE_TERMS` is empty?** Raised by GRM /
+  MRFIELDTECH, 2026-11-11, in `unique-name`, for `private-terms`. The
+  secret never existed and CI skipped the names check with only a log
+  line, so no session noticed, and this one told MrFieldTech to copy a
+  secret that was not there. Settle it in `private-terms`?
 
 - **Should the kit make every remote branch tracked from the start?** A
   session working from a single-branch clone pushed its task branch, but git
@@ -269,6 +279,19 @@ None.
   file. Open a task for it?
 
 ## Flagged As Unverified
+
+**No repository has moved from 1.x to 2.0.0 through GitHub.** A real
+1.16.0 install updated through its own `kit.sh update` to `.claude/afk/`
+in a scratch repository on 2026-11-11, from a local source, and `check.sh`
+tests the forwarder's mapping of the old address. Verified by: the first
+repository to take 2.0.0 by the update prompt, which should end with
+`.claude/afk/`, the new address in its `MANIFEST`, and the files the
+update listed changed by the 2.0.0 entry.
+
+**Whether the old address keeps redirecting.** On 2026-11-11 both
+addresses returned the same `HEAD`. GitHub ends a redirect if a repository
+is ever created at the old name. Verified by: never creating
+`MrFieldTech/Claude-Kit` again.
 
 **No session has made a copy under `.claude/imported/`.** `backfill-no-close`
 wrote four placeholders under `session-import/`, by this repository's rule
@@ -316,9 +339,10 @@ including `git diff --diff-filter=A` across a source's history.
 account.** Push protection on a public repository is believed free; custom
 patterns, which could catch project names, were not checked.
 
-**The kit's own references were not checked against the private terms.**
-`KIT_PRIVATE_TERMS` was not set in this session's environment, so the first
-reference here names no other project by hand, and CI checks it.
+**No reference or kit-owned file here has been checked against private
+terms.** The `KIT_PRIVATE_TERMS` secret never existed, found 2026-11-11, so
+CI skipped the check on every run. Verified by: `private-terms` setting
+`AFK_PRIVATE_TERMS` and a CI run passing with it.
 
 **No session has run 1.6.0's open or close from start to finish.** This
 session opened under 1.5.0 and wrote its own holder lines by hand. The next

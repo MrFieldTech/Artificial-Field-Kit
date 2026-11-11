@@ -55,13 +55,54 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Build The Private Terms List
+
+**Slug:** `private-terms`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
+`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
+
+**Background.** `check.sh` section 1 reads the secret in CI, or an
+untracked `.private-terms` file locally, as one extended regular
+expression matched case-sensitively by `grep -E`, and fails when it
+matches anything in the kit-owned files, `.claude/references/` or
+`.claude/imported/`. Without it the names part is skipped with a line in
+the log. MrFieldTech found on 2026-11-11 that the secret, then named
+`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
+session reads the same list from its environment to redact a reference at
+close, which needs it set as an environment variable as well, where it is
+stored in plain text.
+
+**Decisions left open.**
+
+1. Which terms go in: the names of MrFieldTech's other projects and
+   repositories, their domains and hosts, the names of clients and other
+   people. Not `MrFieldTech`, which this repository's references name as
+   the developer.
+2. Whether the list is also set in the cloud environment, so closes here
+   can redact.
+3. Whether CI should fail, rather than skip, when the secret is empty, so
+   a missing list is never silent again.
+
+The first CI run with the list may fail on a name already in the
+repository; fixing that is part of the task.
+
+**Stopping point.** Not started. First step: MrFieldTech writes the list;
+the session tests it against `bash check.sh` before it is saved.
+
+## Closed Tasks
+
 ### Give The Kit A Distinctive Name
 
+DROPPED | GRM / MRFIELDTECH | 261111 042752
 HOLDING | GRM / MRFIELDTECH | 261110 225422
 
 **Slug:** `unique-name`
-**Status:** ACTIVE
+**Status:** DONE
 **Opened:** 2026-11-10
+**Closed:** 2026-11-11
 
 **Why.** MrFieldTech, 2026-11-10, ran `/session-open unique-name`: the
 name Claude-Kit is too generic, anyone could use it for their own project,
@@ -156,11 +197,11 @@ runs. `todo_sweep.py` accepts a `TODO.md` its 1.x self wrote. `check.sh`
 tests the move, and a real 1.16.0 install updated through its own
 `kit.sh update` to 2.0.0 in a scratch repository on 2026-11-11, reporting
 `2.0.0, current` after. `bash check.sh` passed on `f2754e8`. CI reads
-`AFK_PRIVATE_TERMS`, a secret MrFieldTech must add.
+`AFK_PRIVATE_TERMS`. MrFieldTech found on 2026-11-11 that no
+`KIT_PRIVATE_TERMS` secret ever existed, so CI has never checked names;
+`private-terms` builds the list. `CLAUDE.md` gained a project rule keeping
+the forwarder.
 
-**Stopping point.** Built and checked; `/session-close` is next.
-
-## Closed Tasks
 ### Point The Backfill Recovery Prompt At The Right Branch And Repository
 
 DROPPED | GRM / MRFIELDTECH | 261110 210147
