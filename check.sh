@@ -43,10 +43,26 @@ fail() {
 ADDRESS='https?://|[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}|\b[A-Za-z0-9-]+\.(com|net|org|io|dev|app|gg|co|us|me|ai)\b'
 # grep exits 1 when nothing matches and 2 when it cannot search, which must
 # fail the check rather than pass it.
+#
+# A standard writes addresses with a placeholder for the host, such as
+# https://www.<domain>/, which name no project. A whole address is allowed
+# when its host is a <placeholder> or localhost, or when it is the sitemap
+# protocol's XML namespace or the escaped prefix a check command greps for.
+ALLOWED='^((https?://)?(www\.)?<[a-z-]+>|https?://localhost[:/]|http://www\.sitemaps\.org/schemas/sitemap/0\.9$|https://www\\\.$)'
 status=0
-grep -rnIE "$ADDRESS" "${AFK_OWNED[@]}" || status=$?
+hits="$(grep -rnIE "$ADDRESS" "${AFK_OWNED[@]}")" || status=$?
 [ "$status" -ne 0 ] && [ "$status" -ne 1 ] && fail "the address pattern could not be searched"
-[ "$status" -eq 0 ] && fail "the lines above hold an address, which belongs to one project"
+bad=""
+while IFS= read -r line; do
+  [ -n "$line" ] || continue
+  text="${line#*:*:}"
+  tokens="$(grep -oE "[^[:space:]\`\"'(]*(${ADDRESS})[^[:space:]\`\"')]*" <<< "$text" || true)"
+  if grep -vqE "$ALLOWED" <<< "$tokens"; then bad+="$line"$'\n'; fi
+done <<< "$hits"
+if [ -n "$bad" ]; then
+  printf '%s' "$bad"
+  fail "the lines above hold an address, which belongs to one project"
+fi
 # Names cannot be caught by pattern, so they come from a list kept out of
 # this public repository: the AFK_PRIVATE_TERMS repository secret in CI, or an
 # untracked .private-terms file locally, holding one extended regular
@@ -107,6 +123,18 @@ done
 for name in $(grep -oE '`[a-z-]+\.md`' <<< "$practices_section" | tr -d '`' | sort -u); do
   [ -f ".claude/afk/practices/$name" ] || fail "HOUSE.md names the practice $name, which does not exist"
 done
+standards_section="$(sed -n '/^## Standards$/,/^## /p' .claude/afk/HOUSE.md)"
+[ -n "$standards_section" ] || fail "HOUSE.md has no Standards section"
+for file in .claude/afk/standards/*.md; do
+  grep -qF "\`$(basename "$file")\`" <<< "$standards_section" \
+    || fail "HOUSE.md's Standards section does not name $file"
+done
+for name in $(grep -oE '`[a-z-]+\.md`' <<< "$standards_section" | tr -d '`' | sort -u); do
+  [ -f ".claude/afk/standards/$name" ] || fail "HOUSE.md names the standard $name, which does not exist"
+done
+for path in $(grep -rhoE '\.claude/afk/standards/[a-z-]+\.md' "${AFK_OWNED[@]}" | sort -u); do
+  [ -f "$path" ] || fail "a kit-owned file points at $path, which does not exist"
+done
 for path in $(grep -rhoE '\.claude/afk/practices/[a-z-]+\.md' "${AFK_OWNED[@]}" | sort -u); do
   [ -f "$path" ] || fail "a kit-owned file points at $path, which does not exist"
 done
@@ -117,7 +145,7 @@ done
 if grep -rlI $'\r' "${AFK_OWNED[@]}"; then
   fail "the files above hold a carriage return"
 fi
-echo "check: scripts parse, skills are whole, practices are pointed at, and line endings stay LF"
+echo "check: scripts parse, skills are whole, practices and standards are pointed at, and line endings stay LF"
 
 # 4. A task block's format is written out in more than one file, and a
 # field or holder line added to one copy and missed in another is caught

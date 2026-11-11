@@ -41,6 +41,13 @@ looked back on, and each proposal becomes a question for the owner. Every
 pull request a close opens carries a summary, evidence and a merge danger
 call.
 
+Two standards ride along the same way. Before a session creates a website
+it reads the site standard: a static site Cloudflare Pages serves free, with
+its typefaces served from its own origin, and the rules a site takes on when
+it grows accounts, uploads, email to a list or analytics, including a warning
+before anything leaves Cloudflare's free plan. Before it designs or reviews
+an interface it reads the design standard's twenty rules.
+
 Every close also writes a session reference: the facts the session
 learned, its decisions, exact values and open questions, one block per
 subject it worked on, in a dated file under `.claude/references/` that is
@@ -80,6 +87,7 @@ by an update.
 | `.claude/skills/session-open/SKILL.md` | Opens a session: reads the state, surveys the branches, puts the session on its task's branch, and runs the first-run setup in a repository new to the kit. With `temp`, opens a read-only temporary session that promotes the integration branch and turns into tasks only when asked. With `import`, imports the session references of other repositories |
 | `.claude/skills/session-close/SKILL.md` | Closes a session: places credentials, writes the state back and the session reference, regenerates, pushes, and merges a finished task or parks an unfinished one. It diagnoses a failing check before parking, writes the pull request body, and looks back over a session that met friction |
 | `.claude/afk/references.md` | Session references: what a close writes and its companion for credentials, the copies of imported references and uploaded files, the setup that turns imports on, the import, and the kit's default import procedure |
+| `.claude/afk/standards/` | Two standards `HOUSE.md` names, read when their case comes up: `site.md`, how a website is built, static first and full featured when it takes in visitors' data, with `content-policy.md`, the template for a site's content policy; and `design.md`, the rules for any user interface |
 | `.claude/afk/practices/` | Five practices `HOUSE.md` names and the skills run at fixed points: grilling, diagnosing, writing for agents, questionnaire, and retrospective |
 | `.claude/afk/afk.sh` | Installs, updates, and reports the kit's status |
 | `.claude/afk/todo_sweep.py` | Collects every `TODO:` in the repository into `TODO.md` |
@@ -217,7 +225,7 @@ release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open afk-update-2-0-0
+/session-open afk-update-2-1-0
 Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
 repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:

@@ -22,7 +22,8 @@ When two sources disagree, the first of these wins:
 2. The rest of `CLAUDE.md`.
 3. This file.
 4. The `session-open` and `session-close` skills.
-5. The practices in `.claude/afk/practices/`.
+5. The standards in `.claude/afk/standards/`.
+6. The practices in `.claude/afk/practices/`.
 
 Read the authority file rather than working from memory of it. It is
 versioned and it changes. A conflict between it and an instruction from the
@@ -202,6 +203,22 @@ reaches for it on its own, and the owner never has to name one.
   own, such as a task about to block on several questions.
 - **Retrospective**, `retro.md`: at close when the session met friction,
   and when the owner asks what went wrong or what would have prevented it.
+
+## Standards
+
+Two standards hold how kinds of things are built, whatever the repository.
+Each is a file in `.claude/afk/standards/`, read in full when its case comes
+up. The session reaches for it on its own, and the owner never has to name
+one. A rule in a standard that does not fit the work is raised with the
+owner, never broken quietly.
+
+- **Site**, `site.md`: before creating a website, before adding a feature
+  that takes in visitors' data, such as accounts, uploads, stored forms,
+  email to a list or analytics, and before calling site work done. Its
+  template for a site's content policy is `content-policy.md`.
+- **Design**, `design.md`: before designing or reviewing any user
+  interface, a site, an app or a page, and before calling interface work
+  done.
 
 ## Response format
 
