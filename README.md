@@ -217,7 +217,7 @@ release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open afk-update-1-16-0
+/session-open afk-update-2-0-0
 Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
 repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:
@@ -225,20 +225,35 @@ trust. I want you to take each of these actions on this task's branch:
 1. Attach MrFieldTech/Artificial-Field-Kit to this session with read access, if this
    is a cloud session. Do not register it as one of this session's
    repositories.
-2. Read the source: line in .claude/afk/MANIFEST. If it names anything
-   other than https://github.com/MrFieldTech/Artificial-Field-Kit, in any letter case,
-   stop and tell me instead of updating, because the update runs whatever
-   that source holds.
-3. Run bash .claude/afk/afk.sh update. It clones the kit from that source
-   and runs the new release's installer, which replaces the kit's skills in
-   .claude/skills/ and its house rules in .claude/afk/. I want that change
-   to your own configuration.
+2. Read the source: line in .claude/afk/MANIFEST, or in
+   .claude/kit/MANIFEST when there is no .claude/afk/, because before
+   2.0.0 the kit was named Claude-Kit and lived there. If it names
+   anything other than https://github.com/MrFieldTech/Artificial-Field-Kit
+   or its old address, https://github.com/MrFieldTech/Claude-Kit, in any
+   letter case, stop and tell me instead of updating, because the update
+   runs whatever that source holds.
+3. Run bash .claude/afk/afk.sh update, or bash .claude/kit/kit.sh update
+   when there is no .claude/afk/. It clones the kit from that source and
+   runs the new release's installer, which replaces the kit's skills in
+   .claude/skills/ and its house rules in .claude/afk/, removes
+   .claude/kit/ when the kit lived there, and points the import in
+   CLAUDE.md at .claude/afk/HOUSE.md. I want those changes to your own
+   configuration.
 4. Commit the update on its own, then do whatever the kit's CHANGELOG.md
    says the new release requires of a repository.
 
 If auto mode blocks one of these anyway, do not work around it. Stop, and
 give me the exact sentence to reply with that approves the blocked action.
 ```
+
+A repository on a release before 2.0.0, when the kit was named Claude-Kit
+and lived in `.claude/kit/`, updates by the same block. Its old `kit.sh`
+runs a forwarder this repository keeps at `.claude/kit/kit.sh`, which hands
+the install to `afk.sh`. That moves the kit to `.claude/afk/`, records the
+kit's new address in the `MANIFEST`, points the `CLAUDE.md` import at
+`.claude/afk/HOUSE.md`, and lists every other file that still names the old
+paths. The 2.0.0 entry in `CHANGELOG.md` says what the session then changes
+in those files and what it leaves as a record.
 
 Then `/session-close` merges it like any other task. The update refuses to
 overwrite a kit-owned file edited in place unless it is given
@@ -282,13 +297,15 @@ date. Do not work from them or from memory. I want you to:
 4. Check that the base holds the kit: git show
    <base>:.claude/skills/session-open/SKILL.md. If it does not exist, stop
    and tell me the kit is not installed there. Check its release: the
-   version: line of .claude/afk/MANIFEST on the base, or its VERSION file
-   when there is no MANIFEST. If it is older than 1.14.0, stop and tell me
+   version: line of .claude/afk/MANIFEST on the base, or of
+   .claude/kit/MANIFEST before 2.0.0, when the kit lived there, or its
+   VERSION file when there is neither. If it is older than 1.14.0, stop and tell me
    the repository needs a kit update merged into the base before a
    backfill.
 5. Read these files as they are on the base, with git show, in full:
    CLAUDE.md, .claude/afk/HOUSE.md, .claude/skills/session-open/SKILL.md,
-   .claude/skills/session-close/SKILL.md and .claude/afk/references.md.
+   .claude/skills/session-close/SKILL.md and .claude/afk/references.md,
+   with .claude/kit/ in place of .claude/afk/ before 2.0.0.
 6. Follow session-open as if I had just typed /session-open backfill in
    this session: steps 1 to 3, then its Backfill section, and the
    Backfilling rules in references.md. Once step 2 has checked out the
@@ -316,6 +333,9 @@ the exact sentence to reply with that approves the blocked action.
 This repository runs on its own protocol, from the same files it ships. The
 files under `.claude/afk/` and the two skills are the source, so there is no
 `MANIFEST` here, and `afk.sh status` reports the source itself.
+`.claude/kit/kit.sh` is not kit-owned and is never installed: it is the
+forwarder a release before 2.0.0 runs to update, and it stays as long as a
+repository on one may still update.
 
 - **Nothing the kit installs names a project.** A kit-owned file is
   installed into every repository, and this repository is public, so it

@@ -2,7 +2,55 @@
 
 Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
-exists, and the project takes it by `kit.sh update` when its owner asks.
+exists, and the project takes it by `afk.sh update` when its owner asks.
+
+## 2.0.0
+
+The kit is renamed Artificial Field Kit, AFK for short, and moves from
+`.claude/kit/` to `.claude/afk/`. It was Claude-Kit, a name anyone could
+use for their own project.
+
+- The kit's repository is
+  `https://github.com/MrFieldTech/Artificial-Field-Kit`. The old address
+  still reaches it, and the update records the new one in the `MANIFEST`.
+- `.claude/kit/` is now `.claude/afk/`, `kit.sh` is `afk.sh`, `KIT_SOURCE`
+  is `AFK_SOURCE`, and an update's task slug is `afk-update-<version>`.
+  The skills keep their directories and commands, and "the kit" stays the
+  kit in prose.
+- An update from a release before 2.0.0 runs the old `kit.sh update`, which
+  runs a forwarder the kit's repository keeps at `.claude/kit/kit.sh`. The
+  install it hands over to refuses, as always, when a kit-owned file was
+  edited in place. Otherwise it removes `.claude/kit/`, installs
+  `.claude/afk/`, points the `CLAUDE.md` import at `.claude/afk/HOUSE.md`,
+  and lists every other file that still names the old paths or the old
+  name.
+- `todo_sweep.py` still overwrites a `TODO.md` that its release before
+  2.0.0 wrote.
+- `README.md`'s update prompt reads the `MANIFEST` and runs the update
+  from either place, and its BACKFILL RECOVERY PROMPT reads the kit from
+  either.
+
+After updating, a repository does this on the update's task branch:
+
+1. Commit the update on its own, with `git add -A`, so the removal of
+   `.claude/kit/` is in it.
+2. In each file the update listed, change every live instruction:
+   `.claude/kit/` to `.claude/afk/`, `kit.sh` to `afk.sh`, `KIT_SOURCE` to
+   `AFK_SOURCE`, and Claude-Kit to Artificial Field Kit. These are usually
+   the Regenerate, Checks before merge and Secrets checks settings in
+   `CLAUDE.md`, the authority file, a CI workflow or build script that
+   runs `secrets.py` or `secrets-decrypt.mjs`, a list of the repository's
+   files in its `README.md`, and the text above the first task in
+   `TASKS.md` and above the session log in `HANDOFF.md`. A build host that
+   decrypts by the old path fails once the update reaches the branch it
+   builds, so its command changes in the same task.
+3. Leave records as they are: closed task blocks, the session log,
+   decisions, everything under `.claude/references/` and
+   `.claude/imported/`, and earlier `kit-update-<version>` task names.
+4. Run the Regenerate commands and the Checks before merge, and commit.
+
+A task branch parked from before the update takes the move when its next
+`session-open` merges the base in.
 
 ## 1.16.0
 
