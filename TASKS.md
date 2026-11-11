@@ -57,8 +57,10 @@ Then the detail block, as prose.
 
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
+HOLDING | GRM / MRFIELDTECH | 261111 191506
+
 **Slug:** `house-instructions`
-**Status:** TODO
+**Status:** ACTIVE
 **Opened:** 2026-11-11
 
 **Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: the
