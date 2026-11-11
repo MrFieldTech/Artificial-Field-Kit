@@ -100,6 +100,31 @@ and emilkowalski/skills.
   2026-11-11. The mobile and Swift ones were first recommended left out
   only because no mobile work was seen, not for quality or size, and
   MrFieldTech will build mobile apps, so they install now.
+- **The mirrors live in this repository, under `vendor/<owner>-<repo>/`,
+  each upstream whole, and a repository receives only what it installs.**
+  MrFieldTech, 2026-11-11. To keep 49 MB from downloading at every open,
+  `afk.sh status`, `install` and `update` fetch the kit by a blobless
+  sparse clone (`--filter=blob:none --sparse`), checking out only the
+  kit-owned paths and the mirrored skills the repository installs. Tried
+  on the cybersecurity collection, 2026-11-11: 1.5 MB in about a second.
+- **The mirrors are kept bit for bit.** MrFieldTech, 2026-11-11.
+  `check.sh` sections 1 and 2 and the TODO sweep skip `vendor/` and the
+  installed copies, so a refresh stays a plain copy.
+- **The installed copies are kit-owned.** MrFieldTech, 2026-11-11. They
+  are listed in `MANIFEST`, replaced whole by every update, and an edit in
+  place is reported and refused like any other kit-owned file.
+- **A mirror is refreshed by a script kept here and never installed.**
+  MrFieldTech, 2026-11-11. `refresh.sh <owner>/<repo>` copies upstream's
+  default branch into its `vendor/` directory and writes an `UPSTREAM`
+  file beside it with the source, commit, license and date. Each refresh
+  is its own release.
+- **The cybersecurity skills a repository installs are listed in a
+  Session Settings key, `Security skills`,** a list of skill names, or
+  `none` by default. MrFieldTech, 2026-11-11.
+- **No review of all 818 before mirroring.** MrFieldTech, 2026-11-11. A
+  skill is read through when a repository first names it under Security
+  skills, before that repository installs it, and the whole collection is
+  reviewed later by its own task, `security-skill-review`.
 
 **Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
@@ -116,53 +141,53 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Open questions, round 1.**
+**Open questions, round 2.**
 
-1. Where do the mirrors live, given the 49 MB cost above?
-   a. (recommended) In a second repository of MrFieldTech's, such as
-      `MrFieldTech/AFK-Vendor`, holding each upstream whole under
-      `<owner>-<repo>/`. `afk.sh install` and `update` fetch from it only
-      the skills a repository installs, so a session open never
-      downloads it.
-   b. Under `vendor/<owner>-<repo>/` in this repository. Every open and
-      update in every repository downloads all of it.
-   c. In this repository, but with the cybersecurity collection left
-      upstream and fetched by name at install; the small sources are kept
-      here.
-2. Are the mirrors kept verbatim?
-   a. (recommended) Yes, bit for bit, with `check.sh` sections 1 and 2
-      and the TODO sweep skipping the mirror, as copies under
-      `.claude/imported/` are a record of what was given. A refresh stays
-      mechanical.
-   b. No, each is rewritten to the house rules (no dashes, no addresses),
-      so every refresh is a rewrite by hand.
-3. Are the installed copies kit-owned?
-   a. (recommended) Yes: listed in `MANIFEST`, replaced whole by every
-      update, and an edit in place reported and refused like any other.
-   b. No: installed once and left to the repository afterwards.
-4. How is a mirror refreshed?
-   a. (recommended) A script kept in this repository and never installed,
-      `refresh.sh <owner>/<repo>`, that copies upstream's default branch,
-      records its commit, license and the date in an `UPSTREAM` file
-      beside it, and is committed as its own release.
-   b. By hand, with the commit written into `NOTICE.md`.
-5. What is the Session Settings key that picks the cybersecurity skills?
-   a. (recommended) `Security skills`, a list of skill names or `none`,
-      default `none`.
-   b. `Extra skills`, a list naming any mirrored skill outside the ones
-      that install everywhere, default `none`.
-6. Are the cybersecurity skills reviewed before mirroring, since some hold
-   offensive security procedures?
-   a. (recommended) No up-front review of all 818: they are mirrored
-      whole as decided, and a skill is read through when a repository
-      first names it in its setting, before that repository installs it.
-   b. Reviewed in full before the mirror is committed.
-   c. Only a list of the offensive ones is made now, so a repository
-      naming one is warned.
+7. A repository already holds a skill or agent of its own under a name a
+   mirrored one installs to, such as `.claude/skills/animate/`. What does
+   `afk.sh install` or `update` do?
+   a. (recommended) Refuse, name the clash, and change nothing, because
+      the repository's file may be the only copy of its own work.
+   b. Replace it and print a line, as it does today for a kit directory
+      no install wrote.
+8. Where does cloudflare/security-audit-skill install? No decision covers
+   it yet.
+   a. (recommended) Everywhere, like the emilkowalski skills: it is one
+      skill, so it adds one line to every session's skill list.
+   b. Only by name, under Security skills.
+9. Does this repository install the everywhere set into itself, so its
+   own sessions can use them? Its sessions run on the source files, and
+   `vendor/` is not where Claude Code looks for skills.
+   a. (recommended) No: this repository writes the protocol and rarely
+      needs them, and a copy here would be a second copy to keep in step.
+   b. Yes: `refresh.sh` also writes them into this repository's
+      `.claude/skills/` and `.claude/agents/`.
 
-**Stopping point.** Grilling, round 1 asked (six questions above). First
-step: record the answers as decisions and ask the next round, then mirror
-one source at a time, one commit each.
+**Stopping point.** Grilling, round 2 asked (questions 7 to 9 above).
+First step: record the answers as decisions, then mirror one source at a
+time, one commit each.
+
+### Review The Mirrored Cybersecurity Skills
+
+**Slug:** `security-skill-review`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, in `vendored-skills`: the 818 skills
+mirrored from mukul975/Anthropic-Cybersecurity-Skills are not reviewed
+before mirroring; each is read when a repository first names it under
+Security skills, and all of them are to be reviewed eventually. Some hold
+offensive security procedures.
+
+**Decisions left open.**
+
+1. What a review checks for, and what it does with a skill that fails:
+   leave it out of the mirror, mark it, or warn a repository that names it.
+2. Where the results are recorded, so a later refresh knows which skills
+   changed since their review.
+
+**Stopping point.** Not started. Waits on `vendored-skills` merging. First
+step: grill the open decisions.
 
 ### Build The Private Terms List
 
