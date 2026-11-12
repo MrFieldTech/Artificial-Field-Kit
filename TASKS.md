@@ -158,6 +158,9 @@ and emilkowalski/skills.
   downloaded at every open in every repository.
 - `afk.sh` treats as kit-owned only `.claude/afk/` and the two session
   skill directories; an install deletes and rewrites those three whole.
+- emilkowalski/skills had 19 skills when mirrored on 2026-11-12, at
+  `f7ce8c0`: `learn-taste` was added upstream after the count of 18. All
+  of them install everywhere, by the decision above.
 - Upstream text breaks `check.sh` as written: emilkowalski/skills holds
   713 lines with an em or en dash in 28 files and addresses in 13 files,
   cloudflare/security-audit-skill 37 such lines in 6 files and an address
@@ -173,13 +176,14 @@ and emilkowalski/skills.
     its `plugins/code-simplifier/` folder, which carries its own Apache
     license. Keep that, or mirror the whole repository?
 
-**Stopping point.** All four sources mirrored under `vendor/`, one commit
-each, by `refresh.sh` and `vendor/SOURCES`; `check.sh` and the sweep skip
-`vendor/`. Next: `afk.sh` installs from `vendor/SOURCES` (blobless sparse
-fetch, the clash stop, `MANIFEST` listing the installed copies), the
-licenses under `.claude/afk/licenses/`, the `Security skills` key in
-`HOUSE.md` and both `CLAUDE.md` files, `check.sh` section 6 tests, then
-`VERSION` 2.3.0, `CHANGELOG.md`, `README.md` and `NOTICE.md`.
+**Stopping point.** Release 2.3.0 built and `bash check.sh` passing,
+2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
+a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
+list, the licenses in `.claude/afk/licenses/`, the Security skills key
+and Mirrored skills in `HOUSE.md`, and the `check.sh` tests. Tried by
+hand: a fetch from GitHub with two Security skills came to 1.9 MB, and a
+2.2.0 repository updated to 2.3.0 and read current. Next: question 11,
+then close.
 
 ### Review The Mirrored Cybersecurity Skills
 
