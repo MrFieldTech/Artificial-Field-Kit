@@ -24,8 +24,9 @@ here, never in a kit-owned file.
 - **Integration preview address:** none
 - **Task slug limit:** 23
 - **Reserved slugs:** none
-- **Regenerate:** `python3 .claude/afk/todo_sweep.py --exclude check.sh`. The
-  fixtures in `check.sh` are TODOs by design.
+- **Regenerate:** `python3 .claude/afk/todo_sweep.py --exclude check.sh
+  --exclude 'vendor/*'`. The fixtures in `check.sh` are TODOs by design,
+  and the mirrors under `vendor/` are upstream's.
 - **Generated files:** `TODO.md`
 - **Checks before merge:** `bash check.sh`
 - **Credentials:** none. Nothing here needs one, and this repository is

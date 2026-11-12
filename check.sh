@@ -4,7 +4,8 @@
 # 1. No kit-owned file holds an address, and neither one nor a session
 #    reference holds a name on the private list of project terms when one is
 #    given.
-# 2. No file in the repository holds an em dash or an en dash.
+# 2. No file in the repository holds an em dash or an en dash, outside the
+#    mirrors under vendor/.
 # 3. The scripts parse, each skill's frontmatter is whole, every practice
 #    is pointed at and every pointer names a practice that exists, and every
 #    kit-owned directory keeps LF line endings.
@@ -89,8 +90,9 @@ else
 fi
 
 # 2. The house rules forbid the em dash and the en dash, in the kit as
-#    everywhere else.
-if git ls-files -z | xargs -0 grep -nI -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' --; then
+#    everywhere else. The mirrors under vendor/ are kept bit for bit as
+#    upstream wrote them, and are not the kit's writing.
+if git ls-files -z -- . ':!vendor' | xargs -0 grep -nI -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' --; then
   fail "the lines above hold an em dash or an en dash"
 fi
 echo "check: no em dash or en dash"
@@ -537,5 +539,6 @@ else
 fi
 
 # 8. This repository keeps its own TODO.md by the sweep it ships. This file is
-# excluded because the fixtures above are TODOs by design.
-python3 .claude/afk/todo_sweep.py --exclude check.sh --check
+# excluded because the fixtures above are TODOs by design, and vendor/ because
+# its mirrors are upstream's.
+python3 .claude/afk/todo_sweep.py --exclude check.sh --exclude 'vendor/*' --check
