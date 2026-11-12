@@ -14,8 +14,8 @@
 # 5. VERSION is a version number, CHANGELOG.md has an entry for it, and the
 #    README's update block names it.
 # 6. An install into a scratch repository works end to end: the manifest,
-#    the status line, the guard against overwriting local edits, and the
-#    TODO sweep.
+#    the status line, the guard against overwriting local edits, the
+#    mirrored skills and agents, and the TODO sweep.
 # 7. The secrets tool stores, places, locks, checks, shows, rekeys and
 #    decrypts values with age, and prints the steps for keys. Skipped when
 #    age is not installed, except in CI. The Node decrypter is tested when
@@ -255,6 +255,63 @@ status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after update reads '$status'"
 echo "check: install, status, and update work"
+
+# The mirrors: every skill and agent vendor/SOURCES installs everywhere is
+# installed and listed, a by-name skill only when Security skills names it,
+# and an unknown name, a local edit and a clash each stop the install.
+everywhere="$(sed -n '/^vendored:$/,$ s/^  //p' "$repo/.claude/afk/MANIFEST")"
+for source in $(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "everywhere" {print $1}'); do
+  [ -f "$repo/.claude/afk/licenses/$source.txt" ] || fail "install left out the license of $source"
+done
+for unit in $everywhere; do
+  [ -e "$repo/$unit" ] || fail "install left out $unit, which MANIFEST lists"
+done
+grep -qx '\.claude/agents/[^/]*\.md' <<< "$everywhere" || fail "install installed no mirrored agent"
+expected_skills="$(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "everywhere" && $4 != "-" {print $1, $4}' \
+  | while read -r source glob; do git ls-files "vendor/$source/${glob%/\*}" | grep -cE "^vendor/$source/${glob%/\*}/[^/]+/SKILL\.md$"; done \
+  | awk '{ s += $1 } END { print s + 0 }')"
+[ "$(grep -c '^\.claude/skills/' <<< "$everywhere")" = "$expected_skills" ] \
+  || fail "install installed $(grep -c '^\.claude/skills/' <<< "$everywhere") mirrored skills, not the $expected_skills vendor/SOURCES installs everywhere"
+by_name_source="$(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "by-name" {print $1, $4}' | awk 'NR == 1')"
+if [ -n "$by_name_source" ]; then
+  read -r source glob <<< "$by_name_source"
+  named="$(git ls-files "vendor/$source/${glob%/\*}" | sed -n "s#^vendor/$source/${glob%/\*}/\([^/]*\)/SKILL\.md\$#\1#p" | awk 'NR == 1')"
+  [ ! -e "$repo/.claude/skills/$named" ] || fail "install installed $named, which Security skills does not name"
+  printf '# Project\n\n- **Security skills:** `%s`\n' "$named" > "$repo/CLAUDE.md"
+  AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null
+  [ -f "$repo/.claude/skills/$named/SKILL.md" ] || fail "install left out $named, which Security skills names"
+  status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
+  [ "$status" = "$version, current" ] || fail "status with a Security skill reads '$status'"
+  printf '\nA local edit.\n' >> "$repo/.claude/skills/$named/SKILL.md"
+  case "$(cd "$repo" && bash .claude/afk/afk.sh status)" in
+    *"edited locally: .claude/skills/$named/SKILL.md"*) ;;
+    *) fail "status did not report a local edit to a mirrored skill" ;;
+  esac
+  if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null 2>&1; then
+    fail "install overwrote a mirrored skill edited in place"
+  fi
+  printf '# Project\n\n- **Security skills:** none\n' > "$repo/CLAUDE.md"
+  AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" --discard-local-edits >/dev/null
+  [ ! -e "$repo/.claude/skills/$named" ] || fail "install kept $named after Security skills stopped naming it"
+fi
+printf '# Project\n\n- **Security skills:** `no-such-skill`\n' > "$repo/CLAUDE.md"
+if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null 2>&1; then
+  fail "install ran with a Security skill the kit does not mirror"
+fi
+rm "$repo/CLAUDE.md"
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
+[ "$status" = "$version, current" ] || fail "status after the mirror checks reads '$status'"
+clash="$scratch/clash"
+git init --quiet "$clash"
+first="$(sed -n 1p <<< "$everywhere")"
+mkdir -p "$(dirname "$clash/$first")"
+printf 'the repository'"'"'s own\n' > "$clash/$first.own"
+mv "$clash/$first.own" "$clash/$first"
+if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$clash" >/dev/null 2>&1; then
+  fail "install replaced $first, which the repository wrote"
+fi
+[ ! -e "$clash/.claude/afk" ] || fail "install changed a repository it refused"
+echo "check: the mirrors install, by name where asked, and stop on a clash"
 
 # A repository on a release before 2.0.0, when the kit was Claude-Kit in
 # .claude/kit/, updates by running .claude/kit/kit.sh from the source with
