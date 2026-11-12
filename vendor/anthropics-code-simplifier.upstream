@@ -1,0 +1,6 @@
+# Written by refresh.sh. Never edit by hand.
+repository: anthropics/claude-plugins-official
+path: plugins/code-simplifier
+commit: e0ab6e51219eef74e417a0e1d89e5d53e5e763d4
+license: LICENSE
+refreshed: 2026-11-12
