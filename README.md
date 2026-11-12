@@ -76,8 +76,8 @@ encrypted file.
 
 ## What gets installed
 
-Everything under `.claude/afk/` and the two skill directories. These files are
-**kit-owned**: an install or update replaces them whole, and they are never
+Everything under `.claude/afk/` and the two skill directories, and the
+mirrored skills and agents below. These files are **kit-owned**: an install or update replaces them whole, and they are never
 edited inside a project. A fix goes into this repository and reaches a project
 by an update.
 
@@ -95,7 +95,9 @@ by an update.
 | `.claude/afk/secrets.py` | Stores, places, locks, checks, shows, re-encrypts and decrypts for a build the values in `<slug>.secrets.md` files, and prints the steps for making the keys. Needs the `age` command line tool |
 | `.claude/afk/secrets-decrypt.mjs` | Decrypts for a build in Node, for a build host that cannot run `secrets.py decrypt`. Needs the `age-encryption` package |
 | `.claude/afk/templates/` | The starting `CLAUDE.md`, `TASKS.md` and `HANDOFF.md` for the first run, the session reference a close fills in, and the `REFERENCES.md` the import setup writes |
-| `.claude/afk/MANIFEST` | Written by the install: the version, the source, the commit, and a checksum per file |
+| Mirrored skills and agents | Written outside the kit and mirrored bit for bit under `vendor/` in this repository: every emilkowalski skill, the security audit skill and the `code-simplifier` agent in every repository, and the cybersecurity skills a repository names under Security skills. Each skill goes to `.claude/skills/<name>/` and each agent to `.claude/agents/`; one already there that the kit did not write stops the install |
+| `.claude/afk/licenses/` | The license of each mirrored source |
+| `.claude/afk/MANIFEST` | Written by the install: the version, the source, the commit, a checksum per file, and the mirrored skills and agents it installed |
 | `.gitattributes` in each kit directory | Keeps LF line endings, so a checkout on Windows can still run `afk.sh` and still matches the checksums |
 
 Everything else in a project is **project-owned** and an update never touches
@@ -225,7 +227,7 @@ release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open afk-update-2-2-0
+/session-open afk-update-2-3-0
 Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
 repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:
@@ -243,7 +245,8 @@ trust. I want you to take each of these actions on this task's branch:
 3. Run bash .claude/afk/afk.sh update, or bash .claude/kit/kit.sh update
    when there is no .claude/afk/. It clones the kit from that source and
    runs the new release's installer, which replaces the kit's skills in
-   .claude/skills/ and its house rules in .claude/afk/, removes
+   .claude/skills/, its agents in .claude/agents/ and its house rules in
+   .claude/afk/, removes
    .claude/kit/ when the kit lived there, and points the import in
    CLAUDE.md at .claude/afk/HOUSE.md. I want those changes to your own
    configuration.
@@ -360,6 +363,12 @@ repository on one may still update.
   version, all in the same pull request.
 - **`main` is what every install and update takes,** so it moves only when the
   owner asks, like the default branch of any repository using the kit.
+- **The mirrors under `vendor/` are upstream's, bit for bit.**
+  `vendor/SOURCES` names each source and what it installs, and
+  `bash refresh.sh <name>` refreshes one from upstream, recording the commit
+  in `vendor/<name>.upstream` and its license in `.claude/afk/licenses/`.
+  A refresh changes kit-owned files, so it is a release. `check.sh` and the
+  TODO sweep skip `vendor/`, and the address check skips the licenses.
 - **The practices are adapted from a public collection of agent skills,**
   https://github.com/mattpocock/skills, under the MIT License. `NOTICE.md`
   holds its notice and names the skill each practice came from. A kit-owned

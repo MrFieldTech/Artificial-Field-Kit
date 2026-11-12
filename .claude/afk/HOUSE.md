@@ -257,6 +257,27 @@ owner, never broken quietly.
   interface, a site, an app or a page, and before calling interface work
   done.
 
+## Mirrored skills
+
+The kit installs skills and agents written outside it, mirrored bit for bit
+in the kit's own repository: each skill in `.claude/skills/<name>/`, each
+agent in `.claude/agents/`, every one listed under `vendored` in
+`.claude/afk/MANIFEST` with its license in `.claude/afk/licenses/`. They
+are kit-owned. A fix to one goes upstream, and reaches the kit when it
+refreshes its mirror.
+
+- Use them as the work calls for, as any skill or agent.
+- **Security skills** come from a large cybersecurity collection, some of
+  them offensive procedures, and install only by name. Before a name is
+  added to the Security skills setting, read that skill in the kit's
+  source, `vendor/` in its repository, tell the owner what it does, and add
+  it only when they say so. Then run `bash .claude/afk/afk.sh update` on
+  the task's branch and commit what it installs.
+- **A clash** is a skill or agent of the repository's own where a mirrored
+  one installs. `afk.sh` names it and changes nothing. Show the owner both
+  and ask whether to rename theirs, remove it, or keep it and not take the
+  update.
+
 ## Response format
 
 These rules govern what goes back to the owner and how. They do not change
@@ -406,3 +427,6 @@ never in a kit-owned file.
   runs them under `kit standard`.
 - **State file format.** The format `TASKS.md` and `HANDOFF.md` keep: `kit
   templates`, or a rule in the authority file.
+- **Security skills.** The skills from the mirrored cybersecurity
+  collection this repository installs, each name in backticks, or `none`,
+  the default. Mirrored skills says how one is added.

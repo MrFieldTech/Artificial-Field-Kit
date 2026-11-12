@@ -26,6 +26,7 @@ here, never in a kit-owned file.
 - **Credentials:** none
 - **Secrets checks:** none
 - **State file format:** kit templates
+- **Security skills:** none
 
 ## Project rules
 
