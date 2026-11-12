@@ -8,8 +8,10 @@
 # Each source is copied bit for bit from its upstream's default branch into
 # vendor/<name>/, replacing what was there, and vendor/<name>.upstream records
 # where it came from: the repository, the commit, the path within it, the
-# license file and the date. Commits nothing: a refresh is a release, by the
-# rules in CLAUDE.md.
+# license file and the date. The license is also copied to
+# .claude/afk/licenses/<name>.txt, which every install carries, so each
+# repository that installs a mirrored skill holds its license. Commits
+# nothing: a refresh is a release, by the rules in CLAUDE.md.
 #
 # AFK_VENDOR_BASE replaces https://github.com as the place sources are
 # cloned from, for check.sh.
@@ -55,8 +57,9 @@ refresh_one() {
   [ -n "$license" ] || die "$repo has no license file in $path, so it cannot be mirrored"
 
   rm -rf "vendor/$name"
-  mkdir -p "vendor/$name"
+  mkdir -p "vendor/$name" .claude/afk/licenses
   cp -a "$from/." "vendor/$name/"
+  cp "vendor/$name/$license" ".claude/afk/licenses/$name.txt"
   {
     printf '# Written by refresh.sh. Never edit by hand.\n'
     printf 'repository: %s\n' "$repo"
@@ -71,7 +74,7 @@ refresh_one() {
 }
 
 case "${1:-}" in
-  "") sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 1 ;;
+  "") sed -n '2,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 1 ;;
   --all) for name in $(sources | awk '{print $1}'); do refresh_one "$name"; done ;;
   *) refresh_one "$1" ;;
 esac

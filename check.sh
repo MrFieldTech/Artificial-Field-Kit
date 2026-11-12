@@ -51,7 +51,9 @@ ADDRESS='https?://|[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}|\b[A-Za-z0-9-]+
 # protocol's XML namespace or the escaped prefix a check command greps for.
 ALLOWED='^((https?://)?(www\.)?<[a-z-]+>|https?://localhost[:/]|http://www\.sitemaps\.org/schemas/sitemap/0\.9$|https://www\\\.$)'
 status=0
-hits="$(grep -rnIE "$ADDRESS" "${AFK_OWNED[@]}")" || status=$?
+# The licenses of the mirrors under .claude/afk/licenses/ are upstream's text,
+# kept whole, and name only their own license's address.
+hits="$(grep -rnIE --exclude-dir=licenses "$ADDRESS" "${AFK_OWNED[@]}")" || status=$?
 [ "$status" -ne 0 ] && [ "$status" -ne 1 ] && fail "the address pattern could not be searched"
 bad=""
 while IFS= read -r line; do
