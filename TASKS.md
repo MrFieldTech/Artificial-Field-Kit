@@ -134,6 +134,12 @@ and emilkowalski/skills.
 - **This repository does not install the mirrors into itself.**
   MrFieldTech, 2026-11-11. Its sessions write the protocol and rarely
   need them, and a second copy would have to be kept in step.
+- **Each mirrored skill installs to its own `.claude/skills/<name>/` and
+  the agent to `.claude/agents/`.** MrFieldTech, 2026-11-12. That is
+  where Claude Code looks, and `.claude/afk/MANIFEST` already records
+  every file the kit installed. A plugin folder holding them all was
+  considered and not taken. A name clash is stopped by `afk.sh` and
+  handled by the session when it arises.
 
 **Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
@@ -159,28 +165,8 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Open questions, round 3.**
-
-10. MrFieldTech asked, 2026-11-11, whether everything the kit installs
-    beyond its own files should sit in one folder the kit owns, so a
-    repository's owner sees what the kit put there. Claude Code never
-    loads skills from `.claude/afk/skills/`. Which layout?
-    a. (recommended) One plugin folder, `.claude/skills/afk-vendor/`,
-       holding every installed mirrored skill and the agent, used as
-       `/afk-vendor:animate`. Namespaced, so no clash with a repository's
-       own skills. This changes the decision that `code-simplifier` goes
-       under `.claude/agents/`, though not why: it is still a
-       committed agent the session hands work to. Built only after a
-       live session shows the folder loads, in the cloud as well as
-       locally, with no extra step; otherwise the next option.
-    b. Each mirrored skill in its own `.claude/skills/<name>/` and the
-       agent in `.claude/agents/`, with `.claude/afk/MANIFEST` the list
-       of what the kit installed and `afk.sh status` able to print it.
-
-**Stopping point.** Grilling, round 3 asked (question 10 above). First
-step: record the answer; for 10a, test a plugin folder under
-`.claude/skills/` in a live session before building on it. Then mirror one
-source at a time, one commit each.
+**Stopping point.** Grilling done, 2026-11-12. First step: mirror one
+source at a time, one commit each, with `refresh.sh`.
 
 ### Review The Mirrored Cybersecurity Skills
 
