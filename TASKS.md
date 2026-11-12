@@ -165,8 +165,21 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Stopping point.** Grilling done, 2026-11-12. First step: mirror one
-source at a time, one commit each, with `refresh.sh`.
+**Open questions.**
+
+11. The decision to mirror each upstream whole was made with
+    anthropics/claude-plugins-official in mind as well. It is 19 MB of
+    unrelated plugins for one 32 KB agent, so `vendor/SOURCES` mirrors only
+    its `plugins/code-simplifier/` folder, which carries its own Apache
+    license. Keep that, or mirror the whole repository?
+
+**Stopping point.** All four sources mirrored under `vendor/`, one commit
+each, by `refresh.sh` and `vendor/SOURCES`; `check.sh` and the sweep skip
+`vendor/`. Next: `afk.sh` installs from `vendor/SOURCES` (blobless sparse
+fetch, the clash stop, `MANIFEST` listing the installed copies), the
+licenses under `.claude/afk/licenses/`, the `Security skills` key in
+`HOUSE.md` and both `CLAUDE.md` files, `check.sh` section 6 tests, then
+`VERSION` 2.3.0, `CHANGELOG.md`, `README.md` and `NOTICE.md`.
 
 ### Review The Mirrored Cybersecurity Skills
 
