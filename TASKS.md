@@ -228,7 +228,57 @@ documentation before the kit relies on a path.
 
 Grilling done: the frontier is empty.
 
-**Stopping point.** Building. Next: the `AGENTS.md` template and pointer. This is a release, 2.4.0
+**Built, 2026-11-13, release 2.4.0.** `.claude/afk/templates/AGENTS.md`
+and this repository's `AGENTS.md`; `afk.sh` writes, tops or rewrites the
+pointer block and leaves a link alone; neutral wording in `HOUSE.md`, both
+skills, `references.md`, the site standard and `README.md`, whose install
+section now has As commands, What happens next and In Claude Code;
+`check.sh` tests the template, this repository's pointer and four install
+cases. `bash check.sh` passes.
+
+**Cold read, 2026-11-13.** A fresh Claude session, told to act as a tool
+with only `AGENTS.md`, a shell and `gh`, walked a temporary session, a new
+task, a close, an install and a summarized context. Labeled a Claude cold
+read: it is not another vendor's tool. Fixed from it: `temp` reached First
+Run and the stray stop before step 4 diverted it; First Run never read
+`HOUSE.md`; a working copy with uncommitted changes was never considered;
+nothing said to re-read the skill being followed after a summary; three
+GitHub steps had no `gh` command; a new task's block had no pointer to
+Format; an upload was undefined. Not fixed: state a close keeps only in the
+conversation, such as the hash step 8 notes for step 9, is lost if the
+context is summarized midway, in any tool.
+
+**Checklist for another vendor's tool,** for MrFieldTech to run once, in a
+scratch repository with the kit installed or in this one:
+
+1. Open a session and ask what its instructions for this repository are.
+   Pass: it names `CLAUDE.md` and `.claude/afk/HOUSE.md`. When it names
+   neither, its context file is not `AGENTS.md`; set it, and note how.
+2. Type `/session-open temp`, or `session-open temp` when the tool takes
+   `/` for itself. Pass: the seven-line report and nothing written.
+3. Type `session-open checklist-trial` asking for a one-line change. Pass:
+   `task/checklist-trial` pushed with a `HOLDING` line and a grilling round
+   in its block.
+4. Finish it and type `session-close`. Pass: a pull request into `preview`
+   with Summary, Evidence and Merge danger, merged, and the ten-line
+   report.
+5. Throughout, every reply ends in numbered questions or `No questions`,
+   with no em dash or en dash.
+6. Record the tool, its version and each place it stalled, as a task.
+
+**Open questions.**
+
+1. The developer prefix on a local tool. `HOUSE.md` takes it from the part
+   before the first `/` of the branch the session started on, so a
+   developer who starts on their own `feature/x` is named `FEATURE`.
+   a (recommended): take a prefix only from a branch whose name has three
+   or more parts, as cloud tools name theirs, and none otherwise. b: ask
+   the developer for a prefix when the branch is not one a tool made.
+   c: leave it.
+
+**Stopping point.** Built and checked. Next: answer the open question,
+then `/session-close`, which merges into `preview`. The checklist waits
+for MrFieldTech in another tool. This is a release, 2.4.0
 unless the answers make it a breaking change.
 
 ### Rebuild The Kit Around A Vendor-Neutral Layout
