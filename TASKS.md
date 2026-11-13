@@ -114,7 +114,205 @@ repository; fixing that is part of the task.
 **Stopping point.** Not started. First step: MrFieldTech writes the list;
 the session tests it against `bash check.sh` before it is saved.
 
+### Rebuild The Kit Around A Vendor-Neutral Layout
+
+**Slug:** `neutral-layout`
+**Status:** TODO
+**Opened:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-13, in `vendor-neutral-update`: the kit is
+used only in Claude Code today, but MrFieldTech may move to another
+vendor's tool, and the repository is public. `vendor-neutral-update` made
+the `.claude/` layout reachable from any tool through an `AGENTS.md`
+pointer; this task would move the kit itself out of `.claude/`.
+
+**Background.** The trade-off, as given to MrFieldTech on 2026-11-13. For:
+no vendor's name in any path, a later move to another tool costs little,
+and tools that read `.agents/skills/` would list the skills as commands.
+Against: a breaking release and a migration for every installed
+repository, like 2.0.0's; Claude Code finds skills only in
+`.claude/skills/` as far as was checked, so each skill needs a copy there
+that can drift or a link that breaks on Windows and in the `MANIFEST`
+checksums; the shared conventions were still moving, with sources
+disagreeing on paths; and no other vendor's tool could be tested from a
+Claude Code session.
+
+**Decisions left open.**
+
+1. Whether to do it at all, decided when MrFieldTech picks another tool or
+   another user asks, and tested in that tool.
+2. The layout: which folder holds the kit and the skills, and how Claude
+   Code still finds them.
+3. How installed repositories migrate.
+
+**Stopping point.** Not started. First step: check each target tool's own
+documentation for where it reads instruction files and skills.
+
 ## Closed Tasks
+
+### Let Other AI Tools Run The Kit
+
+DROPPED | GRM / MRFIELDTECH | 261113 195314
+HOLDING | GRM / MRFIELDTECH | 261113 161247
+
+**Slug:** `vendor-neutral-update`
+**Status:** DONE
+**Opened:** 2026-11-13
+**Closed:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-13, turning a temporary session into this
+task: walk through the whole kit process and verify that an AI coding
+tool from another vendor could follow it, with no concealed or confusing
+path that only works because Claude Code already knows to do something,
+such as starting from `CLAUDE.md`. Add a vendor-neutral Markdown file that
+mirrors or points back to `CLAUDE.md`, unless other vendors already have a
+convention that covers it.
+
+**Background.** The temporary session found the kit tied to Claude Code in
+four places: how it loads (`CLAUDE.md` importing `HOUSE.md` with `@`,
+skills under `.claude/skills/` with Claude Code frontmatter, and
+`/session-open` working as a slash command only because Claude Code turns
+skills into commands); wording ("Claude Code session" in `README.md` and
+both skill descriptions, and the branch prefix taken from "the developer's
+Claude Code settings" in `HOUSE.md`); cloud-session behavior (the assigned
+branch, the end-of-turn hook, attaching a repository without registering
+it, auto mode's classifier in `README.md`); and the mirrored skills, which
+are in Claude's skill format. The branch protocol, state files, response
+format, practices, standards and scripts carry nothing Claude-specific.
+Not tested with any other vendor's tool.
+
+**Walkthrough findings, 2026-11-13.** Read as a tool that knows nothing of
+Claude Code: `README.md`, `HOUSE.md`, both skills, the templates and
+`afk.sh`. Paths that work only because Claude Code already knows them:
+
+1. Nothing tells another tool to read `CLAUDE.md`. Most other tools read
+   `AGENTS.md` at the repository root.
+2. The first line of `CLAUDE.md`, `@.claude/afk/HOUSE.md`, is Claude Code
+   import syntax. Elsewhere it is a literal line, and the house rules never
+   load.
+3. `/session-open` and `/session-close` are commands only because Claude
+   Code turns `.claude/skills/<name>/SKILL.md` into slash commands. A tool
+   without that has no command, and `HOUSE.md`'s "ask the owner to run it"
+   leads nowhere.
+4. `disable-model-invocation: true` in each skill's frontmatter is the only
+   thing that keeps a session from running either skill on its own.
+   Another tool ignores it.
+5. `README.md` says the rules live in `CLAUDE.md` because Claude Code
+   reloads it after the context is summarized. Nothing tells another tool
+   to read `HOUSE.md` again after that.
+6. The developer's prefix comes from "the developer's Claude Code
+   settings", and the handle from "the account behind the session's GitHub
+   access", with no command to find either.
+7. Cloud terms with no definition: the branch "the cloud harness assigns",
+   attaching a repository "with read access" and "never registering it",
+   the "end-of-turn hook", "schedule a message back to itself", and auto
+   mode's classifier.
+8. Mirrored skills install to `.claude/skills/` and the `code-simplifier`
+   agent to `.claude/agents/`. The agent format is Claude Code's alone.
+9. The install, update and backfill prompts in `README.md` say "In a Claude
+   Code session" and are written around auto mode.
+10. Both skill descriptions say "a Claude Code session", and `HOUSE.md`
+    defines an owner as working "with Claude Code".
+
+Not a finding: the commit attribution lines come from the session's own
+tool, not the kit.
+
+**What other vendors already have, unverified.** Secondary sources, not
+the official specifications, 2026-11-13: `AGENTS.md` at the repository
+root is the shared instruction file, read by OpenAI Codex, Cursor and
+GitHub Copilot, and by Gemini CLI by default or by a setting; sources
+disagree on whether Claude Code now reads it. `SKILL.md` folders are an
+open standard (Agent Skills), and `.agents/skills/` is the most common
+shared place for them. Codex reads it; Copilot reads `.github/skills/`
+and, by some sources, `.agents/skills/`. Confirm against each vendor's own
+documentation before the kit relies on a path.
+
+**Decisions.** MrFieldTech, 2026-11-13, round 1, each as recommended:
+
+1. The vendor-neutral file is `AGENTS.md` at the repository root, a short
+   pointer that tells any tool to read `CLAUDE.md` and then `HOUSE.md`. It
+   holds no rules, so nothing is kept twice. `CLAUDE.md` keeps the
+   settings.
+2. `AGENTS.md` is project-owned, like `CLAUDE.md`. First run writes it
+   from a new template, or adds the pointer to the top of one that
+   exists, and an update adds it when it is missing.
+3. Another tool runs the skills by `AGENTS.md`: `/session-open <words>`
+   means read `.claude/skills/session-open/SKILL.md` and follow it with
+   those words, the same for `/session-close`, which runs only when the
+   owner asks. One copy of each skill.
+4. Claude-specific wording in kit-owned files is rewritten in neutral
+   terms. Each Claude Code detail stays as a labeled note, and the kit
+   gives the commands that find the developer's handle and prefix.
+5. The mirrored skills and agent stay where they are. `AGENTS.md` says any
+   tool may read a skill's `SKILL.md` as instructions, and that
+   `.claude/agents/` is Claude Code's alone.
+6. The install, update and backfill prompts in `README.md` become neutral,
+   with the auto mode notes in a section for Claude Code.
+7. Verified means: `check.sh` tests that `AGENTS.md` is in the template
+   and an install and names the right files; a fresh agent, told to use
+   only the repository's files, walks the protocol from `AGENTS.md`,
+   labeled a Claude cold read; and a checklist in this block for
+   MrFieldTech to run once in another vendor's tool.
+
+8. Round 2, 2026-11-13: this release builds round 1's plan, and the
+   rebuild around a vendor-neutral layout is queued as its own task,
+   `neutral-layout`, for when MrFieldTech moves to another tool or another
+   user asks. A rebuild now would break every install for a gain no tool
+   here can test.
+9. Round 2, 2026-11-13: a repository's own `AGENTS.md` keeps its text
+   below the pointer. That text ranks with `CLAUDE.md` in Which file wins,
+   `CLAUDE.md` winning a conflict, and first run reports any part that
+   only repeats `HOUSE.md`, as it does for `CLAUDE.md`.
+
+Grilling done: the frontier is empty.
+
+**Built, 2026-11-13, release 2.4.0.** `.claude/afk/templates/AGENTS.md`
+and this repository's `AGENTS.md`; `afk.sh` writes, tops or rewrites the
+pointer block and leaves a link alone; neutral wording in `HOUSE.md`, both
+skills, `references.md`, the site standard and `README.md`, whose install
+section now has As commands, What happens next and In Claude Code;
+`check.sh` tests the template, this repository's pointer and four install
+cases. `bash check.sh` passes.
+
+**Cold read, 2026-11-13.** A fresh Claude session, told to act as a tool
+with only `AGENTS.md`, a shell and `gh`, walked a temporary session, a new
+task, a close, an install and a summarized context. Labeled a Claude cold
+read: it is not another vendor's tool. Fixed from it: `temp` reached First
+Run and the stray stop before step 4 diverted it; First Run never read
+`HOUSE.md`; a working copy with uncommitted changes was never considered;
+nothing said to re-read the skill being followed after a summary; three
+GitHub steps had no `gh` command; a new task's block had no pointer to
+Format; an upload was undefined. Not fixed: state a close keeps only in the
+conversation, such as the hash step 8 notes for step 9, is lost if the
+context is summarized midway, in any tool.
+
+**Checklist for another vendor's tool,** for MrFieldTech to run once, in a
+scratch repository with the kit installed or in this one:
+
+1. Open a session and ask what its instructions for this repository are.
+   Pass: it names `CLAUDE.md` and `.claude/afk/HOUSE.md`. When it names
+   neither, its context file is not `AGENTS.md`; set it, and note how.
+2. Type `/session-open temp`, or `session-open temp` when the tool takes
+   `/` for itself. Pass: the seven-line report and nothing written.
+3. Type `session-open checklist-trial` asking for a one-line change. Pass:
+   `task/checklist-trial` pushed with a `HOLDING` line and a grilling round
+   in its block.
+4. Finish it and type `session-close`. Pass: a pull request into `preview`
+   with Summary, Evidence and Merge danger, merged, and the ten-line
+   report.
+5. Throughout, every reply ends in numbered questions or `No questions`,
+   with no em dash or en dash.
+6. Record the tool, its version and each place it stalled, as a task.
+
+10. MrFieldTech, 2026-11-13: the prefix rule stays, and `HOUSE.md` says a
+    session in a local tool starts on the default branch or a task branch,
+    which give no prefix. A rule by the shape of a branch name cannot tell
+    a tool's branch from a developer's: this session's own cloud branch
+    has two parts, like `feature/x`.
+
+**Outcome.** Release 2.4.0 built, `bash check.sh` passing, and merged into
+`preview`, 2026-11-13. The checklist above waits for MrFieldTech in another
+vendor's tool; no such tool has run the kit.
 
 ### Mirror Outside Skills And Agents Into The Kit
 

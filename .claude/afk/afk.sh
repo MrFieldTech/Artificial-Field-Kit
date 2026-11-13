@@ -19,7 +19,8 @@
 # .claude/agents/, and MANIFEST lists them under vendored. A mirrored skill
 # or agent whose place already holds one of the repository's own stops the
 # install, which changes nothing. An install replaces the kit-owned files
-# whole and touches nothing else,
+# whole and touches nothing else but the kit's pointer block at the top of
+# AGENTS.md, which it writes, adds or rewrites,
 # except when it moves a repository from a release before 2.0.0, when the
 # kit was Claude-Kit and lived in .claude/kit/: then it also removes
 # .claude/kit/, points the CLAUDE.md import at .claude/afk/HOUSE.md, and
@@ -235,6 +236,48 @@ by_path() {
   LC_ALL=C sort -k2
 }
 
+# The kit's pointer for AI coding tools other than Claude Code, at the top
+# of the repository's AGENTS.md. AGENTS.md is the repository's own: the kit
+# writes only the block between its markers, and leaves the rest as it is.
+# A symbolic link is left alone, because writing it would write the file it
+# points at, often CLAUDE.md.
+POINTER_START='<!-- afk:pointer:start'
+POINTER_END='<!-- afk:pointer:end -->'
+agents_pointer() {
+  local target="$1" block="$2" agents="$1/AGENTS.md" starts ends
+  [ -f "$block" ] || return 0
+  if [ -L "$agents" ]; then
+    printf 'AGENTS.md is a link, so the kit wrote no pointer into it. Replace it with a file for tools other than Claude Code to find the kit\n'
+    return 0
+  fi
+  if [ ! -e "$agents" ]; then
+    cp "$block" "$agents"
+    printf 'Wrote AGENTS.md, the pointer for AI coding tools other than Claude Code\n'
+    return 0
+  fi
+  starts="$(grep -c "^$POINTER_START" "$agents" || true)"
+  ends="$(grep -cxF "$POINTER_END" "$agents" || true)"
+  if [ "$starts" = 0 ] && [ "$ends" = 0 ]; then
+    { cat "$block"; printf '\n'; cat "$agents"; } > "$agents.afk"
+    mv "$agents.afk" "$agents"
+    printf 'Added the kit'"'"'s pointer to the top of AGENTS.md, above the text already there\n'
+  elif [ "$starts" = 1 ] && [ "$ends" = 1 ]; then
+    awk -v block="$block" -v start="$POINTER_START" -v end="$POINTER_END" '
+      index($0, start) == 1 { while ((getline line < block) > 0) print line; skip = 1; next }
+      skip && $0 == end { skip = 0; next }
+      !skip { print }
+    ' "$agents" > "$agents.afk"
+    if cmp -s "$agents" "$agents.afk"; then
+      rm -f "$agents.afk"
+    else
+      mv "$agents.afk" "$agents"
+      printf 'Rewrote the kit'"'"'s pointer in AGENTS.md\n'
+    fi
+  else
+    printf 'AGENTS.md has a broken kit pointer, %s start and %s end markers, so the kit left it as it is. Remove the block and run the update again\n' "$starts" "$ends"
+  fi
+}
+
 cmd_install() {
   local target="" discard=0 arg
   for arg in "$@"; do
@@ -338,6 +381,7 @@ cmd_install() {
   } > "$target/$MANIFEST"
 
   printf 'Installed Artificial Field Kit %s, commit %s, into %s\n' "$version" "${commit:0:7}" "$target"
+  agents_pointer "$target" "$target/.claude/afk/templates/AGENTS.md"
   [ -z "$old" ] || move_old "$target"
 }
 

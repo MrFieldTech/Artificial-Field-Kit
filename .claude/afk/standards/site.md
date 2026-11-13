@@ -23,7 +23,7 @@ for it on top of Part 1, and the hosting line below says when it must leave
 Cloudflare's free plan.
 
 It is written for two readers: a developer starting or maintaining a site,
-and a Claude Code session that reads it as its instructions and creates a
+and an AI coding session that reads it as its instructions and creates a
 new site by working through the New site checklist from top to bottom. It
 deliberately sets no development process: repository naming, visibility,
 branching, review, continuous integration (CI) and licensing belong to the
@@ -1437,7 +1437,7 @@ Escalation contact: <admin-contact>.
 - `pnpm-workspace.yaml` `overrides` strip every non-linux-x64 platform binary. Installing on macOS, Windows or ARM needs that platform's lines removed locally, never committed.
 - <Each departure from the standard, with the rule identifier and the reason.>
 
-### Rules for Claude Code
+### Rules for AI coding sessions
 
 - Read this file, the site standard and the design standard before changing anything.
 - Follow this repository's own process for branches, commits, review and CI. The standard sets none.

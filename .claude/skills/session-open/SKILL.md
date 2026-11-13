@@ -1,7 +1,7 @@
 ---
 name: session-open
 description: >-
-  Start a Claude Code session in a repository that uses Artificial Field Kit. Takes an optional task slug: an existing task resumes on its branch, a slug that names no task starts a new task under that name, claimed on its branch at once and then settled by grilling, and with no slug it lists the parked task branches and queued tasks and asks. In a repository that has never used the kit, it proposes the Session Settings and builds TASKS.md and HANDOFF.md first. Names the developer running it from their GitHub account and Claude Code branch prefix, warns before taking a task another developer still holds, and records who took each task. Reads the authority file, CLAUDE.md, TASKS.md and HANDOFF.md, reports the kit's version and any stray branch, puts the session on the task's own branch, task/<task-slug>, and works the task from the stopping point in its block. With the argument temp it opens a temporary session instead: it reads and reports the same way, answers questions without taking a branch or writing anything, merges the integration branch into the default branch when the owner asks, and turns what is to be kept or built into tasks when the owner asks. With the argument import it imports the session references of the repositories REFERENCES.md names, on a task of its own. With the argument backfill it writes the session reference the session it runs in is missing, or in a brand new session asks which past closes with no reference to write, on a task of its own that closes itself. Runs only when the owner invokes /session-open.
+  Start an AI coding session, in Claude Code or any other tool, in a repository that uses Artificial Field Kit. Takes an optional task slug: an existing task resumes on its branch, a slug that names no task starts a new task under that name, claimed on its branch at once and then settled by grilling, and with no slug it lists the parked task branches and queued tasks and asks. In a repository that has never used the kit, it proposes the Session Settings and builds TASKS.md and HANDOFF.md first. Names the developer running it from their GitHub account and Claude Code branch prefix, warns before taking a task another developer still holds, and records who took each task. Reads the authority file, CLAUDE.md, TASKS.md and HANDOFF.md, reports the kit's version and any stray branch, puts the session on the task's own branch, task/<task-slug>, and works the task from the stopping point in its block. With the argument temp it opens a temporary session instead: it reads and reports the same way, answers questions without taking a branch or writing anything, merges the integration branch into the default branch when the owner asks, and turns what is to be kept or built into tasks when the owner asks. With the argument import it imports the session references of the repositories REFERENCES.md names, on a task of its own. With the argument backfill it writes the session reference the session it runs in is missing, or in a brand new session asks which past closes with no reference to write, on a task of its own that closes itself. Runs only when the owner invokes /session-open.
 disable-model-invocation: true
 ---
 
@@ -28,7 +28,12 @@ this file.
 ## 1. Find the developer and fetch everything
 
 Before anything checks out another branch, note the branch the session
-started on, with `git rev-parse --abbrev-ref HEAD`. Then name the developer
+started on, with `git rev-parse --abbrev-ref HEAD`. When
+`git status --porcelain` prints anything, stop and name those files: the
+steps below check out other branches, which a change not yet committed
+would block or be carried onto, as can happen when the session runs in the
+developer's own working copy. The developer commits, stashes or discards
+them, then runs `/session-open` again. Then name the developer
 running the session, `<PREFIX> / <HANDLE>`, by Developers in
 `.claude/afk/HOUSE.md`: the handle from the account behind the session's
 GitHub access, and the prefix from the branch just noted. Ask for the handle
@@ -48,7 +53,9 @@ steps compare against.
 `## Session Settings` section and no branch on the remote carries a `TASKS.md`
 holding a `**Slug:**` line. Check each remote branch with
 `git grep -l '^\*\*Slug:\*\*' origin/<branch> -- TASKS.md`. If it is the first
-run, follow First Run at the end of this file and then come back to step 3.
+run, follow First Run at the end of this file and then come back to step 3,
+unless the owner named `temp`, `import` or `backfill`, which do not run
+First Run: say so, and carry on.
 
 A task branch carrying `TASKS.md` while the default branch does not is a first
 task that has not merged yet. That is not a first run. Read the settings and
@@ -126,8 +133,9 @@ Sort every remote branch except `origin/HEAD`:
   still be running`, with its top holder line. Never offer to merge it. Its
   pull request belongs to its own session, or to the developer who takes
   the task over.
-- Anything else is a stray: a branch by any other name, including one the cloud
-  harness assigned to an earlier session, or a `task/` branch with no task
+- Anything else is a stray: a branch by any other name, including one a
+  session's tool checked out for an earlier session, such as a Claude Code
+  cloud session's assigned branch, or a `task/` branch with no task
   behind it.
 
 For each stray, report the branch name, the number of commits it has that the
@@ -150,7 +158,8 @@ delete them, and do not start work with the report unread. A stray is the one
 failure mode that loses finished work permanently. Two exceptions carry on
 without stopping, reported on the `Strays:` line: a stray holding no commit the
 default branch lacks, because nothing on it can be lost, and a branch the
-owner already answered for in this session's First Run.
+owner already answered for in this session's First Run. A temporary
+session, `temp`, never stops here, because it changes nothing.
 
 ## 4. Choose the task
 
@@ -173,7 +182,8 @@ another slug, and stop until they answer.
 **c. They named a slug that is no task.** Open a new task under that slug.
 If the slug breaks the rule below, propose one that keeps it and stop until
 they answer, because a claimed slug is permanent. Step 5 claims it and writes
-its block under Open Tasks in `TASKS.md`: a title, the slug, status
+its block under Open Tasks in `TASKS.md`, by Format in
+`.claude/skills/session-close/SKILL.md`: a title, the slug, status
 `ACTIVE`, today's date, and a detail block recording what they asked for.
 Step 6 then settles it by grilling before any other work.
 
@@ -259,7 +269,7 @@ owner answers. Do not resolve a content conflict unattended. Both sides are
 committed work and picking one loses the other.
 
 Never create a branch by any other name, never commit to the default branch or
-the integration branch, and never push the branch the cloud harness assigned.
+the integration branch, and never push the branch the session started on.
 
 If a merge in this step changed any file under `.claude/skills/` or
 `.claude/afk/`, re-read `.claude/skills/session-open/SKILL.md` and follow the
@@ -346,8 +356,8 @@ does not stop it, because it changes nothing, though every stray is reported.
 
 **It stays read-only.** It stays detached on the base, takes no branch, and
 writes, commits and pushes nothing. A file uploaded to it is kept only if it
-opens a task, by Copies in `.claude/afk/references.md`. It never pushes the branch the cloud
-harness assigned. The one exception is a promotion the owner asks for, below. Report these lines, as one fenced code block with no
+opens a task, by Copies in `.claude/afk/references.md`. It never pushes the branch the session
+started on. The one exception is a promotion the owner asks for, below. Report these lines, as one fenced code block with no
 backticks inside it, then answer what the owner asked:
 
 ```
@@ -443,8 +453,10 @@ each step.
    a time in `.claude/afk/references.md` and stop until the developer
    answers. Nothing is written.
 3. **Attach each source** under Sources, read-only, through the session's
-   GitHub access: in a cloud session, attach it with read access and clone
-   it, never registering it as one of the session's repositories. Fetch the
+   GitHub access, and clone it outside the repository. Where the tool keeps
+   a list of the session's repositories, as a Claude Code cloud session
+   does, attach it with read access only, never registering it in that
+   list, so its `CLAUDE.md` and skills never load. Fetch the
    branch its row names. A source that cannot be reached is reported, and
    its row is left as it is.
 4. **List what is new** in each source by What is new in
@@ -522,6 +534,10 @@ kit-owned files into the working tree and nothing is committed yet. If
 `.claude/afk/afk.sh` is not there, stop and ask the owner to install the kit
 first, by the command in the kit's README.
 
+`CLAUDE.md` does not import the house rules yet, so read
+`.claude/afk/HOUSE.md` in full before item 1. Its rules govern the first
+run and its reply as they govern every session.
+
 1. **Find the default branch.** `git symbolic-ref --short refs/remotes/origin/HEAD`
    prints it after `origin/`, and the `HEAD branch:` line of
    `git remote show origin` names it when that ref is missing. A repository
@@ -535,10 +551,11 @@ first, by the command in the kit's README.
      run on a pull request and the commands behind them.
    - The package manifest and build files, such as `package.json`,
      `pyproject.toml` or a `Makefile`, for build, test and lint commands.
-   - Any existing `CLAUDE.md`, `README.md` or contributing guide, for rules
-     the repository already follows, a file that already acts as an
-     authority, and each section of `CLAUDE.md` that repeats a rule
-     `HOUSE.md` carries.
+   - Any existing `CLAUDE.md`, `AGENTS.md`, `README.md` or contributing
+     guide, for rules the repository already follows, a file that already
+     acts as an authority, and each section of `CLAUDE.md`, or of the
+     repository's own text in `AGENTS.md`, that repeats a rule `HOUSE.md`
+     carries.
    - Hosting configuration and deployment notes, for a preview address per
      branch.
    - Files the repository generates and commits, and the commands that
@@ -603,6 +620,12 @@ first, by the command in the kit's README.
      says more stays unless the owner answered to remove it. Keep everything
      else. When there is no `CLAUDE.md`, start from
      `.claude/afk/templates/CLAUDE.md`.
+   - `AGENTS.md`, which `afk.sh install` already wrote, or topped with the
+     kit's pointer when the repository had one. Treat the repository's own
+     text below the pointer as `CLAUDE.md` is treated above: remove a part
+     that only repeats `HOUSE.md`, and name it in the reply. When the install
+     reported `AGENTS.md` is a link, say so in the reply, because tools
+     other than Claude Code then never find the kit.
    - `TASKS.md` from `.claude/afk/templates/TASKS.md`, with the first task's
      block under Open Tasks.
    - `HANDOFF.md` from `.claude/afk/templates/HANDOFF.md`.

@@ -2,8 +2,10 @@
 
 Artificial Field Kit, AFK for short, was named Claude-Kit before 2.0.0.
 
-A session protocol and a set of house rules for Claude Code, installed into
-each repository that uses them as a pinned copy.
+A session protocol and a set of house rules for AI coding tools, installed
+into each repository that uses them as a pinned copy. It is built in Claude
+Code, which loads it on its own, and any other tool reaches it from the
+kit's pointer at the top of `AGENTS.md`.
 
 Each session in a repository that uses the kit opens with `/session-open` and
 closes with `/session-close`. A session resumes from committed files alone.
@@ -13,12 +15,12 @@ session picks it up by name.
 
 Several developers can share a repository, and every one of them is an owner:
 any of them answers questions, promotes, and takes kit updates. A session
-names the developer running it from their GitHub account and their Claude
-Code branch prefix, and each task's block keeps a log of who took it and who
+names the developer running it from their GitHub account and the branch
+prefix their tool uses, and each task's block keeps a log of who took it and who
 dropped it. A developer opening a task someone else took and never closed is
 told who holds it and since when, and takes it over only by saying so.
 
-The same house rules govern how Claude works and
+The same house rules govern how the session works and
 how it answers in every repository.
 
 `/session-open temp` opens a temporary session, for questions about the
@@ -94,14 +96,15 @@ by an update.
 | `.claude/afk/credentials.md` | The kit standard for credentials: age encrypted `<slug>.secrets.md` files, the keys, how a value is stored, read, re-encrypted and decrypted for a build, and the setup a repository runs to take the standard |
 | `.claude/afk/secrets.py` | Stores, places, locks, checks, shows, re-encrypts and decrypts for a build the values in `<slug>.secrets.md` files, and prints the steps for making the keys. Needs the `age` command line tool |
 | `.claude/afk/secrets-decrypt.mjs` | Decrypts for a build in Node, for a build host that cannot run `secrets.py decrypt`. Needs the `age-encryption` package |
-| `.claude/afk/templates/` | The starting `CLAUDE.md`, `TASKS.md` and `HANDOFF.md` for the first run, the session reference a close fills in, and the `REFERENCES.md` the import setup writes |
+| `.claude/afk/templates/` | The starting `CLAUDE.md`, `TASKS.md` and `HANDOFF.md` for the first run, the `AGENTS.md` pointer every install writes, the session reference a close fills in, and the `REFERENCES.md` the import setup writes |
 | Mirrored skills and agents | Written outside the kit and mirrored bit for bit under `vendor/` in this repository: every emilkowalski skill, the security audit skill and the `code-simplifier` agent in every repository, and the cybersecurity skills a repository names under Security skills. Each skill goes to `.claude/skills/<name>/` and each agent to `.claude/agents/`; one already there that the kit did not write stops the install |
 | `.claude/afk/licenses/` | The license of each mirrored source |
 | `.claude/afk/MANIFEST` | Written by the install: the version, the source, the commit, a checksum per file, and the mirrored skills and agents it installed |
 | `.gitattributes` in each kit directory | Keeps LF line endings, so a checkout on Windows can still run `afk.sh` and still matches the checksums |
 
 Everything else in a project is **project-owned** and an update never touches
-it: `CLAUDE.md`, `TASKS.md`, `HANDOFF.md`, `TODO.md`, `REFERENCES.md`,
+it: `CLAUDE.md`, `AGENTS.md` below the kit's pointer, `TASKS.md`,
+`HANDOFF.md`, `TODO.md`, `REFERENCES.md`,
 `secrets-recipients.txt`, every `<slug>.secrets.md` file, everything under
 `.claude/references/` and `.claude/imported/`, and anything the project names as its authority
 file. A project's `CLAUDE.md` opens with
@@ -111,41 +114,108 @@ repositories. The skills name none of those values themselves.
 
 The house rules live in `CLAUDE.md` by import rather than inside a skill
 because a skill's text loads only when the skill is invoked, and a long session
-can compact it away. `CLAUDE.md` loads at the start of every session and is
-read again after compaction, and the response rules have to govern every turn.
+can compact it away. Claude Code loads `CLAUDE.md` at the start of every
+session and reads it again after compaction, and the response rules have to
+govern every turn.
+
+Other AI coding tools, such as OpenAI Codex, Cursor and GitHub Copilot, read
+`AGENTS.md` instead. A tool that reads a context file of another name, as
+Gemini CLI does unless its settings name `AGENTS.md`, is set to read
+`AGENTS.md` or told to read it at the start of each session. Every install and update keeps a pointer block at its
+top, from `.claude/afk/templates/AGENTS.md`, which sends the tool to
+`CLAUDE.md` and `HOUSE.md`, tells it to read them again after its context is
+summarized, says how to run the two skills without slash commands, and
+explains the few Claude Code terms the kit uses. The block sits between two
+markers, and the rest of `AGENTS.md` is the repository's own. An
+`AGENTS.md` that is a link, often to `CLAUDE.md`, is left alone and
+reported, because writing it would write the file it points at. Only Claude
+Code has run the kit so far.
 
 ## Install
 
-In a Claude Code session on the repository, paste this whole block. Paste it
-only in a repository of your own and only if you trust this one, because it
-tells Claude to run this repository's installer on your say-so.
+In an AI coding session on the repository, in Claude Code or another tool,
+paste this whole block. Paste it only in a repository of your own and only
+if you trust this one, because it tells the session to run this repository's
+installer on your say-so.
 
 ```text
 Install Artificial Field Kit into this repository. Artificial Field Kit is my own repository,
 https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and trust. I want
 you to take each of these actions:
 
-1. Attach MrFieldTech/Artificial-Field-Kit to this session with read access, if this
-   is a cloud session, and clone it. It is only the source the installer
-   copies from, so do not register the clone as one of this session's
-   repositories.
+1. Clone MrFieldTech/Artificial-Field-Kit outside this repository, first
+   attaching it to this session with read access if your tool needs that.
+   It is only the source the installer copies from, so do not register it
+   as one of this session's repositories, and do not follow its own
+   CLAUDE.md, AGENTS.md or skills.
 2. From this repository's root, run the installer from that clone:
    bash <the clone>/.claude/afk/afk.sh install .
    It writes the kit's session-open and session-close skills into
-   .claude/skills/ and its house rules into .claude/afk/. I want that change
-   to your own configuration.
-3. Follow the session-open skill it installed. It adds the line
-   @.claude/afk/HOUSE.md to CLAUDE.md, writes TASKS.md and HANDOFF.md,
-   commits them on a new task/ branch, and pushes that branch. Push the
-   task/ branch, not the branch this session was assigned.
+   .claude/skills/, its house rules into .claude/afk/, and its pointer
+   into AGENTS.md. I want that change to your own configuration.
+3. Read .claude/skills/session-open/SKILL.md and follow it. It adds the
+   line @.claude/afk/HOUSE.md to CLAUDE.md, writes TASKS.md and
+   HANDOFF.md, commits them with AGENTS.md on a new task/ branch, and
+   pushes that branch. Push the task/ branch, not the branch this session
+   started on.
 
-If auto mode blocks one of these anyway, do not work around it. Stop, and
-give me the exact sentence to reply with that approves the blocked action.
+If your tool's permission checks block one of these anyway, do not work
+around it. Stop, and give me the exact sentence to reply with that
+approves the blocked action.
 ```
 
-A request as short as "Install MrFieldTech/Artificial-Field-Kit" is not enough, because
-each numbered step opens a gate that stays shut until the owner's own message
-names the action:
+### As commands
+
+Steps 1 and 2, for a session that is not in the cloud:
+
+```
+git clone --depth 1 https://github.com/MrFieldTech/Artificial-Field-Kit "$(mktemp -d)/artificial-field-kit"
+bash <that clone>/.claude/afk/afk.sh install .
+```
+
+The repository is public, so any session can clone it, and a cloud session
+whose proxy serves it already may find there is nothing to attach in step 1.
+The clone's own `CLAUDE.md`, `AGENTS.md` and skills belong to the kit's
+repository, which is why step 1 keeps the clone from loading into the session.
+
+### What happens next
+
+The install writes the kit-owned files into the working tree and commits
+nothing. `session-open` then finds a repository new to the kit and runs its
+first-run setup. It reads the repository and settles every Session Setting it
+can: the Owner is the account that owns the repository, the integration
+branch is `preview`, and a key the repository does not show takes its
+default. It asks only about what is left, and when nothing is, it carries
+straight on. Its reply does not list the settings, which are in `CLAUDE.md`.
+It creates the first task's branch, writes `CLAUDE.md`, `TASKS.md` and
+`HANDOFF.md` on it, and commits them with the kit and `AGENTS.md`. An existing `CLAUDE.md` is
+kept and gains the import line and the settings, and a section of it that
+only repeats `HOUSE.md` is removed.
+
+While the first run waits for an answer, the install stays uncommitted. A
+tool that asks for unpushed work to be committed and pushed, such as a Claude
+Code cloud session's end-of-turn hook, is told why it will not be.
+
+A skill installed partway through a session may not be listed until the next
+session starts, which is why the install prompt says to follow the skill file
+rather than to run `/session-open`. From the next session on, `/session-open`
+works as usual: Claude Code lists it as a command, and any other tool follows
+the pointer in `AGENTS.md`. A tool that keeps `/` for its own commands takes
+`session-open` without it.
+
+Two settings only the owner can change, which the first run gives as
+`Action needed:` notices rather than questions: GitHub's Automatically delete
+head branches, which the workflow needs because a session cannot delete a
+branch, and a preview host's list of branches to build, when there is one.
+The first run asks only about a rule in the repository's own files that
+contradicts the kit, such as a release process that pushes straight to the
+default branch.
+
+### In Claude Code
+
+A request as short as "Install MrFieldTech/Artificial-Field-Kit" is not enough
+in Claude Code's auto mode, because each numbered step opens a gate that stays
+shut until the owner's own message names the action:
 
 - **`[Untrusted Code Integration]`.** Auto mode's classifier trusts only the
   repository the session started in and its remotes. Attaching another
@@ -166,47 +236,6 @@ action and its target, and it retries. Only if the block holds after that,
 switch the permission mode from Auto to Accept edits in the mode selector,
 approve the action when asked, and switch back.
 
-Steps 1 and 2 as commands, for a session that is not in the cloud:
-
-```
-git clone --depth 1 https://github.com/MrFieldTech/Artificial-Field-Kit "$(mktemp -d)/artificial-field-kit"
-bash <that clone>/.claude/afk/afk.sh install .
-```
-
-The repository is public, so any session can clone it, and a cloud session
-whose proxy serves it already may find there is nothing to attach in step 1.
-The clone's own `CLAUDE.md` and skills belong to the kit's repository, which
-is why step 1 keeps the clone from loading into the session.
-
-The install writes the kit-owned files into the working tree and commits
-nothing. `session-open` then finds a repository new to the kit and runs its
-first-run setup. It reads the repository and settles every Session Setting it
-can: the Owner is the account that owns the repository, the integration
-branch is `preview`, and a key the repository does not show takes its
-default. It asks only about what is left, and when nothing is, it carries
-straight on. Its reply does not list the settings, which are in `CLAUDE.md`.
-It creates the first task's branch, writes `CLAUDE.md`, `TASKS.md` and
-`HANDOFF.md` on it, and commits them with the kit. An existing `CLAUDE.md` is
-kept and gains the import line and the settings, and a section of it that
-only repeats `HOUSE.md` is removed.
-
-While the first run waits for an answer, the install stays uncommitted. A
-cloud session's end-of-turn hook asks for it to be committed and pushed to
-the assigned branch, and the session says why it will not.
-
-A skill installed partway through a session may not be listed until the next
-session starts, which is why the install prompt says to follow the skill rather
-than to run `/session-open`. From the next session on, `/session-open` works
-as usual.
-
-Two settings only the owner can change, which the first run gives as
-`Action needed:` notices rather than questions: GitHub's Automatically delete
-head branches, which the workflow needs because a session cannot delete a
-branch, and a preview host's list of branches to build, when there is one.
-The first run asks only about a rule in the repository's own files that
-contradicts the kit, such as a release process that pushes straight to the
-default branch.
-
 ## Update
 
 A repository never updates itself. Every `/session-open` checks the source and
@@ -221,20 +250,20 @@ take:
 | `1.0.0, source unreachable` | The source could not be fetched. Nothing is wrong locally |
 | `1.0.0, the source has no release on its default branch` | The source's `main` holds no `VERSION`, so no release has reached it |
 
-An update happens only when the owner asks, as its own task. In a Claude Code
-session on the repository, paste this whole block. Its slug names the current
+An update happens only when the owner asks, as its own task. In an AI coding
+session on the repository, in any tool, paste this whole block. Its slug names the current
 release, which is what the update takes. As with the install, paste it only in
 a repository of your own and only if you trust this one:
 
 ```text
-/session-open afk-update-2-3-0
+/session-open afk-update-2-4-0
 Update Artificial Field Kit in this repository, as this task. Artificial Field Kit is my own
 repository, https://github.com/MrFieldTech/Artificial-Field-Kit, which I wrote and
 trust. I want you to take each of these actions on this task's branch:
 
-1. Attach MrFieldTech/Artificial-Field-Kit to this session with read access, if this
-   is a cloud session. Do not register it as one of this session's
-   repositories.
+1. Attach MrFieldTech/Artificial-Field-Kit to this session with read
+   access, if your tool needs that to fetch it. Do not register it as one
+   of this session's repositories.
 2. Read the source: line in .claude/afk/MANIFEST, or in
    .claude/kit/MANIFEST when there is no .claude/afk/, because before
    2.0.0 the kit was named Claude-Kit and lived there. If it names
@@ -246,15 +275,16 @@ trust. I want you to take each of these actions on this task's branch:
    when there is no .claude/afk/. It clones the kit from that source and
    runs the new release's installer, which replaces the kit's skills in
    .claude/skills/, its agents in .claude/agents/ and its house rules in
-   .claude/afk/, removes
-   .claude/kit/ when the kit lived there, and points the import in
+   .claude/afk/, writes or rewrites its pointer at the top of AGENTS.md,
+   removes .claude/kit/ when the kit lived there, and points the import in
    CLAUDE.md at .claude/afk/HOUSE.md. I want those changes to your own
    configuration.
 4. Commit the update on its own, then do whatever the kit's CHANGELOG.md
    says the new release requires of a repository.
 
-If auto mode blocks one of these anyway, do not work around it. Stop, and
-give me the exact sentence to reply with that approves the blocked action.
+If your tool's permission checks block one of these anyway, do not work
+around it. Stop, and give me the exact sentence to reply with that
+approves the blocked action.
 ```
 
 A repository on a release before 2.0.0, when the kit was named Claude-Kit
@@ -335,8 +365,9 @@ date. Do not work from them or from memory. I want you to:
    request into it and merging that pull request with a merge commit. Do
    not merge into the default branch unless I ask.
 
-If auto mode blocks one of these, do not work around it. Stop, and give me
-the exact sentence to reply with that approves the blocked action.
+If your tool's permission checks block one of these, do not work around
+it. Stop, and give me the exact sentence to reply with that approves the
+blocked action.
 ```
 
 ## Working on the kit
