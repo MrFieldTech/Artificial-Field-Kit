@@ -271,10 +271,12 @@ scratch repository with the kit installed or in this one:
 1. The developer prefix on a local tool. `HOUSE.md` takes it from the part
    before the first `/` of the branch the session started on, so a
    developer who starts on their own `feature/x` is named `FEATURE`.
-   a (recommended): take a prefix only from a branch whose name has three
-   or more parts, as cloud tools name theirs, and none otherwise. b: ask
-   the developer for a prefix when the branch is not one a tool made.
-   c: leave it.
+   a (recommended): keep the rule, and say in `HOUSE.md` that a session in
+   a local tool starts from the default branch or a task branch, which
+   give no prefix. b: ask the developer for a prefix whenever the branch
+   the session started on is not one the kit names. c: leave it as it is.
+   A rule by the shape of the name does not work: this session's own
+   cloud branch has two parts, like `feature/x`.
 
 **Stopping point.** Built and checked. Next: answer the open question,
 then `/session-close`, which merges into `preview`. The checklist waits
