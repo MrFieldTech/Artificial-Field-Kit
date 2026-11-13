@@ -1,0 +1,6 @@
+# Written by refresh.sh. Never edit by hand.
+repository: cloudflare/security-audit-skill
+path: .
+commit: c1c8a8c1471069fb0e188eeaff69b8e8db6564a8
+license: LICENSE
+refreshed: 2026-11-12

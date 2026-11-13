@@ -1,0 +1,16 @@
+# The outside skills and agents the kit mirrors, one source per line.
+# refresh.sh copies each into vendor/<name>/ and afk.sh installs from there.
+#
+#   name        the directory under vendor/
+#   repository  <owner>/<repo> upstream, on its default branch
+#   path        the part of the repository mirrored, or . for all of it
+#   skills      a glob of skill directories inside the mirror, or -
+#   agents      a glob of agent files inside the mirror, or -
+#   install     everywhere, or by-name: only the skills a repository's
+#               Security skills setting names
+#
+# name                              repository                                path                     skills    agents     install
+emilkowalski-skills                 emilkowalski/skills                       .                        skills/*  -          everywhere
+cloudflare-security-audit-skill     cloudflare/security-audit-skill           .                        skills/*  -          everywhere
+anthropics-code-simplifier          anthropics/claude-plugins-official        plugins/code-simplifier  -         agents/*   everywhere
+mukul975-cybersecurity-skills       mukul975/Anthropic-Cybersecurity-Skills   .                        skills/*  -          by-name

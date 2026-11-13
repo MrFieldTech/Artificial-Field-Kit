@@ -4,6 +4,96 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `afk.sh update` when its owner asks.
 
+## 2.3.0
+
+The kit installs skills and agents written outside it, mirrored in its own
+repository.
+
+- `vendor/` in the kit's repository mirrors four sources bit for bit:
+  emilkowalski/skills, cloudflare/security-audit-skill, the
+  `code-simplifier` agent from anthropics/claude-plugins-official, and
+  mukul975/Anthropic-Cybersecurity-Skills. `vendor/SOURCES` says what each
+  installs, and `refresh.sh`, which is never installed, refreshes a mirror
+  from upstream as its own release.
+- Every repository takes the emilkowalski skills, the security audit skill
+  and the agent. The cybersecurity skills install only by name, under a new
+  Session Settings key, Security skills, `none` by default.
+- `afk.sh` installs each mirrored skill to `.claude/skills/<name>/` and each
+  agent to `.claude/agents/`, lists them under `vendored` in `MANIFEST`,
+  and treats them as kit-owned. One in place that no install wrote stops
+  the install, which changes nothing. Their licenses go to
+  `.claude/afk/licenses/`.
+- `afk.sh status`, `install` and `update` fetch the kit by a blobless
+  sparse clone, holding only the kit-owned files and the mirrors the
+  repository installs, so the mirrors are never downloaded whole.
+- `HOUSE.md` gains a Mirrored skills section: how a Security skill is
+  read and added, and what to do on a clash.
+
+A repository that updates adds `- **Security skills:** none` as the last
+line of its Session Settings. When the update stops on a clash, it follows
+Mirrored skills in `HOUSE.md`. Its own skills under `.claude/skills/` and
+agents under `.claude/agents/` are untouched otherwise. On Windows, a
+checkout that turns LF into CRLF can make `afk.sh status` report the
+installed copies as edited, because they carry no `.gitattributes` of
+their own.
+
+## 2.2.0
+
+The house rules carry the owner's general instructions and a permission to
+fail.
+
+- Rules for every action: never invent or assume a name, figure, price,
+  version, source, feature or which tool is in use, and say "I don't know"
+  in a reply; label a guess as one; point out an error, contradiction or
+  flawed premise at once, including in the session's own earlier work, and
+  ask which is current when the owner and the files disagree; say so when
+  a recommendation reverses a recorded decision; prefer automating
+  repeatable work. The dash rule now bans the en dash too.
+- A new section, Permission to fail: make a real attempt, and when the goal
+  is out of reach, give a failure report instead of a workaround that only
+  looks right. The report is kept in full under What brevity never
+  suppresses.
+- Response format: part 1 leads with the answer, Yes or No first, a verdict
+  and its deciding factors first; no affirmation or filler. New: Writing
+  for the owner, for a capable non-specialist unless `CLAUDE.md` says
+  otherwise, acronyms spelled out, American English; and Commands for the
+  owner, complete commands, and only the confirming ones first when a step
+  depends on what the owner must check.
+- `check.sh` fails on an en dash as on an em dash.
+
+A repository that updates should look for en dashes in its own files, which
+the house rules now forbid.
+
+## 2.1.0
+
+The kit carries standards: how a website is built and how any interface
+looks, read when their case comes up, as the practices are.
+
+- `.claude/afk/standards/site.md`, the site standard. It was written
+  outside the kit and reached version 1.2 there; the kit takes it over from
+  that version, generic, and it now follows the kit's version. Part 1 is
+  the static site it covered. Its typefaces are now always served from the
+  site's own origin: FONT-1 is a MUST, and FONT-2 forbids a font host such
+  as Google Fonts. New: which part applies, SITE-1 to SITE-3; the hosting
+  line, HOST-1 to HOST-4, which warns before a site needs more than
+  Cloudflare's free plan; and Part 2, the full featured site, with rules
+  for its stack, analytics that never capture keys or inputs, a 13 or
+  older age check that stores no birth date, email to a list with one-click
+  unsubscribe and a mailing address, and uploads with a consent checkbox, a
+  content policy and a Report Infringement link.
+- `.claude/afk/standards/content-policy.md`, the template a full featured
+  site fills to publish its content policy.
+- `.claude/afk/standards/design.md`, twenty design rules, DESIGN-1 to
+  DESIGN-20, each with its reason and check, and which design skills to
+  reach for when they are installed.
+- `HOUSE.md` gains a Standards section, and the standards rank between the
+  skills and the practices in Which file wins.
+
+A repository that already has a site built to the standard's version 1.2
+checks it against FONT-1 and FONT-2, and records in its `CLAUDE.md` which
+part it is built to, per SITE-1, the next time its site is worked on.
+Nothing else needs doing after updating.
+
 ## 2.0.0
 
 The kit is renamed Artificial Field Kit, AFK for short, and moves from
