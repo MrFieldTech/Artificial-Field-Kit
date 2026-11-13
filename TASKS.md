@@ -143,8 +143,96 @@ are in Claude's skill format. The branch protocol, state files, response
 format, practices, standards and scripts carry nothing Claude-specific.
 Not tested with any other vendor's tool.
 
-**Stopping point.** Claimed. First step: walk the process as another
-vendor's tool would, then grill what it finds.
+**Walkthrough findings, 2026-11-13.** Read as a tool that knows nothing of
+Claude Code: `README.md`, `HOUSE.md`, both skills, the templates and
+`afk.sh`. Paths that work only because Claude Code already knows them:
+
+1. Nothing tells another tool to read `CLAUDE.md`. Most other tools read
+   `AGENTS.md` at the repository root.
+2. The first line of `CLAUDE.md`, `@.claude/afk/HOUSE.md`, is Claude Code
+   import syntax. Elsewhere it is a literal line, and the house rules never
+   load.
+3. `/session-open` and `/session-close` are commands only because Claude
+   Code turns `.claude/skills/<name>/SKILL.md` into slash commands. A tool
+   without that has no command, and `HOUSE.md`'s "ask the owner to run it"
+   leads nowhere.
+4. `disable-model-invocation: true` in each skill's frontmatter is the only
+   thing that keeps a session from running either skill on its own.
+   Another tool ignores it.
+5. `README.md` says the rules live in `CLAUDE.md` because Claude Code
+   reloads it after the context is summarized. Nothing tells another tool
+   to read `HOUSE.md` again after that.
+6. The developer's prefix comes from "the developer's Claude Code
+   settings", and the handle from "the account behind the session's GitHub
+   access", with no command to find either.
+7. Cloud terms with no definition: the branch "the cloud harness assigns",
+   attaching a repository "with read access" and "never registering it",
+   the "end-of-turn hook", "schedule a message back to itself", and auto
+   mode's classifier.
+8. Mirrored skills install to `.claude/skills/` and the `code-simplifier`
+   agent to `.claude/agents/`. The agent format is Claude Code's alone.
+9. The install, update and backfill prompts in `README.md` say "In a Claude
+   Code session" and are written around auto mode.
+10. Both skill descriptions say "a Claude Code session", and `HOUSE.md`
+    defines an owner as working "with Claude Code".
+
+Not a finding: the commit attribution lines come from the session's own
+tool, not the kit.
+
+**What other vendors already have, unverified.** Secondary sources, not
+the official specifications, 2026-11-13: `AGENTS.md` at the repository
+root is the shared instruction file, read by OpenAI Codex, Cursor and
+GitHub Copilot, and by Gemini CLI by default or by a setting; sources
+disagree on whether Claude Code now reads it. `SKILL.md` folders are an
+open standard (Agent Skills), and `.agents/skills/` is the most common
+shared place for them. Codex reads it; Copilot reads `.github/skills/`
+and, by some sources, `.agents/skills/`. Confirm against each vendor's own
+documentation before the kit relies on a path.
+
+**Open questions, round 1.**
+
+1. What the vendor-neutral file is. a (recommended): `AGENTS.md`, a short
+   pointer that tells any tool to read `CLAUDE.md` and then `HOUSE.md`,
+   and holds no rules, so nothing is kept twice. b: `AGENTS.md` as a full
+   copy of `CLAUDE.md`, written by a script. c: settings move to
+   `AGENTS.md` and `CLAUDE.md` becomes the pointer.
+2. Who owns `AGENTS.md` in a repository using the kit. a (recommended):
+   project-owned, like `CLAUDE.md`: first run writes it from a new
+   template, or adds the pointer to the top of one that exists, and an
+   update adds it when missing. b: kit-owned, replaced whole by every
+   update, which overwrites any `AGENTS.md` a repository already has.
+3. How another tool runs the two skills. a (recommended): `AGENTS.md` says
+   that `/session-open <words>` means read
+   `.claude/skills/session-open/SKILL.md` and follow it with those words,
+   the same for `/session-close`, and that `session-close` runs only when
+   the owner asks. One copy of each skill. b: also install copies under
+   `.agents/skills/`, which some tools list as commands, at the cost of
+   two copies and an unverified path.
+4. Claude-specific wording in kit-owned files. a (recommended): rewrite it
+   in neutral terms, such as "the session's tool", and keep each Claude
+   Code detail as a labeled note, such as how its branch prefix or cloud
+   sessions work, and give the commands for the handle and prefix. b:
+   leave the wording and rely on `AGENTS.md`.
+5. The mirrored skills and agent. a (recommended): leave them where they
+   are; `AGENTS.md` says any tool may read a skill's `SKILL.md` as
+   instructions, and that `.claude/agents/` is Claude Code's alone. b:
+   also copy the skills to `.agents/skills/`.
+6. The prompts in `README.md`. a (recommended): make the install, update
+   and backfill prompts neutral, with the auto mode notes moved to a
+   section for Claude Code. b: leave them, and add one line saying other
+   tools follow the same steps.
+7. How "verified" is shown. No other vendor's tool runs in this session.
+   a (recommended): `check.sh` tests that `AGENTS.md` exists in the
+   template and an install and names the right files; a fresh agent here,
+   told to use nothing but the repository's files, walks the protocol from
+   `AGENTS.md`, labeled a Claude cold read; and a checklist in the block
+   for MrFieldTech to run once in another vendor's tool. b: the cold read
+   and checklist only. c: MrFieldTech tests in other tools first, and the
+   session builds after.
+
+**Stopping point.** Grilling round 1 asked, above. Next: write the answers
+as decisions, then the next round or the build. This is a release, 2.4.0
+unless the answers make it a breaking change.
 
 ## Closed Tasks
 
