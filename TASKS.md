@@ -114,13 +114,51 @@ repository; fixing that is part of the task.
 **Stopping point.** Not started. First step: MrFieldTech writes the list;
 the session tests it against `bash check.sh` before it is saved.
 
+### Rebuild The Kit Around A Vendor-Neutral Layout
+
+**Slug:** `neutral-layout`
+**Status:** TODO
+**Opened:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-13, in `vendor-neutral-update`: the kit is
+used only in Claude Code today, but MrFieldTech may move to another
+vendor's tool, and the repository is public. `vendor-neutral-update` made
+the `.claude/` layout reachable from any tool through an `AGENTS.md`
+pointer; this task would move the kit itself out of `.claude/`.
+
+**Background.** The trade-off, as given to MrFieldTech on 2026-11-13. For:
+no vendor's name in any path, a later move to another tool costs little,
+and tools that read `.agents/skills/` would list the skills as commands.
+Against: a breaking release and a migration for every installed
+repository, like 2.0.0's; Claude Code finds skills only in
+`.claude/skills/` as far as was checked, so each skill needs a copy there
+that can drift or a link that breaks on Windows and in the `MANIFEST`
+checksums; the shared conventions were still moving, with sources
+disagreeing on paths; and no other vendor's tool could be tested from a
+Claude Code session.
+
+**Decisions left open.**
+
+1. Whether to do it at all, decided when MrFieldTech picks another tool or
+   another user asks, and tested in that tool.
+2. The layout: which folder holds the kit and the skills, and how Claude
+   Code still finds them.
+3. How installed repositories migrate.
+
+**Stopping point.** Not started. First step: check each target tool's own
+documentation for where it reads instruction files and skills.
+
+## Closed Tasks
+
 ### Let Other AI Tools Run The Kit
 
+DROPPED | GRM / MRFIELDTECH | 261113 195314
 HOLDING | GRM / MRFIELDTECH | 261113 161247
 
 **Slug:** `vendor-neutral-update`
-**Status:** ACTIVE
+**Status:** DONE
 **Opened:** 2026-11-13
+**Closed:** 2026-11-13
 
 **Why.** MrFieldTech, 2026-11-13, turning a temporary session into this
 task: walk through the whole kit process and verify that an AI coding
@@ -272,46 +310,9 @@ scratch repository with the kit installed or in this one:
     a tool's branch from a developer's: this session's own cloud branch
     has two parts, like `feature/x`.
 
-**Stopping point.** Built and checked. Next: answer the open question,
-then `/session-close`, which merges into `preview`. The checklist waits
-for MrFieldTech in another tool. This is a release, 2.4.0
-unless the answers make it a breaking change.
-
-### Rebuild The Kit Around A Vendor-Neutral Layout
-
-**Slug:** `neutral-layout`
-**Status:** TODO
-**Opened:** 2026-11-13
-
-**Why.** MrFieldTech, 2026-11-13, in `vendor-neutral-update`: the kit is
-used only in Claude Code today, but MrFieldTech may move to another
-vendor's tool, and the repository is public. `vendor-neutral-update` made
-the `.claude/` layout reachable from any tool through an `AGENTS.md`
-pointer; this task would move the kit itself out of `.claude/`.
-
-**Background.** The trade-off, as given to MrFieldTech on 2026-11-13. For:
-no vendor's name in any path, a later move to another tool costs little,
-and tools that read `.agents/skills/` would list the skills as commands.
-Against: a breaking release and a migration for every installed
-repository, like 2.0.0's; Claude Code finds skills only in
-`.claude/skills/` as far as was checked, so each skill needs a copy there
-that can drift or a link that breaks on Windows and in the `MANIFEST`
-checksums; the shared conventions were still moving, with sources
-disagreeing on paths; and no other vendor's tool could be tested from a
-Claude Code session.
-
-**Decisions left open.**
-
-1. Whether to do it at all, decided when MrFieldTech picks another tool or
-   another user asks, and tested in that tool.
-2. The layout: which folder holds the kit and the skills, and how Claude
-   Code still finds them.
-3. How installed repositories migrate.
-
-**Stopping point.** Not started. First step: check each target tool's own
-documentation for where it reads instruction files and skills.
-
-## Closed Tasks
+**Outcome.** Release 2.4.0 built, `bash check.sh` passing, and merged into
+`preview`, 2026-11-13. The checklist above waits for MrFieldTech in another
+vendor's tool; no such tool has run the kit.
 
 ### Mirror Outside Skills And Agents Into The Kit
 
