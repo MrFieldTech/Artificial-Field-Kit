@@ -42,6 +42,9 @@ Any AI coding tool can run the kit, not only Claude Code, through an
   waiting on checks. `HOUSE.md` and the pointer say to read the rules and
   the skill being followed again after the context is summarized, and
   `references.md` defines an upload.
+- `HOUSE.md` says a session in a local tool starts on the default branch
+  or a task branch, because a branch of the developer's own, such as
+  `feature/x`, would otherwise be read as a prefix.
 
 A repository that updates commits the `AGENTS.md` the update writes or
 changes. A session that opens on a working copy with uncommitted

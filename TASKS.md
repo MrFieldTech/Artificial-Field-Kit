@@ -266,17 +266,11 @@ scratch repository with the kit installed or in this one:
    with no em dash or en dash.
 6. Record the tool, its version and each place it stalled, as a task.
 
-**Open questions.**
-
-1. The developer prefix on a local tool. `HOUSE.md` takes it from the part
-   before the first `/` of the branch the session started on, so a
-   developer who starts on their own `feature/x` is named `FEATURE`.
-   a (recommended): keep the rule, and say in `HOUSE.md` that a session in
-   a local tool starts from the default branch or a task branch, which
-   give no prefix. b: ask the developer for a prefix whenever the branch
-   the session started on is not one the kit names. c: leave it as it is.
-   A rule by the shape of the name does not work: this session's own
-   cloud branch has two parts, like `feature/x`.
+10. MrFieldTech, 2026-11-13: the prefix rule stays, and `HOUSE.md` says a
+    session in a local tool starts on the default branch or a task branch,
+    which give no prefix. A rule by the shape of a branch name cannot tell
+    a tool's branch from a developer's: this session's own cloud branch
+    has two parts, like `feature/x`.
 
 **Stopping point.** Built and checked. Next: answer the open question,
 then `/session-close`, which merges into `preview`. The checklist waits

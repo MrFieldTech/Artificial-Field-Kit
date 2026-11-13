@@ -188,7 +188,9 @@ in capitals, which `session-open` settles before it takes a task:
   the part before its first `/`, when that branch is not the default branch,
   the integration branch, an Other branch or a task branch. With none, the
   name is the handle alone and `/` is left out. The prefix is never added to
-  a branch name.
+  a branch name. A session in a tool that runs in the developer's own
+  working copy starts on the default branch or a task branch, which give no
+  prefix, because any other branch the developer made would be read as one.
 
 **Holder lines.** Directly under each task's heading, newest first, a log of
 who held the task:
