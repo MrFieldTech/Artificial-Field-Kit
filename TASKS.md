@@ -172,6 +172,18 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
+**Open questions.**
+
+12. Nothing tells this repository when an upstream changes; a refresh
+    happens only when someone runs `refresh.sh`. How is it prompted?
+    a. (recommended) `refresh.sh --check` lists each source whose
+       upstream has moved past its mirrored commit, by `git ls-remote`,
+       downloading nothing, and this repository's sessions run it when
+       asked about the mirrors or before a release.
+    b. A weekly GitHub Actions workflow runs that check and opens an
+       issue when a source has moved.
+    c. Nothing: refresh only when someone wants a newer version.
+
 **Stopping point.** Release 2.3.0 built and `bash check.sh` passing,
 2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
 a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
