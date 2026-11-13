@@ -189,49 +189,52 @@ shared place for them. Codex reads it; Copilot reads `.github/skills/`
 and, by some sources, `.agents/skills/`. Confirm against each vendor's own
 documentation before the kit relies on a path.
 
-**Open questions, round 1.**
+**Decisions.** MrFieldTech, 2026-11-13, round 1, each as recommended:
 
-1. What the vendor-neutral file is. a (recommended): `AGENTS.md`, a short
-   pointer that tells any tool to read `CLAUDE.md` and then `HOUSE.md`,
-   and holds no rules, so nothing is kept twice. b: `AGENTS.md` as a full
-   copy of `CLAUDE.md`, written by a script. c: settings move to
-   `AGENTS.md` and `CLAUDE.md` becomes the pointer.
-2. Who owns `AGENTS.md` in a repository using the kit. a (recommended):
-   project-owned, like `CLAUDE.md`: first run writes it from a new
-   template, or adds the pointer to the top of one that exists, and an
-   update adds it when missing. b: kit-owned, replaced whole by every
-   update, which overwrites any `AGENTS.md` a repository already has.
-3. How another tool runs the two skills. a (recommended): `AGENTS.md` says
-   that `/session-open <words>` means read
-   `.claude/skills/session-open/SKILL.md` and follow it with those words,
-   the same for `/session-close`, and that `session-close` runs only when
-   the owner asks. One copy of each skill. b: also install copies under
-   `.agents/skills/`, which some tools list as commands, at the cost of
-   two copies and an unverified path.
-4. Claude-specific wording in kit-owned files. a (recommended): rewrite it
-   in neutral terms, such as "the session's tool", and keep each Claude
-   Code detail as a labeled note, such as how its branch prefix or cloud
-   sessions work, and give the commands for the handle and prefix. b:
-   leave the wording and rely on `AGENTS.md`.
-5. The mirrored skills and agent. a (recommended): leave them where they
-   are; `AGENTS.md` says any tool may read a skill's `SKILL.md` as
-   instructions, and that `.claude/agents/` is Claude Code's alone. b:
-   also copy the skills to `.agents/skills/`.
-6. The prompts in `README.md`. a (recommended): make the install, update
-   and backfill prompts neutral, with the auto mode notes moved to a
-   section for Claude Code. b: leave them, and add one line saying other
-   tools follow the same steps.
-7. How "verified" is shown. No other vendor's tool runs in this session.
-   a (recommended): `check.sh` tests that `AGENTS.md` exists in the
-   template and an install and names the right files; a fresh agent here,
-   told to use nothing but the repository's files, walks the protocol from
-   `AGENTS.md`, labeled a Claude cold read; and a checklist in the block
-   for MrFieldTech to run once in another vendor's tool. b: the cold read
-   and checklist only. c: MrFieldTech tests in other tools first, and the
-   session builds after.
+1. The vendor-neutral file is `AGENTS.md` at the repository root, a short
+   pointer that tells any tool to read `CLAUDE.md` and then `HOUSE.md`. It
+   holds no rules, so nothing is kept twice. `CLAUDE.md` keeps the
+   settings.
+2. `AGENTS.md` is project-owned, like `CLAUDE.md`. First run writes it
+   from a new template, or adds the pointer to the top of one that
+   exists, and an update adds it when it is missing.
+3. Another tool runs the skills by `AGENTS.md`: `/session-open <words>`
+   means read `.claude/skills/session-open/SKILL.md` and follow it with
+   those words, the same for `/session-close`, which runs only when the
+   owner asks. One copy of each skill.
+4. Claude-specific wording in kit-owned files is rewritten in neutral
+   terms. Each Claude Code detail stays as a labeled note, and the kit
+   gives the commands that find the developer's handle and prefix.
+5. The mirrored skills and agent stay where they are. `AGENTS.md` says any
+   tool may read a skill's `SKILL.md` as instructions, and that
+   `.claude/agents/` is Claude Code's alone.
+6. The install, update and backfill prompts in `README.md` become neutral,
+   with the auto mode notes in a section for Claude Code.
+7. Verified means: `check.sh` tests that `AGENTS.md` is in the template
+   and an install and names the right files; a fresh agent, told to use
+   only the repository's files, walks the protocol from `AGENTS.md`,
+   labeled a Claude cold read; and a checklist in this block for
+   MrFieldTech to run once in another vendor's tool.
 
-**Stopping point.** Grilling round 1 asked, above. Next: write the answers
-as decisions, then the next round or the build. This is a release, 2.4.0
+**Open questions, round 2.**
+
+1. How far to go. MrFieldTech asked, 2026-11-13, for the trade-off of
+   rebuilding the kit around a vendor-neutral layout, such as
+   `.agents/afk/` and `.agents/skills/` with `CLAUDE.md` as an adapter,
+   against round 1's plan, which keeps the `.claude/` layout and adds the
+   neutral entry. a (recommended): build round 1's plan now, and open a
+   `TODO` task for the neutral layout, to take up if MrFieldTech moves to
+   another tool or another user asks. b: round 1's plan only. c: the
+   neutral layout now, a breaking 3.0.0 release.
+2. A repository that already has its own `AGENTS.md` with rules in it.
+   a (recommended): keep its text below the pointer, rank it with
+   `CLAUDE.md` in Which file wins, with `CLAUDE.md` winning a conflict,
+   and have first run report any part that only repeats `HOUSE.md`, as it
+   does for `CLAUDE.md`. b: first run moves its rules into `CLAUDE.md`
+   and leaves `AGENTS.md` only the pointer.
+
+**Stopping point.** Grilling round 2 asked, above. Next: write the answers
+as decisions, then build. This is a release, 2.4.0
 unless the answers make it a breaking change.
 
 ## Closed Tasks
