@@ -13,6 +13,7 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-13 | GRM / MRFIELDTECH | `vendored-skills`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.3.0 mirrors four outside sources under `vendor/` and installs their skills and agent as kit-owned files, the cybersecurity skills only by the new Security skills key, fetched by a blobless sparse clone; `refresh.sh --check` offers each upstream update; `security-skill-review` opened for later | `d5dbf75..904db23` |
 | 2026-11-11 | GRM / MRFIELDTECH | `house-instructions`, DONE, merged into `preview`: release 2.2.0 merges the owner's general instructions into `HOUSE.md`, adds a Permission to fail section with its failure report, and bans the en dash, which `check.sh` now enforces | `2768c9d..ac6d2e7` |
 | 2026-11-11 | GRM / MRFIELDTECH | `skill-incorporation`, DONE, merged into `preview`: release 2.1.0 adds `.claude/afk/standards/` with the site standard (static and full featured parts, the hosting line), a content policy template and twenty design rules, named in `HOUSE.md`; `house-instructions` and `vendored-skills` opened for later | `4995d34..003517b` |
 | 2026-11-11 | GRM / MRFIELDTECH | `unique-name`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.0.0 renames the kit Artificial Field Kit and moves it from `.claude/kit/` to `.claude/afk/`, with a forwarder that moves a 1.x repository on its next update; `private-terms` opened for later | `70399cf..2b0503b` |
@@ -227,6 +228,15 @@ None.
   2026-11-11, in `unique-name`: every 1.x repository updates by running it.
   Moved to `CLAUDE.md` as a project rule.
 
+- **The kit mirrors outside skills and agents under `vendor/` and installs
+  them as kit-owned files.** MrFieldTech, 2026-11-11 to 2026-11-13, in
+  `vendored-skills`, whose block holds each decision and its reason.
+  Mirrors are kept bit for bit; each skill installs to
+  `.claude/skills/<name>/`, the agent to `.claude/agents/`, listed in
+  `MANIFEST`; the cybersecurity collection installs only by the Security
+  skills key. How sessions here offer upstream updates moved to
+  `CLAUDE.md` as a project rule.
+
 ## Open Questions
 
 - **Should the private repository the default import follows name its
@@ -282,6 +292,25 @@ None.
   file. Open a task for it?
 
 ## Flagged As Unverified
+
+**No repository has taken 2.3.0 from GitHub.** A scratch repository took
+it from a local clone, and one fetch from the task branch on GitHub with
+two Security skills came to 1.9 MB. Verified by: the first repository
+to update to 2.3.0, whose `afk.sh status` should read current and whose
+`.claude/skills/` should hold the mirrored skills.
+
+**Installed mirrors on Windows.** They carry no `.gitattributes`, so a
+checkout that turns LF into CRLF may show them as edited locally.
+Verified by: `afk.sh status` in a Windows checkout after 2.3.0.
+
+**The mirrored skills and agent load in a session.** They sit where Claude
+Code's documentation says project skills and agents load, but no session
+has listed or used one. Verified by: a session in a repository on 2.3.0
+listing `animate` among its skills and handing work to
+`code-simplifier`.
+
+**None of the 818 cybersecurity skills has been reviewed.** Verified by:
+`security-skill-review`.
 
 **The 2.2.0 response rules in a live session.** Part 1 now leads with the
 answer, and Writing for the owner and Commands for the owner are new; no

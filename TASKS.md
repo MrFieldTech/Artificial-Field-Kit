@@ -55,13 +55,76 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
+### Review The Mirrored Cybersecurity Skills
+
+**Slug:** `security-skill-review`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, in `vendored-skills`: the 818 skills
+mirrored from mukul975/Anthropic-Cybersecurity-Skills are not reviewed
+before mirroring; each is read when a repository first names it under
+Security skills, and all of them are to be reviewed eventually. Some hold
+offensive security procedures.
+
+**Decisions left open.**
+
+1. What a review checks for, and what it does with a skill that fails:
+   leave it out of the mirror, mark it, or warn a repository that names it.
+2. Where the results are recorded, so a later refresh knows which skills
+   changed since their review.
+
+**Stopping point.** Not started. Waits on `vendored-skills` merging. First
+step: grill the open decisions.
+
+### Build The Private Terms List
+
+**Slug:** `private-terms`
+**Status:** TODO
+**Opened:** 2026-11-11
+
+**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
+`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
+
+**Background.** `check.sh` section 1 reads the secret in CI, or an
+untracked `.private-terms` file locally, as one extended regular
+expression matched case-sensitively by `grep -E`, and fails when it
+matches anything in the kit-owned files, `.claude/references/` or
+`.claude/imported/`. Without it the names part is skipped with a line in
+the log. MrFieldTech found on 2026-11-11 that the secret, then named
+`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
+session reads the same list from its environment to redact a reference at
+close, which needs it set as an environment variable as well, where it is
+stored in plain text.
+
+**Decisions left open.**
+
+1. Which terms go in: the names of MrFieldTech's other projects and
+   repositories, their domains and hosts, the names of clients and other
+   people. Not `MrFieldTech`, which this repository's references name as
+   the developer.
+2. Whether the list is also set in the cloud environment, so closes here
+   can redact.
+3. Whether CI should fail, rather than skip, when the secret is empty, so
+   a missing list is never silent again.
+
+The first CI run with the list may fail on a name already in the
+repository; fixing that is part of the task.
+
+**Stopping point.** Not started. First step: MrFieldTech writes the list;
+the session tests it against `bash check.sh` before it is saved.
+
+## Closed Tasks
+
 ### Mirror Outside Skills And Agents Into The Kit
 
+DROPPED | GRM / MRFIELDTECH | 261113 005220
 HOLDING | GRM / MRFIELDTECH | 261111 200802
 
 **Slug:** `vendored-skills`
-**Status:** ACTIVE
+**Status:** DONE
 **Opened:** 2026-11-11
+**Closed:** 2026-11-13
 
 **Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
 skills should be mirrored into this repository, installed with the kit,
@@ -181,76 +244,15 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Stopping point.** Release 2.3.0 built and `bash check.sh` passing,
+**Outcome.** Release 2.3.0 built and `bash check.sh` passing,
 2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
 a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
 list, the licenses in `.claude/afk/licenses/`, the Security skills key
 and Mirrored skills in `HOUSE.md`, and the `check.sh` tests. Tried by
 hand: a fetch from GitHub with two Security skills came to 1.9 MB, and a
 2.2.0 repository updated to 2.3.0 and read current. `refresh.sh --check`,
-`--changes`, `--diff` and `--skip` added and tested, 2026-11-13. Next:
-close.
-
-### Review The Mirrored Cybersecurity Skills
-
-**Slug:** `security-skill-review`
-**Status:** TODO
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, in `vendored-skills`: the 818 skills
-mirrored from mukul975/Anthropic-Cybersecurity-Skills are not reviewed
-before mirroring; each is read when a repository first names it under
-Security skills, and all of them are to be reviewed eventually. Some hold
-offensive security procedures.
-
-**Decisions left open.**
-
-1. What a review checks for, and what it does with a skill that fails:
-   leave it out of the mirror, mark it, or warn a repository that names it.
-2. Where the results are recorded, so a later refresh knows which skills
-   changed since their review.
-
-**Stopping point.** Not started. Waits on `vendored-skills` merging. First
-step: grill the open decisions.
-
-### Build The Private Terms List
-
-**Slug:** `private-terms`
-**Status:** TODO
-**Opened:** 2026-11-11
-
-**Why.** MrFieldTech, 2026-11-11, at the close of `unique-name`: the
-`AFK_PRIVATE_TERMS` repository secret should be built out. Not urgent.
-
-**Background.** `check.sh` section 1 reads the secret in CI, or an
-untracked `.private-terms` file locally, as one extended regular
-expression matched case-sensitively by `grep -E`, and fails when it
-matches anything in the kit-owned files, `.claude/references/` or
-`.claude/imported/`. Without it the names part is skipped with a line in
-the log. MrFieldTech found on 2026-11-11 that the secret, then named
-`KIT_PRIVATE_TERMS`, never existed, so CI has never checked names. A
-session reads the same list from its environment to redact a reference at
-close, which needs it set as an environment variable as well, where it is
-stored in plain text.
-
-**Decisions left open.**
-
-1. Which terms go in: the names of MrFieldTech's other projects and
-   repositories, their domains and hosts, the names of clients and other
-   people. Not `MrFieldTech`, which this repository's references name as
-   the developer.
-2. Whether the list is also set in the cloud environment, so closes here
-   can redact.
-3. Whether CI should fail, rather than skip, when the secret is empty, so
-   a missing list is never silent again.
-
-The first CI run with the list may fail on a name already in the
-repository; fixing that is part of the task.
-
-**Stopping point.** Not started. First step: MrFieldTech writes the list;
-the session tests it against `bash check.sh` before it is saved.
-
-## Closed Tasks
+`--changes`, `--diff` and `--skip` added and tested, 2026-11-13. Done:
+release 2.3.0.
 
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 
