@@ -216,26 +216,54 @@ documentation before the kit relies on a path.
    labeled a Claude cold read; and a checklist in this block for
    MrFieldTech to run once in another vendor's tool.
 
-**Open questions, round 2.**
+8. Round 2, 2026-11-13: this release builds round 1's plan, and the
+   rebuild around a vendor-neutral layout is queued as its own task,
+   `neutral-layout`, for when MrFieldTech moves to another tool or another
+   user asks. A rebuild now would break every install for a gain no tool
+   here can test.
+9. Round 2, 2026-11-13: a repository's own `AGENTS.md` keeps its text
+   below the pointer. That text ranks with `CLAUDE.md` in Which file wins,
+   `CLAUDE.md` winning a conflict, and first run reports any part that
+   only repeats `HOUSE.md`, as it does for `CLAUDE.md`.
 
-1. How far to go. MrFieldTech asked, 2026-11-13, for the trade-off of
-   rebuilding the kit around a vendor-neutral layout, such as
-   `.agents/afk/` and `.agents/skills/` with `CLAUDE.md` as an adapter,
-   against round 1's plan, which keeps the `.claude/` layout and adds the
-   neutral entry. a (recommended): build round 1's plan now, and open a
-   `TODO` task for the neutral layout, to take up if MrFieldTech moves to
-   another tool or another user asks. b: round 1's plan only. c: the
-   neutral layout now, a breaking 3.0.0 release.
-2. A repository that already has its own `AGENTS.md` with rules in it.
-   a (recommended): keep its text below the pointer, rank it with
-   `CLAUDE.md` in Which file wins, with `CLAUDE.md` winning a conflict,
-   and have first run report any part that only repeats `HOUSE.md`, as it
-   does for `CLAUDE.md`. b: first run moves its rules into `CLAUDE.md`
-   and leaves `AGENTS.md` only the pointer.
+Grilling done: the frontier is empty.
 
-**Stopping point.** Grilling round 2 asked, above. Next: write the answers
-as decisions, then build. This is a release, 2.4.0
+**Stopping point.** Building. Next: the `AGENTS.md` template and pointer. This is a release, 2.4.0
 unless the answers make it a breaking change.
+
+### Rebuild The Kit Around A Vendor-Neutral Layout
+
+**Slug:** `neutral-layout`
+**Status:** TODO
+**Opened:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-13, in `vendor-neutral-update`: the kit is
+used only in Claude Code today, but MrFieldTech may move to another
+vendor's tool, and the repository is public. `vendor-neutral-update` made
+the `.claude/` layout reachable from any tool through an `AGENTS.md`
+pointer; this task would move the kit itself out of `.claude/`.
+
+**Background.** The trade-off, as given to MrFieldTech on 2026-11-13. For:
+no vendor's name in any path, a later move to another tool costs little,
+and tools that read `.agents/skills/` would list the skills as commands.
+Against: a breaking release and a migration for every installed
+repository, like 2.0.0's; Claude Code finds skills only in
+`.claude/skills/` as far as was checked, so each skill needs a copy there
+that can drift or a link that breaks on Windows and in the `MANIFEST`
+checksums; the shared conventions were still moving, with sources
+disagreeing on paths; and no other vendor's tool could be tested from a
+Claude Code session.
+
+**Decisions left open.**
+
+1. Whether to do it at all, decided when MrFieldTech picks another tool or
+   another user asks, and tested in that tool.
+2. The layout: which folder holds the kit and the skills, and how Claude
+   Code still finds them.
+3. How installed repositories migrate.
+
+**Stopping point.** Not started. First step: check each target tool's own
+documentation for where it reads instruction files and skills.
 
 ## Closed Tasks
 
