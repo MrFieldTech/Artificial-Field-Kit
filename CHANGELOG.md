@@ -31,9 +31,21 @@ Any AI coding tool can run the kit, not only Claude Code, through an
   `AGENTS.md` and treats its own text as it treats `CLAUDE.md`.
 - `README.md`'s install, update and backfill prompts work in any tool, and
   the notes on Claude Code's auto mode have a section of their own.
+- A cold read of the protocol from `AGENTS.md`, by a fresh session told to
+  use nothing else, found steps that leaned on what a session already
+  knew. `session-open` now stops on uncommitted changes before it checks
+  out anything, skips First Run and the stray stop for `temp` where they
+  come up rather than only at step 4, has First Run read `HOUSE.md`
+  first, since `CLAUDE.md` does not import it yet, and points a new task's
+  block at Format. `session-close` gives a `gh` command for the
+  repository's visibility, for recreating the integration branch and for
+  waiting on checks. `HOUSE.md` and the pointer say to read the rules and
+  the skill being followed again after the context is summarized, and
+  `references.md` defines an upload.
 
 A repository that updates commits the `AGENTS.md` the update writes or
-changes. When the update reports `AGENTS.md` is a link, replace the link
+changes. A session that opens on a working copy with uncommitted
+changes now stops until they are committed, stashed or discarded. When the update reports `AGENTS.md` is a link, replace the link
 with a file holding the repository's own text, if any, and run the update
 again. When an `AGENTS.md` it topped with the pointer holds text that only
 repeats `HOUSE.md`, remove that text.

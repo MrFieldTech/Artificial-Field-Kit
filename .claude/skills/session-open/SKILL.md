@@ -28,7 +28,12 @@ this file.
 ## 1. Find the developer and fetch everything
 
 Before anything checks out another branch, note the branch the session
-started on, with `git rev-parse --abbrev-ref HEAD`. Then name the developer
+started on, with `git rev-parse --abbrev-ref HEAD`. When
+`git status --porcelain` prints anything, stop and name those files: the
+steps below check out other branches, which a change not yet committed
+would block or be carried onto, as can happen when the session runs in the
+developer's own working copy. The developer commits, stashes or discards
+them, then runs `/session-open` again. Then name the developer
 running the session, `<PREFIX> / <HANDLE>`, by Developers in
 `.claude/afk/HOUSE.md`: the handle from the account behind the session's
 GitHub access, and the prefix from the branch just noted. Ask for the handle
@@ -48,7 +53,9 @@ steps compare against.
 `## Session Settings` section and no branch on the remote carries a `TASKS.md`
 holding a `**Slug:**` line. Check each remote branch with
 `git grep -l '^\*\*Slug:\*\*' origin/<branch> -- TASKS.md`. If it is the first
-run, follow First Run at the end of this file and then come back to step 3.
+run, follow First Run at the end of this file and then come back to step 3,
+unless the owner named `temp`, `import` or `backfill`, which do not run
+First Run: say so, and carry on.
 
 A task branch carrying `TASKS.md` while the default branch does not is a first
 task that has not merged yet. That is not a first run. Read the settings and
@@ -151,7 +158,8 @@ delete them, and do not start work with the report unread. A stray is the one
 failure mode that loses finished work permanently. Two exceptions carry on
 without stopping, reported on the `Strays:` line: a stray holding no commit the
 default branch lacks, because nothing on it can be lost, and a branch the
-owner already answered for in this session's First Run.
+owner already answered for in this session's First Run. A temporary
+session, `temp`, never stops here, because it changes nothing.
 
 ## 4. Choose the task
 
@@ -174,7 +182,8 @@ another slug, and stop until they answer.
 **c. They named a slug that is no task.** Open a new task under that slug.
 If the slug breaks the rule below, propose one that keeps it and stop until
 they answer, because a claimed slug is permanent. Step 5 claims it and writes
-its block under Open Tasks in `TASKS.md`: a title, the slug, status
+its block under Open Tasks in `TASKS.md`, by Format in
+`.claude/skills/session-close/SKILL.md`: a title, the slug, status
 `ACTIVE`, today's date, and a detail block recording what they asked for.
 Step 6 then settles it by grilling before any other work.
 
@@ -524,6 +533,10 @@ For a repository that has never used the kit. `afk.sh install` has written the
 kit-owned files into the working tree and nothing is committed yet. If
 `.claude/afk/afk.sh` is not there, stop and ask the owner to install the kit
 first, by the command in the kit's README.
+
+`CLAUDE.md` does not import the house rules yet, so read
+`.claude/afk/HOUSE.md` in full before item 1. Its rules govern the first
+run and its reply as they govern every session.
 
 1. **Find the default branch.** `git symbolic-ref --short refs/remotes/origin/HEAD`
    prints it after `origin/`, and the `HEAD branch:` line of

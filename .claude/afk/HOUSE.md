@@ -98,6 +98,8 @@ give a **failure report** instead of a workaround that only looks right:
 Every session starts with `/session-open` and ends with `/session-close`. If a
 session begins without `/session-open`, ask the owner to run it before doing
 any work. If context is running low and `/session-close` has not run, say so.
+After the context is summarized or cut short, read this file again in full,
+and the skill being followed, from the step it was on.
 
 Both are skills, `.claude/skills/<name>/SKILL.md`, and both run only when the
 owner asks for them, never on the session's own initiative. Claude Code lists

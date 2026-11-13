@@ -42,7 +42,7 @@ Before anything is committed, account for every credential this session
 produced, was given, or found sitting somewhere it should not be.
 
 First confirm the repository's visibility through the session's GitHub
-access. Then:
+access, such as `gh repo view --json visibility --jq .visibility`. Then:
 
 - **When the repository is confirmed private and the Credentials setting names
   a place or a rule,** such as a section of the authority file, follow it for
@@ -228,7 +228,9 @@ git push origin origin/<default branch>:refs/heads/<integration branch>
 GitHub declines that push, as one that would publish a private email
 address, when the owner keeps their address private and the default branch's
 head is a merge made under it. Then create the branch through the session's
-GitHub access instead, from the default branch, which publishes nothing new.
+GitHub access instead, from the default branch, which publishes nothing new,
+such as `gh api repos/<owner>/<repository>/git/refs -f
+ref=refs/heads/<integration branch> -f sha=<the default branch's head>`.
 
 Then merge it into the task branch, and note the hash of `origin/<target>`
 that this brings in, because step 9 compares against it:
@@ -287,7 +289,9 @@ carry the three parts inside it.
 Checks can run for many minutes. Stay with the pull request until they
 finish, reading them again about once a minute. When the session can schedule
 a message back to itself, wait by a check-in a minute or two out, which ends
-the turn, and carry on from here when it arrives. Never read the checks back
+the turn, and carry on from here when it arrives. Otherwise wait in one
+command that reads them once a minute, such as
+`gh pr checks <number> --watch --interval 60`. Never read the checks back
 to back, and never set the check-in far out, which leaves the merge idle long
 after the checks finish. Tell the owner nothing between readings unless a
 check fails.

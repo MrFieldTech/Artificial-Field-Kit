@@ -7,9 +7,10 @@ tool starts here.
 
 ## Read first
 
-Before any work, and again whenever your context has been summarized or
-cut short, read these in full, in this order, skipping one your tool has
-already loaded:
+Before any work, read these in full, in this order, skipping one your
+tool has already loaded. Whenever your context has been summarized or cut
+short, read them again, with the skill you were following, from the step
+you were on:
 
 1. `CLAUDE.md`. Named for Claude Code, written for every tool. It holds
    this repository's Session Settings and its own rules.

@@ -119,7 +119,9 @@ session and reads it again after compaction, and the response rules have to
 govern every turn.
 
 Other AI coding tools, such as OpenAI Codex, Cursor and GitHub Copilot, read
-`AGENTS.md` instead. Every install and update keeps a pointer block at its
+`AGENTS.md` instead. A tool that reads a context file of another name, as
+Gemini CLI does unless its settings name `AGENTS.md`, is set to read
+`AGENTS.md` or told to read it at the start of each session. Every install and update keeps a pointer block at its
 top, from `.claude/afk/templates/AGENTS.md`, which sends the tool to
 `CLAUDE.md` and `HOUSE.md`, tells it to read them again after its context is
 summarized, says how to run the two skills without slash commands, and
