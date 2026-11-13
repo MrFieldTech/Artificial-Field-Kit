@@ -140,6 +140,10 @@ and emilkowalski/skills.
   every file the kit installed. A plugin folder holding them all was
   considered and not taken. A name clash is stopped by `afk.sh` and
   handled by the session when it arises.
+- **Only the `code-simplifier` folder of anthropics/claude-plugins-official
+  is mirrored.** MrFieldTech, 2026-11-13. The rest is 19 MB of unrelated
+  plugins, and the folder carries its own Apache license. Every other
+  source is mirrored whole.
 
 **Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
@@ -168,22 +172,14 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Open questions.**
-
-11. The decision to mirror each upstream whole was made with
-    anthropics/claude-plugins-official in mind as well. It is 19 MB of
-    unrelated plugins for one 32 KB agent, so `vendor/SOURCES` mirrors only
-    its `plugins/code-simplifier/` folder, which carries its own Apache
-    license. Keep that, or mirror the whole repository?
-
 **Stopping point.** Release 2.3.0 built and `bash check.sh` passing,
 2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
 a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
 list, the licenses in `.claude/afk/licenses/`, the Security skills key
 and Mirrored skills in `HOUSE.md`, and the `check.sh` tests. Tried by
 hand: a fetch from GitHub with two Security skills came to 1.9 MB, and a
-2.2.0 repository updated to 2.3.0 and read current. Next: question 11,
-then close.
+2.2.0 repository updated to 2.3.0 and read current. Next: how a refresh
+is prompted, asked 2026-11-13, then close.
 
 ### Review The Mirrored Cybersecurity Skills
 
