@@ -71,6 +71,21 @@ here, never in a kit-owned file.
   repository, and it hands the install to `.claude/afk/afk.sh`. Removing it
   strands every repository still on 1.x, so it goes only when MrFieldTech
   says none is left.
+- **The mirrors under `vendor/` are checked for updates at every
+  `/session-open` here, after its report, and before every release,** by
+  `bash refresh.sh --check`, which downloads almost nothing. For each
+  source it reports `available`, read what the update brings with
+  `bash refresh.sh --changes <name>` and `--diff <name> [<file>]`, tell
+  the owner in plain words what actually changed, such as skills added,
+  removed or rewritten and scripts changed, then ask, as a numbered
+  question:
+  a. Update now: `bash refresh.sh <name>` on a task of its own, a release.
+  b. Remind later: nothing is recorded, and the next check offers it
+     again.
+  c. Skip this version: `bash refresh.sh --skip <name>`, committed on the
+     current task. The check reports it `skipped` until upstream changes
+     again.
+  A source reported `skipped` or `current` is not raised.
 - **A skill stays generic by reading Session Settings.** A value that differs
   between repositories becomes a settings key, defined at the end of
   `HOUSE.md` and given a default in `.claude/afk/templates/CLAUDE.md`, never a

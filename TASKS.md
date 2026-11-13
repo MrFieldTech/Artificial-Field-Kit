@@ -144,6 +144,15 @@ and emilkowalski/skills.
   is mirrored.** MrFieldTech, 2026-11-13. The rest is 19 MB of unrelated
   plugins, and the folder carries its own Apache license. Every other
   source is mirrored whole.
+- **Each session here checks the mirrors for updates and offers update,
+  remind later or skip.** MrFieldTech, 2026-11-13. `refresh.sh --check`
+  runs at every `/session-open` in this repository and before every
+  release; for a source with an update the session first says what
+  actually changed, from `--changes` and `--diff`, then offers to update
+  now, remind later (nothing recorded), or skip that version (`--skip`,
+  recorded in `vendor/<name>.upstream` until upstream changes again). The
+  rule is in this repository's `CLAUDE.md`, since only it holds the
+  mirrors.
 
 **Facts, GRM / MRFIELDTECH, 2026-11-11.**
 
@@ -172,26 +181,15 @@ and emilkowalski/skills.
   an address in a kit-owned file. Each also holds one `TODO`, which the
   Regenerate sweep would list in `TODO.md`.
 
-**Open questions.**
-
-12. Nothing tells this repository when an upstream changes; a refresh
-    happens only when someone runs `refresh.sh`. How is it prompted?
-    a. (recommended) `refresh.sh --check` lists each source whose
-       upstream has moved past its mirrored commit, by `git ls-remote`,
-       downloading nothing, and this repository's sessions run it when
-       asked about the mirrors or before a release.
-    b. A weekly GitHub Actions workflow runs that check and opens an
-       issue when a source has moved.
-    c. Nothing: refresh only when someone wants a newer version.
-
 **Stopping point.** Release 2.3.0 built and `bash check.sh` passing,
 2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
 a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
 list, the licenses in `.claude/afk/licenses/`, the Security skills key
 and Mirrored skills in `HOUSE.md`, and the `check.sh` tests. Tried by
 hand: a fetch from GitHub with two Security skills came to 1.9 MB, and a
-2.2.0 repository updated to 2.3.0 and read current. Next: how a refresh
-is prompted, asked 2026-11-13, then close.
+2.2.0 repository updated to 2.3.0 and read current. `refresh.sh --check`,
+`--changes`, `--diff` and `--skip` added and tested, 2026-11-13. Next:
+close.
 
 ### Review The Mirrored Cybersecurity Skills
 

@@ -367,6 +367,9 @@ repository on one may still update.
   `vendor/SOURCES` names each source and what it installs, and
   `bash refresh.sh <name>` refreshes one from upstream, recording the commit
   in `vendor/<name>.upstream` and its license in `.claude/afk/licenses/`.
+  `bash refresh.sh --check` says which sources upstream has changed, and
+  `CLAUDE.md` has each session here run it and offer to update, remind
+  later or skip the version.
   A refresh changes kit-owned files, so it is a release. `check.sh` and the
   TODO sweep skip `vendor/`, and the address check skips the licenses.
 - **The practices are adapted from a public collection of agent skills,**

@@ -313,6 +313,62 @@ fi
 [ ! -e "$clash/.claude/afk" ] || fail "install changed a repository it refused"
 echo "check: the mirrors install, by name where asked, and stop on a clash"
 
+# refresh.sh, against a local upstream: a refresh records the commit, a
+# check reads current, then available once upstream changes the mirrored
+# path but not for a change elsewhere, a skip holds until the next version,
+# and changes lists the commit.
+up="$scratch/upstreams/owner/repo"
+mkdir -p "$up/plugins/one" "$up/other"
+git init --quiet "$up"
+printf 'license\n' > "$up/plugins/one/LICENSE"
+printf 'first\n' > "$up/plugins/one/SKILL.md"
+printf 'elsewhere\n' > "$up/other/file"
+upcommit() {
+  git -C "$up" add -A
+  git -C "$up" -c user.name=check -c user.email=check@example.invalid commit --quiet -m "$1"
+}
+upcommit "first"
+mirror="$scratch/mirror"
+mkdir -p "$mirror/vendor"
+cp refresh.sh "$mirror/"
+printf 'one  owner/repo  plugins/one  -  -  everywhere\n' > "$mirror/vendor/SOURCES"
+git init --quiet "$mirror"
+refresh() { (cd "$mirror" && AFK_VENDOR_BASE="file://$scratch/upstreams" bash refresh.sh "$@"); }
+refresh one >/dev/null
+cmp -s "$up/plugins/one/SKILL.md" "$mirror/vendor/one/SKILL.md" || fail "refresh.sh did not mirror the source"
+[ -f "$mirror/.claude/afk/licenses/one.txt" ] || fail "refresh.sh did not copy the license"
+grep -qx "commit: $(git -C "$up" rev-parse HEAD)" "$mirror/vendor/one.upstream" || fail "refresh.sh did not record the commit"
+git -C "$mirror" add -A
+git -C "$mirror" -c user.name=check -c user.email=check@example.invalid commit --quiet -m mirror
+[ "$(refresh --check)" = "one current" ] || fail "refresh.sh --check reads '$(refresh --check)' after a refresh"
+printf 'moved\n' > "$up/other/file"
+upcommit "elsewhere"
+[ "$(refresh --check)" = "one current" ] || fail "refresh.sh --check offered a change outside the mirrored path"
+printf 'second\n' > "$up/plugins/one/SKILL.md"
+upcommit "second version"
+case "$(refresh --check)" in
+  "one "*"available") ;;
+  *) fail "refresh.sh --check reads '$(refresh --check)', not available" ;;
+esac
+changes="$(refresh --changes one)"
+grep -q 'second version' <<< "$changes" || fail "refresh.sh --changes did not list the commit"
+grep -q 'elsewhere' <<< "$changes" && fail "refresh.sh --changes listed a commit outside the mirrored path"
+grep -qx '+second' <<< "$(refresh --diff one SKILL.md)" || fail "refresh.sh --diff did not show the change"
+refresh --skip one >/dev/null
+case "$(refresh --check)" in
+  "one "*"skipped") ;;
+  *) fail "refresh.sh --check reads '$(refresh --check)' after a skip" ;;
+esac
+printf 'third\n' > "$up/plugins/one/SKILL.md"
+upcommit "third version"
+case "$(refresh --check)" in
+  "one "*"available") ;;
+  *) fail "refresh.sh --check did not offer the version after a skipped one" ;;
+esac
+refresh one >/dev/null
+grep -q '^skipped:' "$mirror/vendor/one.upstream" && fail "a refresh kept the skip"
+echo "check: refresh.sh refreshes, checks, lists changes and skips"
+
 # A repository on a release before 2.0.0, when the kit was Claude-Kit in
 # .claude/kit/, updates by running .claude/kit/kit.sh from the source with
 # KIT_SOURCE set to the source its manifest names. The forwarder there must
