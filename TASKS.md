@@ -114,6 +114,38 @@ repository; fixing that is part of the task.
 **Stopping point.** Not started. First step: MrFieldTech writes the list;
 the session tests it against `bash check.sh` before it is saved.
 
+### Let Other AI Tools Run The Kit
+
+HOLDING | GRM / MRFIELDTECH | 261113 161247
+
+**Slug:** `vendor-neutral-update`
+**Status:** ACTIVE
+**Opened:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-13, turning a temporary session into this
+task: walk through the whole kit process and verify that an AI coding
+tool from another vendor could follow it, with no concealed or confusing
+path that only works because Claude Code already knows to do something,
+such as starting from `CLAUDE.md`. Add a vendor-neutral Markdown file that
+mirrors or points back to `CLAUDE.md`, unless other vendors already have a
+convention that covers it.
+
+**Background.** The temporary session found the kit tied to Claude Code in
+four places: how it loads (`CLAUDE.md` importing `HOUSE.md` with `@`,
+skills under `.claude/skills/` with Claude Code frontmatter, and
+`/session-open` working as a slash command only because Claude Code turns
+skills into commands); wording ("Claude Code session" in `README.md` and
+both skill descriptions, and the branch prefix taken from "the developer's
+Claude Code settings" in `HOUSE.md`); cloud-session behavior (the assigned
+branch, the end-of-turn hook, attaching a repository without registering
+it, auto mode's classifier in `README.md`); and the mirrored skills, which
+are in Claude's skill format. The branch protocol, state files, response
+format, practices, standards and scripts carry nothing Claude-specific.
+Not tested with any other vendor's tool.
+
+**Stopping point.** Claimed. First step: walk the process as another
+vendor's tool would, then grill what it finds.
+
 ## Closed Tasks
 
 ### Mirror Outside Skills And Agents Into The Kit
