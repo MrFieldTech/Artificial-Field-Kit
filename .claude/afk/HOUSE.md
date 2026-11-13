@@ -2,7 +2,9 @@
 
 These rules apply in every repository that uses Artificial Field Kit, AFK
 for short, called the kit below. The kit installs this file, and the first
-line of the repository's `CLAUDE.md` imports it. Never edit it inside a
+line of the repository's `CLAUDE.md` imports it. `CLAUDE.md` is named for
+Claude Code and serves every AI coding tool: a tool that does not load it on
+its own reaches it from the kit's pointer at the top of `AGENTS.md`. Never edit it inside a
 project: a change goes to the kit and reaches the project by an update. The kit's own repository is the one place it is edited.
 
 Every value that differs between repositories is in the `## Session Settings`
@@ -10,7 +12,7 @@ section of `CLAUDE.md`. The keys are defined at the end of this file.
 
 Where these rules say "the owner", they mean the developer running the
 session. Every developer is an owner: anyone who works the repository with
-Claude Code and this kit, with push access to it. Any of them may answer any
+an AI coding tool and this kit, with push access to it. Any of them may answer any
 question, promote the integration branch, take a kit update, and answer for a
 stray. Developers below says how a session knows which one it is.
 
@@ -19,7 +21,8 @@ stray. Developers below says how a session knows which one it is.
 When two sources disagree, the first of these wins:
 
 1. The authority file, when Session Settings names one.
-2. The rest of `CLAUDE.md`.
+2. The rest of `CLAUDE.md`, then the repository's own text in `AGENTS.md`,
+   below the kit's pointer.
 3. This file.
 4. The `session-open` and `session-close` skills.
 5. The standards in `.claude/afk/standards/`.
@@ -96,6 +99,14 @@ Every session starts with `/session-open` and ends with `/session-close`. If a
 session begins without `/session-open`, ask the owner to run it before doing
 any work. If context is running low and `/session-close` has not run, say so.
 
+Both are skills, `.claude/skills/<name>/SKILL.md`, and both run only when the
+owner asks for them, never on the session's own initiative. Claude Code lists
+them as slash commands. In any other tool, `/session-open <words>` in the
+owner's message means: read `.claude/skills/session-open/SKILL.md` and follow
+it, with `<words>` as what follows the command, and the same for
+`/session-close`. A tool that keeps `/` for its own commands takes the
+command without it, as `session-open <words>`, meaning the same.
+
 `/session-open temp` opens a temporary session instead, for questions about
 the repository. It reads the state and answers, and it writes, commits and
 pushes nothing and takes no branch, except that it merges the integration
@@ -121,8 +132,9 @@ There are three kinds of branch, and no others.
 
 Branches the Other branches setting names are left alone. Anything else is a
 stray: a branch by any other name, or a `task/` branch whose slug is not a
-task in `TASKS.md`. A branch the cloud harness assigns before any skill runs
-is never pushed. The session works on its task branch instead.
+task in `TASKS.md`. The branch the session's tool checked out before any
+skill ran, such as the branch a Claude Code cloud session is assigned, is
+never pushed. The session works on its task branch instead.
 
 - **One branch per task, not per session.** A task that takes three sessions
   is still one branch. A task branch on the remote means the task is taken, so
@@ -161,12 +173,16 @@ Several developers can work one repository at once, each in their own
 sessions. A session names the developer running it as `<PREFIX> / <HANDLE>`,
 in capitals, which `session-open` settles before it takes a task:
 
-- **Handle.** The account behind the session's GitHub access. Developers who
-  share one account are that account. When the access names no account, the
+- **Handle.** The account behind the session's GitHub access: the login
+  `gh api user --jq .login` prints, or the one a GitHub connector's tool for
+  the signed-in user names. Developers who share one account are that
+  account. When the access names no account, the
   session asks the developer for their GitHub handle, the one thing about
   them it asks, and with no answer the handle is `UNKNOWN`.
-- **Prefix.** The Branch prefix from the developer's Claude Code settings, as
-  it shows in the branch the harness checked out before the session began:
+- **Prefix.** The prefix the developer's tool puts on the branch it checks
+  out before the session begins, such as the Branch prefix in Claude Code's
+  settings, as it shows in that branch, which `git rev-parse --abbrev-ref
+  HEAD` prints before anything checks out another:
   the part before its first `/`, when that branch is not the default branch,
   the integration branch, an Other branch or a task branch. With none, the
   name is the handle alone and `/` is left out. The prefix is never added to
@@ -266,7 +282,10 @@ agent in `.claude/agents/`, every one listed under `vendored` in
 are kit-owned. A fix to one goes upstream, and reaches the kit when it
 refreshes its mirror.
 
-- Use them as the work calls for, as any skill or agent.
+- Use them as the work calls for, as any skill or agent. In a tool that does
+  not list skills, read a skill's `SKILL.md` when its `description` fits the
+  work, and follow it. The agents are in Claude Code's format and run only
+  there.
 - **Security skills** come from a large cybersecurity collection, some of
   them offensive procedures, and install only by name. Before a name is
   added to the Security skills setting, read that skill in the kit's

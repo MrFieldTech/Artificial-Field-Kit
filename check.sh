@@ -7,15 +7,17 @@
 # 2. No file in the repository holds an em dash or an en dash, outside the
 #    mirrors under vendor/.
 # 3. The scripts parse, each skill's frontmatter is whole, every practice
-#    is pointed at and every pointer names a practice that exists, and every
-#    kit-owned directory keeps LF line endings.
+#    is pointed at and every pointer names a practice that exists, the
+#    AGENTS.md pointer names files that exist and opens this repository's
+#    AGENTS.md, and every kit-owned directory keeps LF line endings.
 # 4. A task block's field lines and holder lines read the same wherever a
 #    kit-owned file or this repository's TASKS.md writes them out.
 # 5. VERSION is a version number, CHANGELOG.md has an entry for it, and the
 #    README's update block names it.
 # 6. An install into a scratch repository works end to end: the manifest,
 #    the status line, the guard against overwriting local edits, the
-#    mirrored skills and agents, and the TODO sweep.
+#    pointer in AGENTS.md, the mirrored skills and agents, and the TODO
+#    sweep.
 # 7. The secrets tool stores, places, locks, checks, shows, rekeys and
 #    decrypts values with age, and prints the steps for keys. Skipped when
 #    age is not installed, except in CI. The Node decrypter is tested when
@@ -152,6 +154,18 @@ if grep -rlI $'\r' "${AFK_OWNED[@]}"; then
 fi
 echo "check: scripts parse, skills are whole, practices and standards are pointed at, and line endings stay LF"
 
+# The pointer for other tools names the files a session reads first, and
+# this repository's own AGENTS.md carries the current pointer.
+for path in CLAUDE.md .claude/afk/HOUSE.md .claude/skills/session-open/SKILL.md \
+  .claude/skills/session-close/SKILL.md; do
+  grep -qF "\`$path\`" .claude/afk/templates/AGENTS.md \
+    || fail "the AGENTS.md template does not name $path"
+  [ -f "$path" ] || fail "the AGENTS.md template names $path, which does not exist"
+done
+pointer_lines="$(wc -l < .claude/afk/templates/AGENTS.md)"
+[ "$(head -n "$pointer_lines" AGENTS.md)" = "$(cat .claude/afk/templates/AGENTS.md)" ] \
+  || fail "AGENTS.md does not open with the current .claude/afk/templates/AGENTS.md"
+
 # 4. A task block's format is written out in more than one file, and a
 # field or holder line added to one copy and missed in another is caught
 # nowhere else. .claude/afk/templates/TASKS.md is the source. Every fenced
@@ -255,6 +269,32 @@ status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after update reads '$status'"
 echo "check: install, status, and update work"
+
+# The kit's pointer at the top of AGENTS.md, for tools other than Claude
+# Code: written when missing, added above a repository's own text, rewritten
+# in place when stale, and never written through a link.
+pointer="$scratch/kit/.claude/afk/templates/AGENTS.md"
+cmp -s "$repo/AGENTS.md" "$pointer" || fail "install did not write AGENTS.md from its template"
+own="$scratch/own"
+git init --quiet "$own"
+printf '# Our rules\n\nthe repository'"'"'s own\n' > "$own/AGENTS.md"
+AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$own" >/dev/null
+[ "$(head -n "$(wc -l < "$pointer")" "$own/AGENTS.md")" = "$(cat "$pointer")" ] \
+  || fail "install did not put the kit's pointer at the top of an AGENTS.md that had none"
+grep -qx "the repository's own" "$own/AGENTS.md" || fail "install lost the text of an AGENTS.md that was there"
+sed 's/^# Instructions For Any AI Coding Tool$/# A stale pointer/' "$own/AGENTS.md" > "$own/AGENTS.md.old"
+mv "$own/AGENTS.md.old" "$own/AGENTS.md"
+AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$own" >/dev/null
+grep -q 'A stale pointer' "$own/AGENTS.md" && fail "install did not rewrite a stale pointer in AGENTS.md"
+[ "$(grep -c '^<!-- afk:pointer:start' "$own/AGENTS.md")" = 1 ] || fail "install wrote the pointer into AGENTS.md twice"
+grep -qx "the repository's own" "$own/AGENTS.md" || fail "rewriting the pointer lost the text below it"
+linked="$scratch/linked"
+git init --quiet "$linked"
+printf 'the settings\n' > "$linked/CLAUDE.md"
+ln -s CLAUDE.md "$linked/AGENTS.md"
+AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$linked" >/dev/null
+[ "$(cat "$linked/CLAUDE.md")" = "the settings" ] || fail "install wrote the pointer through an AGENTS.md link"
+echo "check: AGENTS.md takes the kit's pointer and keeps the repository's own text"
 
 # The mirrors: every skill and agent vendor/SOURCES installs everywhere is
 # installed and listed, a by-name skill only when Security skills names it,

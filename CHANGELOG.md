@@ -4,6 +4,40 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `afk.sh update` when its owner asks.
 
+## 2.4.0
+
+Any AI coding tool can run the kit, not only Claude Code, through an
+`AGENTS.md` pointer. Claude Code loads the kit as before.
+
+- `.claude/afk/templates/AGENTS.md` is the kit's pointer: it tells any
+  tool to read `CLAUDE.md` and `HOUSE.md` first and again after its
+  context is summarized, that `/session-open <words>` and `/session-close`
+  mean reading and following the skill files, that both run only when the
+  owner asks, and what the few Claude Code terms in the kit mean.
+- `afk.sh install` and `update` write `AGENTS.md` from it when the
+  repository has none, add it above the text of one that has no pointer,
+  and rewrite only the block between its markers after that. `AGENTS.md`
+  stays project-owned. One that is a link, often to `CLAUDE.md`, is left
+  alone and reported.
+- `HOUSE.md` ranks a repository's own text in `AGENTS.md`, below the
+  pointer, with `CLAUDE.md` in Which file wins, `CLAUDE.md` first. It says
+  how a tool without slash commands runs the two skills, gives the
+  commands that find the developer's handle and prefix, and words the
+  branch the session started on, the owner and the mirrored agents
+  without assuming Claude Code.
+- Both skills' descriptions, `session-open`'s import step,
+  `session-close`'s note on unpushed work, `references.md` and the site
+  standard no longer assume Claude Code. First run reads an existing
+  `AGENTS.md` and treats its own text as it treats `CLAUDE.md`.
+- `README.md`'s install, update and backfill prompts work in any tool, and
+  the notes on Claude Code's auto mode have a section of their own.
+
+A repository that updates commits the `AGENTS.md` the update writes or
+changes. When the update reports `AGENTS.md` is a link, replace the link
+with a file holding the repository's own text, if any, and run the update
+again. When an `AGENTS.md` it topped with the pointer holds text that only
+repeats `HOUSE.md`, remove that text.
+
 ## 2.3.0
 
 The kit installs skills and agents written outside it, mirrored in its own
