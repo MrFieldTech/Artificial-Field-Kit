@@ -4,6 +4,39 @@ Every change to a kit-owned file is a release, recorded here with the version
 `VERSION` carries. A project's `/session-open` reports when a newer release
 exists, and the project takes it by `afk.sh update` when its owner asks.
 
+## 2.3.0
+
+The kit installs skills and agents written outside it, mirrored in its own
+repository.
+
+- `vendor/` in the kit's repository mirrors four sources bit for bit:
+  emilkowalski/skills, cloudflare/security-audit-skill, the
+  `code-simplifier` agent from anthropics/claude-plugins-official, and
+  mukul975/Anthropic-Cybersecurity-Skills. `vendor/SOURCES` says what each
+  installs, and `refresh.sh`, which is never installed, refreshes a mirror
+  from upstream as its own release.
+- Every repository takes the emilkowalski skills, the security audit skill
+  and the agent. The cybersecurity skills install only by name, under a new
+  Session Settings key, Security skills, `none` by default.
+- `afk.sh` installs each mirrored skill to `.claude/skills/<name>/` and each
+  agent to `.claude/agents/`, lists them under `vendored` in `MANIFEST`,
+  and treats them as kit-owned. One in place that no install wrote stops
+  the install, which changes nothing. Their licenses go to
+  `.claude/afk/licenses/`.
+- `afk.sh status`, `install` and `update` fetch the kit by a blobless
+  sparse clone, holding only the kit-owned files and the mirrors the
+  repository installs, so the mirrors are never downloaded whole.
+- `HOUSE.md` gains a Mirrored skills section: how a Security skill is
+  read and added, and what to do on a clash.
+
+A repository that updates adds `- **Security skills:** none` as the last
+line of its Session Settings. When the update stops on a clash, it follows
+Mirrored skills in `HOUSE.md`. Its own skills under `.claude/skills/` and
+agents under `.claude/agents/` are untouched otherwise. On Windows, a
+checkout that turns LF into CRLF can make `afk.sh status` report the
+installed copies as edited, because they carry no `.gitattributes` of
+their own.
+
 ## 2.2.0
 
 The house rules carry the owner's general instructions and a permission to

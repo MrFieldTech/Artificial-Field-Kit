@@ -42,3 +42,17 @@ SOFTWARE.
 
 By the `pr` skill's own credits, its menu of summary visuals comes from the
 `show-me` skill by Dex Horthy of HumanLayer.
+
+## Mirrored skills and agents
+
+The kit mirrors these sources bit for bit under `vendor/`, each with its
+own license file, and installs their skills and agents. Each source's
+license is also at `.claude/afk/licenses/<name>.txt`, and
+`vendor/<name>.upstream` records the commit mirrored.
+
+| `vendor/` name | Source | License |
+|---|---|---|
+| `emilkowalski-skills` | emilkowalski/skills | MIT |
+| `cloudflare-security-audit-skill` | cloudflare/security-audit-skill | MIT |
+| `anthropics-code-simplifier` | anthropics/claude-plugins-official, `plugins/code-simplifier/` | Apache License 2.0 |
+| `mukul975-cybersecurity-skills` | mukul975/Anthropic-Cybersecurity-Skills | Apache License 2.0 |

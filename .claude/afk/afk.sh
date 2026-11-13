@@ -12,7 +12,14 @@
 #       copy here. Commits nothing.
 #
 # Kit-owned files are everything under .claude/afk/ and the two skill
-# directories. An install replaces them whole and touches nothing else,
+# directories, and the outside skills and agents the kit mirrors under
+# vendor/ that a repository installs: every one vendor/SOURCES marks
+# everywhere, and the ones its CLAUDE.md names under Security skills. Each
+# mirrored skill goes to .claude/skills/<name>/ and each agent to
+# .claude/agents/, and MANIFEST lists them under vendored. A mirrored skill
+# or agent whose place already holds one of the repository's own stops the
+# install, which changes nothing. An install replaces the kit-owned files
+# whole and touches nothing else,
 # except when it moves a repository from a release before 2.0.0, when the
 # kit was Claude-Kit and lived in .claude/kit/: then it also removes
 # .claude/kit/, points the CLAUDE.md import at .claude/afk/HOUSE.md, and
@@ -97,7 +104,7 @@ local_edits() {
       printf '%s\n' "$path"
     fi
   done
-  kit_files "$root" "$which" | while IFS= read -r path; do
+  { kit_files "$root" "$which"; [ "$which" = old ] || installed_files "$root"; } | while IFS= read -r path; do
     manifest_sums "$root/$manifest" | cut -c67- | grep -qxF "$path" \
       || printf '%s (added)\n' "$path"
   done
@@ -108,13 +115,124 @@ repo_root() {
 }
 
 # Clone the source into a directory, quietly and without prompting. The "--"
-# keeps a source that begins with a dash from being read as an option.
+# keeps a source that begins with a dash from being read as an option. The
+# clone is blobless and sparse: it holds the kit-owned files and
+# vendor/SOURCES, and the mirrors under vendor/ stay unfetched until
+# sparse_add asks for the ones a repository installs.
 fetch_source() {
   local source="$1" into="$2"
   case "$source" in
     /*) source="file://$source" ;;
   esac
-  GIT_TERMINAL_PROMPT=0 git clone --quiet --depth 1 -- "$source" "$into" >/dev/null 2>&1
+  GIT_TERMINAL_PROMPT=0 git clone --quiet --depth 1 --filter=blob:none --sparse \
+    -- "$source" "$into" >/dev/null 2>&1 || return 1
+  git -C "$into" sparse-checkout set --no-cone /VERSION /.claude/afk/ /.claude/kit/ \
+    /.claude/skills/session-open/ /.claude/skills/session-close/ /vendor/SOURCES >/dev/null 2>&1
+}
+
+# Check out, in a sparse clone of the kit, the mirrors a plan installs.
+sparse_add() {
+  local src="$1" plan="$2" from patterns=()
+  [ "$(git -C "$src" config --bool core.sparseCheckout 2>/dev/null)" = true ] || return 0
+  [ -n "$plan" ] || return 0
+  while read -r _ from _; do
+    patterns+=("/$from")
+  done <<< "$plan"
+  GIT_TERMINAL_PROMPT=0 git -C "$src" sparse-checkout add "${patterns[@]}" >/dev/null 2>&1 \
+    || die "could not fetch the mirrors this repository installs"
+}
+
+# The skill names a repository's CLAUDE.md lists under Security skills, in
+# backticks, one per line. Nothing for none, or for no CLAUDE.md.
+security_skills() {
+  local claude="$1/CLAUDE.md" value
+  [ -f "$claude" ] || return 0
+  value="$(awk '
+    /^- \*\*Security skills:\*\*/ { on = 1; sub(/^- \*\*Security skills:\*\*/, ""); print; next }
+    on && (/^- / || /^$/ || /^#/) { exit }
+    on { print }
+  ' "$claude")"
+  grep -oE '`[^`]+`' <<< "$value" | tr -d '`' || true
+}
+
+# Every file under vendor/ in a kit checkout, relative to it. A sparse clone
+# lists the files it has not fetched as well.
+vendor_files() {
+  local src="$1"
+  if [ -d "$src/.git" ] || [ -f "$src/.git" ]; then
+    git -C "$src" ls-files -- vendor
+  elif [ -d "$src/vendor" ]; then
+    (cd "$src" && find vendor -type f)
+  fi
+}
+
+# What a kit checkout installs into a repository from its mirrors, one line
+# each: "skill <directory under vendor/> .claude/skills/<name>" or
+# "agent <file under vendor/> .claude/agents/<file>". vendor/SOURCES gives
+# each source's skills and agents as "<folder>/*", or "-" for none.
+vendor_plan() {
+  local src="$1" target="$2" wanted files name repo path skills agents install
+  [ -f "$src/vendor/SOURCES" ] || return 0
+  wanted="$(security_skills "$target")"
+  files="$(vendor_files "$src")"
+  local found="" skill dir file
+  while read -r name repo path skills agents install; do
+    if [ "$skills" != "-" ]; then
+      dir="vendor/$name/${skills%/\*}"
+      while IFS= read -r skill; do
+        [ -n "$skill" ] || continue
+        if [ "$install" = everywhere ] || grep -qxF "$skill" <<< "$wanted"; then
+          printf 'skill %s .claude/skills/%s\n' "$dir/$skill" "$skill"
+          found+="$skill"$'\n'
+        fi
+      done < <(grep -E "^$dir/[^/]+/SKILL\.md\$" <<< "$files" | sed "s#^$dir/##; s#/SKILL\.md\$##")
+    fi
+    if [ "$agents" != "-" ]; then
+      dir="vendor/$name/${agents%/\*}"
+      while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        printf 'agent %s .claude/agents/%s\n' "$dir/$file" "$file"
+      done < <(grep -E "^$dir/[^/]+\.md\$" <<< "$files" | sed "s#^$dir/##")
+    fi
+  done < <(grep -vE '^[[:space:]]*(#|$)' "$src/vendor/SOURCES")
+  while IFS= read -r skill; do
+    [ -n "$skill" ] || continue
+    grep -qxF "$skill" <<< "$found" \
+      || die "CLAUDE.md names $skill under Security skills, and the kit mirrors no skill by that name"
+  done <<< "$wanted"
+}
+
+# The mirrored skill directories and agent files MANIFEST lists as installed.
+manifest_vendored() {
+  [ -f "$1" ] || return 0
+  sed -n '/^vendored:$/,$ s/^  \(\.claude\/.*\)$/\1/p' "$1"
+}
+
+# Every file under the mirrors a manifest lists as installed, relative to root.
+installed_files() {
+  local root="$1" unit
+  manifest_vendored "$root/$MANIFEST" | while IFS= read -r unit; do
+    [ -e "$root/$unit" ] || continue
+    (cd "$root" && find "$unit" -type f)
+  done | LC_ALL=C sort
+}
+
+# "<sha256>  <path>" for the files a plan installs, at the paths they take
+# in the repository.
+plan_sums() {
+  local src="$1" plan="$2" from to file files
+  [ -n "$plan" ] || return 0
+  files="$(vendor_files "$src")"
+  while read -r _ from to; do
+    grep -E "^$from(/|\$)" <<< "$files" | while IFS= read -r file; do
+      printf '%s  %s\n' "$(sha "$src/$file")" "$to${file#"$from"}"
+    done
+  done <<< "$plan"
+}
+
+# Sort "<sha256>  <path>" lines by path.
+by_path() {
+  LC_ALL=C sort -k2
 }
 
 cmd_install() {
@@ -157,6 +275,24 @@ cmd_install() {
   commit="$(git -C "$src" rev-parse HEAD 2>/dev/null || echo unknown)"
   source="${AFK_SOURCE:-$(git -C "$src" config --get remote.origin.url 2>/dev/null || echo unknown)}"
 
+  # The mirrors this repository takes. One already in place that no kit
+  # install wrote is the repository's own, and may be the only copy of it.
+  local plan previous clashes="" kind from to
+  plan="$(vendor_plan "$src" "$target")"
+  previous="$(manifest_vendored "$target/$MANIFEST")"
+  if [ -n "$plan" ]; then
+    while read -r kind from to; do
+      if [ -e "$target/$to" ] && ! grep -qxF "$to" <<< "$previous"; then
+        clashes+="  $to"$'\n'
+      fi
+    done <<< "$plan"
+  fi
+  if [ -n "$clashes" ]; then
+    printf 'afk.sh: these hold a skill or agent of the repository'"'"'s own, where a mirrored one installs:\n%s' "$clashes" >&2
+    die "rename or remove them first; nothing was changed"
+  fi
+  sparse_add "$src" "$plan"
+
   local path
   if [ ! -f "$target/$MANIFEST" ] && [ -z "$old" ]; then
     kit_files "$target" | while IFS= read -r path; do
@@ -168,11 +304,22 @@ cmd_install() {
   for dir in "${AFK_DIRS[@]}"; do
     rm -rf "${target:?}/$dir"
   done
+  if [ -n "$previous" ]; then
+    while IFS= read -r path; do
+      rm -rf "${target:?}/$path"
+    done <<< "$previous"
+  fi
   [ -z "$old" ] || rm -rf "${target:?}/.claude/kit"
   kit_files "$src" | while IFS= read -r path; do
     mkdir -p "$target/$(dirname "$path")"
     cp "$src/$path" "$target/$path"
   done
+  if [ -n "$plan" ]; then
+    while read -r kind from to; do
+      mkdir -p "$target/$(dirname "$to")"
+      cp -R "$src/$from" "$target/$to"
+    done <<< "$plan"
+  fi
   chmod +x "$target/.claude/afk/afk.sh"
 
   {
@@ -181,7 +328,13 @@ cmd_install() {
     printf 'source: %s\n' "$source"
     printf 'commit: %s\n' "$commit"
     printf 'files:\n'
-    kit_sums "$target" | sed 's/^/  /'
+    { kit_sums "$target"; plan_sums "$src" "$plan"; } | by_path | sed 's/^/  /'
+    if [ -n "$plan" ]; then
+      printf 'vendored:\n'
+      while read -r kind from to; do
+        printf '  %s\n' "$to"
+      done <<< "$plan"
+    fi
   } > "$target/$MANIFEST"
 
   printf 'Installed Artificial Field Kit %s, commit %s, into %s\n' "$version" "${commit:0:7}" "$target"
@@ -235,9 +388,11 @@ cmd_status() {
   elif [ ! -f "$TMP_DIR/kit/VERSION" ]; then
     state="the source has no release on its default branch"
   else
-    local latest
+    local latest plan
     latest="$(tr -d '[:space:]' < "$TMP_DIR/kit/VERSION")"
-    if [ "$(kit_sums "$TMP_DIR/kit")" = "$(manifest_sums "$root/$MANIFEST")" ]; then
+    plan="$(vendor_plan "$TMP_DIR/kit" "$root")"
+    sparse_add "$TMP_DIR/kit" "$plan"
+    if [ "$({ kit_sums "$TMP_DIR/kit"; plan_sums "$TMP_DIR/kit" "$plan"; } | by_path)" = "$(manifest_sums "$root/$MANIFEST" | by_path)" ]; then
       state="current"
     elif [ "$latest" = "$version" ]; then
       state="differs from the source at the same version"

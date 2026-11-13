@@ -55,66 +55,27 @@ Then the detail block, as prose.
 
 ## Open Tasks
 
-### Mirror Outside Skills And Agents Into The Kit
+### Review The Mirrored Cybersecurity Skills
 
-**Slug:** `vendored-skills`
+**Slug:** `security-skill-review`
 **Status:** TODO
 **Opened:** 2026-11-11
 
-**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
-skills should be mirrored into this repository, installed with the kit,
-so they work in the IDE or Claude Code without reaching their own
-repositories: `code-simplifier` from anthropics/claude-plugins-official,
-cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
-and emilkowalski/skills.
-
-**Facts, 2026-11-11.**
-
-- `code-simplifier` is a Claude Code agent
-  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
-  Apache License 2.0. Upstream at `43fd1f9`. A copy also sits in that
-  repository's `pr-review-toolkit` plugin.
-- cloudflare/security-audit-skill: one skill, `skills/security-audit`,
-  MIT, 372 KB, upstream at `c1c8a8c`.
-- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
-  License 2.0, upstream at `54a7988`. Claude Code lists every installed
-  skill's name and description in each session's context, so 818 in
-  every repository would cost context in every session.
-- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`.
-- Both licenses allow mirroring into a public repository with the
-  license and any notice kept.
-
-**Decisions Made.**
-
-- **`code-simplifier` is mirrored as an agent** under `.claude/agents/`.
-  MrFieldTech, 2026-11-11. A Claude Code agent is used when the session
-  hands it work by the Agent tool, which it does on its own when the
-  work matches the agent's description, or when the owner asks for it by
-  name, such as "run the code-simplifier agent on this change".
-- **The cybersecurity skills are mirrored whole and installed only by
-  name.** MrFieldTech, 2026-11-11. All 818 are kept in this repository;
-  a repository installs the ones its Session Settings list.
-- **All 18 emilkowalski skills install everywhere.** MrFieldTech,
-  2026-11-11. The mobile and Swift ones were first recommended left out
-  only because no mobile work was seen, not for quality or size, and
-  MrFieldTech will build mobile apps, so they install now.
+**Why.** MrFieldTech, 2026-11-11, in `vendored-skills`: the 818 skills
+mirrored from mukul975/Anthropic-Cybersecurity-Skills are not reviewed
+before mirroring; each is read when a repository first names it under
+Security skills, and all of them are to be reviewed eventually. Some hold
+offensive security procedures.
 
 **Decisions left open.**
 
-1. Where the mirrors live in this repository, and how each upstream's
-   license, notice and pinned commit are recorded.
-2. How a mirror is refreshed from upstream: a script recording the
-   commit, run as its own release.
-3. The Session Settings key that lists the cybersecurity skills a
-   repository installs, its name and default, defined in `HOUSE.md` and
-   given a default in the `CLAUDE.md` template.
-4. Whether `afk.sh install` and `update` treat mirrored files as
-   kit-owned, recorded in `MANIFEST`.
-5. Whether the cybersecurity skills need a review before mirroring, since
-   some hold offensive security procedures.
+1. What a review checks for, and what it does with a skill that fails:
+   leave it out of the mirror, mark it, or warn a repository that names it.
+2. Where the results are recorded, so a later refresh knows which skills
+   changed since their review.
 
-**Stopping point.** Not started. First step: grill the open decisions,
-then mirror one source at a time, one commit each.
+**Stopping point.** Not started. Waits on `vendored-skills` merging. First
+step: grill the open decisions.
 
 ### Build The Private Terms List
 
@@ -154,6 +115,144 @@ repository; fixing that is part of the task.
 the session tests it against `bash check.sh` before it is saved.
 
 ## Closed Tasks
+
+### Mirror Outside Skills And Agents Into The Kit
+
+DROPPED | GRM / MRFIELDTECH | 261113 005220
+HOLDING | GRM / MRFIELDTECH | 261111 200802
+
+**Slug:** `vendored-skills`
+**Status:** DONE
+**Opened:** 2026-11-11
+**Closed:** 2026-11-13
+
+**Why.** MrFieldTech, 2026-11-11, split from `skill-incorporation`: these
+skills should be mirrored into this repository, installed with the kit,
+so they work in the IDE or Claude Code without reaching their own
+repositories: `code-simplifier` from anthropics/claude-plugins-official,
+cloudflare/security-audit-skill, mukul975/Anthropic-Cybersecurity-Skills
+and emilkowalski/skills.
+
+**Facts, 2026-11-11.**
+
+- `code-simplifier` is a Claude Code agent
+  (`plugins/code-simplifier/agents/code-simplifier.md`), not a skill.
+  Apache License 2.0. Upstream at `43fd1f9`. A copy also sits in that
+  repository's `pr-review-toolkit` plugin.
+- cloudflare/security-audit-skill: one skill, `skills/security-audit`,
+  MIT, 372 KB, upstream at `c1c8a8c`.
+- mukul975/Anthropic-Cybersecurity-Skills: 818 skills, 49 MB, Apache
+  License 2.0, upstream at `54a7988`. Claude Code lists every installed
+  skill's name and description in each session's context, so 818 in
+  every repository would cost context in every session.
+- emilkowalski/skills: 18 skills, MIT, 496 KB, upstream at `715c180`.
+- Both licenses allow mirroring into a public repository with the
+  license and any notice kept.
+
+**Decisions Made.**
+
+- **`code-simplifier` is mirrored as an agent** under `.claude/agents/`.
+  MrFieldTech, 2026-11-11. A Claude Code agent is used when the session
+  hands it work by the Agent tool, which it does on its own when the
+  work matches the agent's description, or when the owner asks for it by
+  name, such as "run the code-simplifier agent on this change".
+- **The cybersecurity skills are mirrored whole and installed only by
+  name.** MrFieldTech, 2026-11-11. All 818 are kept in this repository;
+  a repository installs the ones its Session Settings list.
+- **All 18 emilkowalski skills install everywhere.** MrFieldTech,
+  2026-11-11. The mobile and Swift ones were first recommended left out
+  only because no mobile work was seen, not for quality or size, and
+  MrFieldTech will build mobile apps, so they install now.
+- **The mirrors live in this repository, under `vendor/<owner>-<repo>/`,
+  each upstream whole, and a repository receives only what it installs.**
+  MrFieldTech, 2026-11-11. To keep 49 MB from downloading at every open,
+  `afk.sh status`, `install` and `update` fetch the kit by a blobless
+  sparse clone (`--filter=blob:none --sparse`), checking out only the
+  kit-owned paths and the mirrored skills the repository installs. Tried
+  on the cybersecurity collection, 2026-11-11: 1.5 MB in about a second.
+- **The mirrors are kept bit for bit.** MrFieldTech, 2026-11-11.
+  `check.sh` sections 1 and 2 and the TODO sweep skip `vendor/` and the
+  installed copies, so a refresh stays a plain copy.
+- **The installed copies are kit-owned.** MrFieldTech, 2026-11-11. They
+  are listed in `MANIFEST`, replaced whole by every update, and an edit in
+  place is reported and refused like any other kit-owned file.
+- **A mirror is refreshed by a script kept here and never installed.**
+  MrFieldTech, 2026-11-11. `refresh.sh <owner>/<repo>` copies upstream's
+  default branch into its `vendor/` directory and writes an `UPSTREAM`
+  file beside it with the source, commit, license and date. Each refresh
+  is its own release.
+- **The cybersecurity skills a repository installs are listed in a
+  Session Settings key, `Security skills`,** a list of skill names, or
+  `none` by default. MrFieldTech, 2026-11-11.
+- **No review of all 818 before mirroring.** MrFieldTech, 2026-11-11. A
+  skill is read through when a repository first names it under Security
+  skills, before that repository installs it, and the whole collection is
+  reviewed later by its own task, `security-skill-review`.
+- **A name clash stops an install or update.** MrFieldTech, 2026-11-11.
+  When a repository holds a skill or agent of its own where a mirrored one
+  would go, `afk.sh` names the clash and changes nothing, because the
+  repository's file may be the only copy of its own work.
+- **cloudflare/security-audit-skill installs everywhere,** like the
+  emilkowalski skills. MrFieldTech, 2026-11-11.
+- **This repository does not install the mirrors into itself.**
+  MrFieldTech, 2026-11-11. Its sessions write the protocol and rarely
+  need them, and a second copy would have to be kept in step.
+- **Each mirrored skill installs to its own `.claude/skills/<name>/` and
+  the agent to `.claude/agents/`.** MrFieldTech, 2026-11-12. That is
+  where Claude Code looks, and `.claude/afk/MANIFEST` already records
+  every file the kit installed. A plugin folder holding them all was
+  considered and not taken. A name clash is stopped by `afk.sh` and
+  handled by the session when it arises.
+- **Only the `code-simplifier` folder of anthropics/claude-plugins-official
+  is mirrored.** MrFieldTech, 2026-11-13. The rest is 19 MB of unrelated
+  plugins, and the folder carries its own Apache license. Every other
+  source is mirrored whole.
+- **Each session here checks the mirrors for updates and offers update,
+  remind later or skip.** MrFieldTech, 2026-11-13. `refresh.sh --check`
+  runs at every `/session-open` in this repository and before every
+  release; for a source with an update the session first says what
+  actually changed, from `--changes` and `--diff`, then offers to update
+  now, remind later (nothing recorded), or skip that version (`--skip`,
+  recorded in `vendor/<name>.upstream` until upstream changes again). The
+  rule is in this repository's `CLAUDE.md`, since only it holds the
+  mirrors.
+
+**Facts, GRM / MRFIELDTECH, 2026-11-11.**
+
+- Claude Code loads project skills only from `.claude/skills/<name>/`
+  (and nested `<dir>/.claude/skills/`, which load only once a file under
+  `<dir>` is read or edited), and project agents only from
+  `.claude/agents/`, by its skills and sub-agents documentation read
+  2026-11-11. A folder such as `.claude/afk/skills/` is never loaded.
+  The same documentation says a plugin folder, holding
+  `.claude-plugin/plugin.json`, placed under `.claude/skills/` loads as
+  `<name>@skills-dir`, its skills namespaced `/<name>:<skill>`, possibly
+  only after the workspace trust dialog. Not tried in a session.
+- `afk.sh status`, run at every `/session-open` in every repository,
+  clones the kit's source with `--depth 1` to compare it, and `afk.sh
+  update` does the same. A 49 MB mirror kept in the kit's tree is
+  downloaded at every open in every repository.
+- `afk.sh` treats as kit-owned only `.claude/afk/` and the two session
+  skill directories; an install deletes and rewrites those three whole.
+- emilkowalski/skills had 19 skills when mirrored on 2026-11-12, at
+  `f7ce8c0`: `learn-taste` was added upstream after the count of 18. All
+  of them install everywhere, by the decision above.
+- Upstream text breaks `check.sh` as written: emilkowalski/skills holds
+  713 lines with an em or en dash in 28 files and addresses in 13 files,
+  cloudflare/security-audit-skill 37 such lines in 6 files and an address
+  in 1. Section 2 fails on a dash anywhere in the repository, section 1 on
+  an address in a kit-owned file. Each also holds one `TODO`, which the
+  Regenerate sweep would list in `TODO.md`.
+
+**Outcome.** Release 2.3.0 built and `bash check.sh` passing,
+2026-11-12: the four mirrors under `vendor/`, `afk.sh` installing them by
+a blobless sparse fetch with the clash stop and `MANIFEST`'s `vendored`
+list, the licenses in `.claude/afk/licenses/`, the Security skills key
+and Mirrored skills in `HOUSE.md`, and the `check.sh` tests. Tried by
+hand: a fetch from GitHub with two Security skills came to 1.9 MB, and a
+2.2.0 repository updated to 2.3.0 and read current. `refresh.sh --check`,
+`--changes`, `--diff` and `--skip` added and tested, 2026-11-13. Done:
+release 2.3.0.
 
 ### Add The Owner's General Instructions And Permission To Fail To The House Rules
 

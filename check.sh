@@ -4,7 +4,8 @@
 # 1. No kit-owned file holds an address, and neither one nor a session
 #    reference holds a name on the private list of project terms when one is
 #    given.
-# 2. No file in the repository holds an em dash or an en dash.
+# 2. No file in the repository holds an em dash or an en dash, outside the
+#    mirrors under vendor/.
 # 3. The scripts parse, each skill's frontmatter is whole, every practice
 #    is pointed at and every pointer names a practice that exists, and every
 #    kit-owned directory keeps LF line endings.
@@ -13,8 +14,8 @@
 # 5. VERSION is a version number, CHANGELOG.md has an entry for it, and the
 #    README's update block names it.
 # 6. An install into a scratch repository works end to end: the manifest,
-#    the status line, the guard against overwriting local edits, and the
-#    TODO sweep.
+#    the status line, the guard against overwriting local edits, the
+#    mirrored skills and agents, and the TODO sweep.
 # 7. The secrets tool stores, places, locks, checks, shows, rekeys and
 #    decrypts values with age, and prints the steps for keys. Skipped when
 #    age is not installed, except in CI. The Node decrypter is tested when
@@ -50,7 +51,9 @@ ADDRESS='https?://|[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}|\b[A-Za-z0-9-]+
 # protocol's XML namespace or the escaped prefix a check command greps for.
 ALLOWED='^((https?://)?(www\.)?<[a-z-]+>|https?://localhost[:/]|http://www\.sitemaps\.org/schemas/sitemap/0\.9$|https://www\\\.$)'
 status=0
-hits="$(grep -rnIE "$ADDRESS" "${AFK_OWNED[@]}")" || status=$?
+# The licenses of the mirrors under .claude/afk/licenses/ are upstream's text,
+# kept whole, and name only their own license's address.
+hits="$(grep -rnIE --exclude-dir=licenses "$ADDRESS" "${AFK_OWNED[@]}")" || status=$?
 [ "$status" -ne 0 ] && [ "$status" -ne 1 ] && fail "the address pattern could not be searched"
 bad=""
 while IFS= read -r line; do
@@ -89,8 +92,9 @@ else
 fi
 
 # 2. The house rules forbid the em dash and the en dash, in the kit as
-#    everywhere else.
-if git ls-files -z | xargs -0 grep -nI -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' --; then
+#    everywhere else. The mirrors under vendor/ are kept bit for bit as
+#    upstream wrote them, and are not the kit's writing.
+if git ls-files -z -- . ':!vendor' | xargs -0 grep -nI -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' --; then
   fail "the lines above hold an em dash or an en dash"
 fi
 echo "check: no em dash or en dash"
@@ -251,6 +255,119 @@ status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
 [ "$status" = "$version, current" ] || fail "status after update reads '$status'"
 echo "check: install, status, and update work"
+
+# The mirrors: every skill and agent vendor/SOURCES installs everywhere is
+# installed and listed, a by-name skill only when Security skills names it,
+# and an unknown name, a local edit and a clash each stop the install.
+everywhere="$(sed -n '/^vendored:$/,$ s/^  //p' "$repo/.claude/afk/MANIFEST")"
+for source in $(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "everywhere" {print $1}'); do
+  [ -f "$repo/.claude/afk/licenses/$source.txt" ] || fail "install left out the license of $source"
+done
+for unit in $everywhere; do
+  [ -e "$repo/$unit" ] || fail "install left out $unit, which MANIFEST lists"
+done
+grep -qx '\.claude/agents/[^/]*\.md' <<< "$everywhere" || fail "install installed no mirrored agent"
+expected_skills="$(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "everywhere" && $4 != "-" {print $1, $4}' \
+  | while read -r source glob; do git ls-files "vendor/$source/${glob%/\*}" | grep -cE "^vendor/$source/${glob%/\*}/[^/]+/SKILL\.md$"; done \
+  | awk '{ s += $1 } END { print s + 0 }')"
+[ "$(grep -c '^\.claude/skills/' <<< "$everywhere")" = "$expected_skills" ] \
+  || fail "install installed $(grep -c '^\.claude/skills/' <<< "$everywhere") mirrored skills, not the $expected_skills vendor/SOURCES installs everywhere"
+by_name_source="$(grep -vE '^[[:space:]]*(#|$)' vendor/SOURCES | awk '$6 == "by-name" {print $1, $4}' | awk 'NR == 1')"
+if [ -n "$by_name_source" ]; then
+  read -r source glob <<< "$by_name_source"
+  named="$(git ls-files "vendor/$source/${glob%/\*}" | sed -n "s#^vendor/$source/${glob%/\*}/\([^/]*\)/SKILL\.md\$#\1#p" | awk 'NR == 1')"
+  [ ! -e "$repo/.claude/skills/$named" ] || fail "install installed $named, which Security skills does not name"
+  printf '# Project\n\n- **Security skills:** `%s`\n' "$named" > "$repo/CLAUDE.md"
+  AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null
+  [ -f "$repo/.claude/skills/$named/SKILL.md" ] || fail "install left out $named, which Security skills names"
+  status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
+  [ "$status" = "$version, current" ] || fail "status with a Security skill reads '$status'"
+  printf '\nA local edit.\n' >> "$repo/.claude/skills/$named/SKILL.md"
+  case "$(cd "$repo" && bash .claude/afk/afk.sh status)" in
+    *"edited locally: .claude/skills/$named/SKILL.md"*) ;;
+    *) fail "status did not report a local edit to a mirrored skill" ;;
+  esac
+  if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null 2>&1; then
+    fail "install overwrote a mirrored skill edited in place"
+  fi
+  printf '# Project\n\n- **Security skills:** none\n' > "$repo/CLAUDE.md"
+  AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" --discard-local-edits >/dev/null
+  [ ! -e "$repo/.claude/skills/$named" ] || fail "install kept $named after Security skills stopped naming it"
+fi
+printf '# Project\n\n- **Security skills:** `no-such-skill`\n' > "$repo/CLAUDE.md"
+if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$repo" >/dev/null 2>&1; then
+  fail "install ran with a Security skill the kit does not mirror"
+fi
+rm "$repo/CLAUDE.md"
+status="$(cd "$repo" && bash .claude/afk/afk.sh status)"
+[ "$status" = "$version, current" ] || fail "status after the mirror checks reads '$status'"
+clash="$scratch/clash"
+git init --quiet "$clash"
+first="$(sed -n 1p <<< "$everywhere")"
+mkdir -p "$(dirname "$clash/$first")"
+printf 'the repository'"'"'s own\n' > "$clash/$first.own"
+mv "$clash/$first.own" "$clash/$first"
+if AFK_SOURCE="$scratch/kit" bash "$scratch/kit/.claude/afk/afk.sh" install "$clash" >/dev/null 2>&1; then
+  fail "install replaced $first, which the repository wrote"
+fi
+[ ! -e "$clash/.claude/afk" ] || fail "install changed a repository it refused"
+echo "check: the mirrors install, by name where asked, and stop on a clash"
+
+# refresh.sh, against a local upstream: a refresh records the commit, a
+# check reads current, then available once upstream changes the mirrored
+# path but not for a change elsewhere, a skip holds until the next version,
+# and changes lists the commit.
+up="$scratch/upstreams/owner/repo"
+mkdir -p "$up/plugins/one" "$up/other"
+git init --quiet "$up"
+printf 'license\n' > "$up/plugins/one/LICENSE"
+printf 'first\n' > "$up/plugins/one/SKILL.md"
+printf 'elsewhere\n' > "$up/other/file"
+upcommit() {
+  git -C "$up" add -A
+  git -C "$up" -c user.name=check -c user.email=check@example.invalid commit --quiet -m "$1"
+}
+upcommit "first"
+mirror="$scratch/mirror"
+mkdir -p "$mirror/vendor"
+cp refresh.sh "$mirror/"
+printf 'one  owner/repo  plugins/one  -  -  everywhere\n' > "$mirror/vendor/SOURCES"
+git init --quiet "$mirror"
+refresh() { (cd "$mirror" && AFK_VENDOR_BASE="file://$scratch/upstreams" bash refresh.sh "$@"); }
+refresh one >/dev/null
+cmp -s "$up/plugins/one/SKILL.md" "$mirror/vendor/one/SKILL.md" || fail "refresh.sh did not mirror the source"
+[ -f "$mirror/.claude/afk/licenses/one.txt" ] || fail "refresh.sh did not copy the license"
+grep -qx "commit: $(git -C "$up" rev-parse HEAD)" "$mirror/vendor/one.upstream" || fail "refresh.sh did not record the commit"
+git -C "$mirror" add -A
+git -C "$mirror" -c user.name=check -c user.email=check@example.invalid commit --quiet -m mirror
+[ "$(refresh --check)" = "one current" ] || fail "refresh.sh --check reads '$(refresh --check)' after a refresh"
+printf 'moved\n' > "$up/other/file"
+upcommit "elsewhere"
+[ "$(refresh --check)" = "one current" ] || fail "refresh.sh --check offered a change outside the mirrored path"
+printf 'second\n' > "$up/plugins/one/SKILL.md"
+upcommit "second version"
+case "$(refresh --check)" in
+  "one "*"available") ;;
+  *) fail "refresh.sh --check reads '$(refresh --check)', not available" ;;
+esac
+changes="$(refresh --changes one)"
+grep -q 'second version' <<< "$changes" || fail "refresh.sh --changes did not list the commit"
+grep -q 'elsewhere' <<< "$changes" && fail "refresh.sh --changes listed a commit outside the mirrored path"
+grep -qx '+second' <<< "$(refresh --diff one SKILL.md)" || fail "refresh.sh --diff did not show the change"
+refresh --skip one >/dev/null
+case "$(refresh --check)" in
+  "one "*"skipped") ;;
+  *) fail "refresh.sh --check reads '$(refresh --check)' after a skip" ;;
+esac
+printf 'third\n' > "$up/plugins/one/SKILL.md"
+upcommit "third version"
+case "$(refresh --check)" in
+  "one "*"available") ;;
+  *) fail "refresh.sh --check did not offer the version after a skipped one" ;;
+esac
+refresh one >/dev/null
+grep -q '^skipped:' "$mirror/vendor/one.upstream" && fail "a refresh kept the skip"
+echo "check: refresh.sh refreshes, checks, lists changes and skips"
 
 # A repository on a release before 2.0.0, when the kit was Claude-Kit in
 # .claude/kit/, updates by running .claude/kit/kit.sh from the source with
@@ -537,5 +654,6 @@ else
 fi
 
 # 8. This repository keeps its own TODO.md by the sweep it ships. This file is
-# excluded because the fixtures above are TODOs by design.
-python3 .claude/afk/todo_sweep.py --exclude check.sh --check
+# excluded because the fixtures above are TODOs by design, and vendor/ because
+# its mirrors are upstream's.
+python3 .claude/afk/todo_sweep.py --exclude check.sh --exclude 'vendor/*' --check
