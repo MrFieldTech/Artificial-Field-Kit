@@ -13,6 +13,7 @@ file at the same time.
 
 | Date | Developer | Tasks touched | Work commits |
 |---|---|---|---|
+| 2026-11-14 | GRM / MRFIELDTECH | `close-state`, ACTIVE, parked: opened for later from `vendor-neutral-update`'s retrospective, at MrFieldTech's answer, with the values a close keeps only in the conversation and three open decisions in its block | `b04f1e5` |
 | 2026-11-13 | GRM / MRFIELDTECH | `vendor-neutral-update`, DONE, merged into `preview`: opened from a temporary session; release 2.4.0 lets any AI coding tool run the kit through a pointer block `afk.sh` keeps at the top of `AGENTS.md`, rewords `HOUSE.md`, both skills and `README.md` without assuming Claude Code, and fixes what a Claude cold read from `AGENTS.md` found; `neutral-layout` opened for later | `2f2138c..240754d` |
 | 2026-11-13 | GRM / MRFIELDTECH | `vendored-skills`, DONE, merged into `preview` and then `main` at MrFieldTech's request: release 2.3.0 mirrors four outside sources under `vendor/` and installs their skills and agent as kit-owned files, the cybersecurity skills only by the new Security skills key, fetched by a blobless sparse clone; `refresh.sh --check` offers each upstream update; `security-skill-review` opened for later | `d5dbf75..904db23` |
 | 2026-11-11 | GRM / MRFIELDTECH | `house-instructions`, DONE, merged into `preview`: release 2.2.0 merges the owner's general instructions into `HOUSE.md`, adds a Permission to fail section with its failure report, and bans the en dash, which `check.sh` now enforces | `2768c9d..ac6d2e7` |
@@ -246,14 +247,6 @@ None.
   `CLAUDE.md` as a project rule.
 
 ## Open Questions
-
-- **Should a close write what it notes for a later step into the task's
-  block?** Raised by GRM / MRFIELDTECH, 2026-11-13, in
-  `vendor-neutral-update`, from its retrospective. A cold read found that
-  `session-close` keeps the hash step 8 notes for step 9, and which task
-  branches the session worked, only in the conversation, so a context
-  summarized midway through a close loses them in any tool. Open a task
-  to record them where a re-read finds them?
 
 - **Should the private repository the default import follows name its
   import procedure?** Raised by GRM / MRFIELDTECH, 2026-10-15, in

@@ -150,6 +150,7 @@ documentation for where it reads instruction files and skills.
 
 ### Keep What A Close Notes Where A Re-Read Finds It
 
+DROPPED | GRM / MRFIELDTECH | 261114 001102
 HOLDING | GRM / MRFIELDTECH | 261114 000917
 
 **Slug:** `close-state`
