@@ -148,6 +148,42 @@ Claude Code session.
 **Stopping point.** Not started. First step: check each target tool's own
 documentation for where it reads instruction files and skills.
 
+### Keep What A Close Notes Where A Re-Read Finds It
+
+HOLDING | GRM / MRFIELDTECH | 261114 000917
+
+**Slug:** `close-state`
+**Status:** ACTIVE
+**Opened:** 2026-11-14
+
+**Why.** MrFieldTech, 2026-11-14, answering the retrospective of
+`vendor-neutral-update`: open a task for later. A cold read of the
+protocol found that `session-close` keeps some values only in the
+conversation, so a context summarized midway through a close loses them,
+in any tool. From 2.4.0, `HOUSE.md` and the `AGENTS.md` pointer say to
+re-read the rules and the skill after a summary, but a re-read cannot
+bring back a value that was never written down.
+
+**Background.** Values found so far that live only in the conversation:
+the hash of `origin/<target>` that step 8 notes and step 9 compares
+against; which task branches the session worked, which steps 1 to 8 loop
+over; the developer `session-open` named, which step 3's `DROPPED` line
+and the Session Log need; and each value given in plaintext, which step 11
+reports. Some can be recomputed from git, such as the developer from the
+task's top `HOLDING` line.
+
+**Decisions left open.**
+
+1. Which values are written down and which are recomputed, value by value.
+2. Where a written value goes: the task's block, a line in the handoff
+   commit, or somewhere else that a re-read reaches.
+3. Whether a plaintext value given in the conversation can be recorded at
+   all without breaking the credential rule, or only its label.
+
+**Stopping point.** Not started. First step: grill the open decisions,
+then read `session-close` step by step for every other value it keeps
+only in the conversation.
+
 ## Closed Tasks
 
 ### Let Other AI Tools Run The Kit
